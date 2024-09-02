@@ -4,29 +4,29 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
     <nav className="w-full bg-gray-700">
-      <ul className="max-w-screen-lg mx-auto grid grid-cols-5 gap-4 p-4 text-center">
+      <ul className=" grid grid-cols-5 sm:gap-2 text-center">
         <li>
-          <Link className="block py-2" to="/">
+          <Link className=" block py-1 sm:py-2 " to="/">
             Home
           </Link>
         </li>
         <li>
-          <Link className="block py-2" to="/recipes">
+          <Link className="block py-1 sm:py-2 " to="/recipes">
             Recipes
           </Link>
         </li>
         <li>
-          <Link className="block py-2" to="/blog">
+          <Link className="block py-1 sm:py-2" to="/blog">
             Blog
           </Link>
         </li>
         <li>
-          <Link className="block py-2" to="/about">
+          <Link className="block py-1 sm:py-2" to="/about">
             About
           </Link>
         </li>
         <li>
-          <Link className="block py-2" to="/contact">
+          <Link className="block py-1 sm:py-2" to="/contact">
             Contact
           </Link>
         </li>
