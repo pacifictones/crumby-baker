@@ -29,24 +29,37 @@ const ContactForm = () => {
       console.error("Execute recaptcha not yet available");
       return;
     }
+
     // Execute reCAPTCHA v3 to get the token
     const token = await executeRecaptcha("contact_form"); // 'contact_form' is the action name
 
-    const response = await fetch("/api/verifyCaptcha", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token }), //Send the token to serverless function
-    });
+    try {
+      const response = await fetch("/api/verifyCaptcha", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }), // Send the token to your serverless function
+      });
 
-    const result = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Verification failed:", errorData.message);
+        alert("CAPTCHA verification failed. Please try again.");
+        return;
+      }
 
-    if (result.sucess) {
-      console.log("CAPTCHA passed, handle form submission");
-      //Handle form submission
-    } else {
-      alert("CAPTCHA verification failed. Please try again.");
+      const result = await response.json();
+
+      if (result.success) {
+        console.log("CAPTCHA passed, handle form submission");
+        // Handle successful form submission
+      } else {
+        alert("CAPTCHA verification failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during verification:", error);
+      alert("An error occurred. Please try again later.");
     }
   };
 
