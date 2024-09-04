@@ -1,5 +1,5 @@
 import React, { isValidElement, useEffect, useState } from "react";
-import client from "../sanityClient";
+import client, { urlFor } from "../sanityClient";
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
@@ -23,7 +23,7 @@ const RecipeList = () => {
             ))}
           </ul>
           {recipe.image && (
-            <img src={recipe.image.asset.url} alt={recipe.title} />
+            <img src={urlFor(recipe.image.asset).url()} alt={recipe.title} />
           )}
         </div>
       ))}
