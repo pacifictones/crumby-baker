@@ -27,5 +27,14 @@ export default {
         hotspot: true,
       },
     },
+    {
+      name: 'slug',
+      type: 'slug',
+      title: 'Slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+    },
   ],
 }
