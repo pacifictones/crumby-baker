@@ -28,6 +28,20 @@ export default {
       },
     },
     {
+      name: 'category',
+      type: 'string',
+      title: 'Category',
+      options: {
+        list: [
+          {title: 'Pastry', value: 'Pastry'},
+          {title: 'Cake', value: 'Cake'},
+          {title: 'Bread', value: 'Bread'},
+          {title: 'Cookie', value: 'Cookie'},
+          {title: 'Pie', value: 'Pie'},
+        ],
+      },
+    },
+    {
       name: 'slug',
       type: 'slug',
       title: 'Slug',
