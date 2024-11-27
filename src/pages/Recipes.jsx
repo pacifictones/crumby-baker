@@ -20,13 +20,16 @@ const Recipes = () => {
       </p>
 
       {/* filter and sort controls */}
-      <div className="filter-controls">
+      <div className="filter-controls flex flex-wrap justify-center gap-4 my-6">
         {/* category filter */}
-        <label htmlFor="categoryFilter">Filter by Category: </label>
+        <label htmlFor="categoryFilter" className="font-semibold">
+          Filter by Category:{" "}
+        </label>
         <select
           id="categoryFilter"
           value={filterCategory}
           onChange={handleCategoryChange}
+          className="ml-2 border rounded px-2 py-1"
         >
           {categories.map((category) => (
             <option key={category} value={category}>
@@ -36,8 +39,15 @@ const Recipes = () => {
         </select>
 
         {/* Sort Option */}
-        <label htmlFor="sortOption">Sort by: </label>
-        <select id="sortOption" value={sortOption} onChange={handleSortChange}>
+        <label htmlFor="sortOption" className="font-semibold">
+          Sort by:{" "}
+        </label>
+        <select
+          id="sortOption"
+          value={sortOption}
+          onChange={handleSortChange}
+          className="ml-2 border rounded px-2 py-1"
+        >
           <option value="Newest">Newest</option>
           <option value="Oldest">Oldest</option>
           <option value="Alphabetical">A-Z</option>
