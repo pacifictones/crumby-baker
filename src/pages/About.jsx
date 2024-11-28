@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import client, { urlFor } from "../sanityClient";
+import { PortableText } from "@portabletext/react";
 
 const About = () => {
   const [aboutContent, setAboutConent] = useState(null);
@@ -13,26 +14,44 @@ const About = () => {
     image
     }`
       )
-      .then((data) => setAboutConent(data))
+      .then((data) => {
+        console.log(data);
+        setAboutConent(data);
+      })
       .catch(console.error);
   }, []);
 
   if (!aboutContent) return <div>Loading...</div>;
+
+  // Custom components for PortableText
+  const components = {
+    block: {
+      normal: ({ children }) => {
+        //skip empty or whitespace-only blocks
+        if (!children || children.join("").trim() === "") return null;
+        return <p className="mb-4 indent-8">{children}</p>; // Add spacing between paragraph
+      },
+    },
+  };
 
   return (
     <div className="max-w-screen-lg mx-auto p-4">
       <h1 className="text-3xl font-bold text-center mb-4">
         {aboutContent.title}
       </h1>
-      <img
-        className="mx-auto rounded-lg mb-4"
-        src={urlFor(aboutContent.image).url()}
-        alt="About"
-      />
+      {aboutContent.image && (
+        <img
+          className="mx-auto rounded-lg mb-4"
+          src={urlFor(aboutContent.image).url()}
+          alt="About"
+        />
+      )}
+
       <div className="prose max-w-none">
-        {aboutContent.content.map((block, index) => (
+        <PortableText value={aboutContent.content} components={components} />
+        {/* {aboutContent.content.map((block, index) => (
           <p key={index}>{block.children[0]?.text}</p>
-        ))}
+        ))} */}
       </div>
     </div>
   );
