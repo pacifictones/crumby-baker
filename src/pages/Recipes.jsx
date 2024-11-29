@@ -69,36 +69,46 @@ const Recipes = () => {
       {/* filter and sort controls */}
       <div className="filter-controls flex flex-wrap justify-center gap-4 my-6">
         {/* category filter */}
-        <label htmlFor="categoryFilter" className="font-semibold">
-          Filter by Category:{" "}
-        </label>
-        <select
-          id="categoryFilter"
-          value={filterCategory}
-          onChange={handleCategoryChange}
-          className="ml-2 border rounded px-2 py-1"
-        >
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-2">
+          <label
+            htmlFor="categoryFilter"
+            className="font-semibold whitespace-nowrap"
+          >
+            Filter by Category:{" "}
+          </label>
+          <select
+            id="categoryFilter"
+            value={filterCategory}
+            onChange={handleCategoryChange}
+            className="ml-2 border rounded px-2 py-1"
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Sort Option */}
-        <label htmlFor="sortOption" className="font-semibold">
-          Sort by:{" "}
-        </label>
-        <select
-          id="sortOption"
-          value={sortOption}
-          onChange={handleSortChange}
-          className="ml-2 border rounded px-2 py-1"
-        >
-          <option value="Newest">Newest</option>
-          <option value="Oldest">Oldest</option>
-          <option value="Alphabetical">A-Z</option>
-        </select>
+        <div className="flex items-center gap-2">
+          <label
+            htmlFor="sortOption"
+            className="font-semibold whitespace-nowrap"
+          >
+            Sort by:{" "}
+          </label>
+          <select
+            id="sortOption"
+            value={sortOption}
+            onChange={handleSortChange}
+            className="ml-2 border rounded px-2 py-1"
+          >
+            <option value="Newest">Newest</option>
+            <option value="Oldest">Oldest</option>
+            <option value="Alphabetical">A-Z</option>
+          </select>
+        </div>
       </div>
 
       {/* Recipe Grid */}
