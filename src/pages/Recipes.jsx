@@ -1,18 +1,65 @@
-import React, { useState } from "react";
-import RecipeList from "../components/RecipeList";
+import React, { useEffect, useState } from "react";
+import List from "../components/List";
+import client from "../sanityClient";
+import { Link } from "react-router-dom";
 
 const Recipes = () => {
+  const [recipes, setRecipes] = useState([]); // All recipes fetched from Sanity
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [filterCategory, setFilteredCategory] = useState("All");
   const [sortOption, setSortOption] = useState("Newest");
 
   const categories = ["All", "Pastry", "Cake", "Bread", "Cookie", "Pie"];
 
+  // Fetch recipes form Sanity
+  useEffect(() => {
+    client
+      .fetch(
+        '*[_type == "recipe"]{title, "image": image.asset->url, slug, category, _createdAt}'
+      )
+      .then((data) => {
+        setRecipes(data);
+        setFilteredRecipes(data);
+      })
+      .catch(console.error);
+  }, []);
+
+  //Update filteredRecipes when filterCategory or sortOption changes
+  useEffect(() => {
+    let updatedRecipes = [...recipes];
+
+    //Filter by category
+
+    if (filterCategory != "All") {
+      updatedRecipes = updatedRecipes.filter(
+        (recipe) => recipe.category === filterCategory
+      );
+    }
+
+    //Sort recipes
+    if (sortOption === "Newest") {
+      updatedRecipes.sort(
+        (a, b) => new Date(b._createdAt) - new Date(a._createdAt)
+      );
+    } else if (sortOption === "Oldest") {
+      updatedRecipes.sort(
+        (a, b) => new Date(a.created_At) - new Date(b._createdAt)
+      );
+    } else if (sortOption === "Alphabetical") {
+      updatedRecipes.sort((a, b) => a.title.localeCompare(b.title));
+    }
+
+    setFilteredRecipes(updatedRecipes);
+  }, [filterCategory, sortOption, recipes]);
+
+  // Handlers for filter and sort changes
+
   const handleCategoryChange = (e) => setFilteredCategory(e.target.value);
   const handleSortChange = (e) => setSortOption(e.target.value);
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-center mb-4">
+    <div className="max-w-screen-lg mx-auto p-4 py-60">
+      <h1 className="text-4xl font-bold text-center mb-4 text-gray-800">
         Crumby Baker Recipes
       </h1>
       <p className="text-lg text-gray-700 text-center">
@@ -54,7 +101,30 @@ const Recipes = () => {
         </select>
       </div>
 
-      <RecipeList filterCategory={filterCategory} sortOption={sortOption} />
+      {/* Recipe Grid */}
+
+      <List
+        data={filteredRecipes}
+        renderItem={(recipe) => (
+          <div
+            key={recipe.slug.current}
+            className="recipe-thumbnail text-center mx-auto border border-gray-200 rounded-lg shadow-md overflow-hidden"
+          >
+            <Link to={`/recipes/${recipe.slug.current}`} className="block">
+              <div className="w-full aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
+                <img
+                  src={recipe.image}
+                  alt={recipe.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex items-center justify-center h-16">
+                <h3 className="text-lg font-semibold">{recipe.title}</h3>
+              </div>
+            </Link>
+          </div>
+        )}
+      />
     </div>
   );
 };

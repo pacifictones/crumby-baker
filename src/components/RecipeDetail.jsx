@@ -1,10 +1,10 @@
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import client, { urlFor } from "../sanityClient";
 
 function RecipeDetail() {
-  const { slug } = useParams();
-  const [recipe, setRecipe] = useState(null);
+  const { slug } = useParams(); // Get the slug from the URL
+  const [recipe, setRecipe] = useState(null); // State to store recipe data
 
   useEffect(() => {
     client
