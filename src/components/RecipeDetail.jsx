@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import client, { urlFor } from "../sanityClient";
+import { PortableText } from "@portabletext/react";
 
 function RecipeDetail() {
   const { slug } = useParams(); // Get the slug from the URL
@@ -17,7 +18,11 @@ function RecipeDetail() {
         }`,
         { slug }
       )
-      .then((data) => setRecipe(data))
+      .then((data) => {
+        console.log("fetched recipe:", data);
+        setRecipe(data);
+      })
+
       .catch(console.error);
   }, [slug]);
 
@@ -33,8 +38,21 @@ function RecipeDetail() {
           <li key={index}>{ingredient}</li>
         ))}
       </ul>
-      <h2>Instructions</h2>
-      <p>{recipe.instructions}</p>
+      <div>
+        <h2 className="text-2xl font-semibold mb-2">Instructions</h2>
+        <div className="prose max-w-none">
+          <PortableText
+            value={recipe.instructions}
+            components={{
+              block: {
+                normal: ({ children }) => (
+                  <p className="text-justify indent-6 mb-4">{children}</p>
+                ),
+              },
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

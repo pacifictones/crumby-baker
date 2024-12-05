@@ -9,6 +9,7 @@ import Contact from "./pages/Contact.jsx";
 import Layout from "./components/Layout.jsx";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import RecipeDetail from "./components/RecipeDetail.jsx";
+import BlogDetail from "./components/BlogDetail.jsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/recipes" element={<Recipes />} />
             <Route path="/recipes/:slug" element={<RecipeDetail />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>

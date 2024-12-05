@@ -29,7 +29,7 @@ const About = () => {
       normal: ({ children }) => {
         //skip empty or whitespace-only blocks
         if (!children || children.join("").trim() === "") return null;
-        return <p className="mb-4 indent-8">{children}</p>; // Add spacing between paragraph
+        return <p className="mb-4 indent-6">{children}</p>; // Add spacing between paragraph
       },
     },
   };
@@ -49,9 +49,9 @@ const About = () => {
 
       <div className="prose max-w-none">
         <PortableText value={aboutContent.content} components={components} />
-        {/* {aboutContent.content.map((block, index) => (
+        {aboutContent.content.map((block, index) => (
           <p key={index}>{block.children[0]?.text}</p>
-        ))} */}
+        ))}
       </div>
     </div>
   );

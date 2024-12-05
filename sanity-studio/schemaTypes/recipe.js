@@ -17,7 +17,8 @@ export default {
     {
       name: 'instructions',
       title: 'Instructions',
-      type: 'text',
+      type: 'array',
+      of: [{type: 'block'}], // Allows rich text content
     },
     {
       name: 'image',
