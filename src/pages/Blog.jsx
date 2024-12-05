@@ -123,12 +123,12 @@ const Blog = () => {
                 alt={blog.title}
                 className=" w-full aspect-[4/3] h-full object-cover"
               />
-            </Link>
 
-            <div className="p-4 flex-1 text-left">
-              <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
-              <p className="text-gray-600 text-sm">{blog.excerpt}</p>
-            </div>
+              <div className="p-4 flex-1 text-left">
+                <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
+                <p className="text-gray-600 text-sm">{blog.excerpt}</p>
+              </div>
+            </Link>
           </div>
         )}
       />

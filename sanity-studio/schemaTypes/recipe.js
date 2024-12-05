@@ -43,6 +43,11 @@ export default {
       },
     },
     {
+      name: 'description',
+      title: 'Description',
+      type: 'string',
+    },
+    {
       name: 'slug',
       type: 'slug',
       title: 'Slug',

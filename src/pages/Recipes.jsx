@@ -15,7 +15,7 @@ const Recipes = () => {
   useEffect(() => {
     client
       .fetch(
-        '*[_type == "recipe"]{title, "image": image.asset->url, slug, category, _createdAt}'
+        '*[_type == "recipe"]{title, "image": image.asset->url, slug, category, description, _createdAt}'
       )
       .then((data) => {
         setRecipes(data);
@@ -128,8 +128,9 @@ const Recipes = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex items-center justify-center h-16">
-                <h3 className="text-lg font-semibold">{recipe.title}</h3>
+              <div className="p-4 flex-1 text-left">
+                <h3 className="text-xl font-bold mb-2">{recipe.title}</h3>
+                <p className="text-gray-600 text-sm">{recipe.description}</p>
               </div>
             </Link>
           </div>
