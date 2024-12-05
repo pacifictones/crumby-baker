@@ -58,7 +58,7 @@ const Recipes = () => {
   const handleSortChange = (e) => setSortOption(e.target.value);
 
   return (
-    <div className="max-w-screen-lg mx-auto p-4 py-60">
+    <div className="max-w-screen-lg mx-auto p-4 py-6">
       <h1 className="text-4xl font-bold text-center mb-4 text-gray-800">
         Crumby Baker Recipes
       </h1>
