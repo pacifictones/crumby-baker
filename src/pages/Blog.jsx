@@ -18,8 +18,12 @@ const Blog = () => {
       .then((data) => {
         setBlogs(data);
         setFilteredBlogs(data);
+        setLoading(false); // Stop loading once data is fetched
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.error(error);
+        setLoading(false); // Stop loading even if there's an error
+      });
   }, []);
 
   //Update filteredBlogs when sortOption changes
@@ -56,13 +60,13 @@ const Blog = () => {
   const handleSortChange = (e) => setSortOption(e.target.value);
 
   return (
-    <div className="max-w-screen-lg mx-auto p-4 py-6">
-      <h1 className="text-4xl font-bold text-center mb-4 text-gray-800">
-        Crumby Baker Blogs
-      </h1>
-      <p className="text-lg text-gray-700 text-center">
-        Have a read into my crumby mind!
-      </p>
+    <div className="max-w-screen-lg mx-auto px-4">
+      <header className="text-center py-10">
+        <h1 className="text-4xl font-bold mb-4 text-gray-800">
+          Crumby Baker Blogs
+        </h1>
+        <p className="text-lg text-gray-700">The latest stories and tips!</p>
+      </header>
 
       {/* filter and sort controls */}
       <div className="filter-controls flex flex-wrap justify-center gap-4 my-6">
@@ -109,6 +113,39 @@ const Blog = () => {
         </div>
       </div>
 
+      {/* Loading Indicator */}
+
+      {loading ? (
+        <div className="felx justify-center items-center py-10">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
+        </div>
+      ) : filteredBlogs.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Blog Grid */}
+          {filteredBlogs.map((blog) => (
+            <div
+              key={blog.slug.current}
+              className="blog-thumbnail rounded-lg shadow-md overflow-hidden"
+            >
+              <Link to={`/blog/${blog.slug.current}`} className="block">
+                <img
+                  src={blog.image}
+                  alt={blog.title}
+                  className=" w-full aspect-[4/3] h-full object-cover"
+                />
+
+                <div className="p-4 flex-1 text-left">
+                  <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
+                  <p className="text-gray-600 text-sm">{blog.excerpt}</p>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-gray-500">No blogs found.</p>
+      )}
+
       {/* Blog Grid */}
 
       <List
@@ -117,20 +154,7 @@ const Blog = () => {
           <div
             key={blog.slug.current}
             className="blog-thumbnail rounded-lg shadow-md overflow-hidden "
-          >
-            <Link to={`/blog/${blog.slug.current}`} className="block">
-              <img
-                src={blog.image}
-                alt={blog.title}
-                className=" w-full aspect-[4/3] h-full object-cover"
-              />
-
-              <div className="p-4 flex-1 text-left">
-                <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
-                <p className="text-gray-600 text-sm">{blog.excerpt}</p>
-              </div>
-            </Link>
-          </div>
+          ></div>
         )}
       />
     </div>
