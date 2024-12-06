@@ -130,24 +130,23 @@ const Recipes = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Recipe Grid */}
           {filteredRecipes.map((recipe) => (
-            <div
+            <Link
+              to={`/recipes/${recipe.slug.current}`}
+              className="block rounded shadow"
               key={recipe.slug.current}
-              className="recipe-thumbnail rounded-lg shadow-md overflow-hidden"
             >
-              <Link to={`/recipes/${recipe.slug.current}`} className="block">
-                <div className="w-full aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
-                  <img
-                    src={recipe.image}
-                    alt={recipe.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4 flex-1 text-left">
-                  <h3 className="text-xl font-bold mb-2">{recipe.title}</h3>
-                  <p className="text-gray-600 text-sm">{recipe.description}</p>
-                </div>
-              </Link>
-            </div>
+              <div className="w-full aspect-square overflow-hidden">
+                <img
+                  src={recipe.image}
+                  alt={recipe.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-xl font-bold mb-2">{recipe.title}</h3>
+                <p className="text-gray-600 text-sm">{recipe.description}</p>
+              </div>
+            </Link>
           ))}
         </div>
       ) : (

@@ -122,23 +122,23 @@ const Blog = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Blog Grid */}
           {filteredBlogs.map((blog) => (
-            <div
+            <Link
+              to={`/blog/${blog.slug.current}`}
+              className="blog-thumbnail block rounded shadow"
               key={blog.slug.current}
-              className="blog-thumbnail rounded-lg shadow-md overflow-hidden"
             >
-              <Link to={`/blog/${blog.slug.current}`} className="block">
+              <div className="w-full aspect-square overflow-hidden">
                 <img
                   src={blog.image}
                   alt={blog.title}
-                  className=" w-full aspect-[4/3] h-full object-cover"
+                  className=" w-full  h-full object-cover"
                 />
-
-                <div className="p-4 flex-1 text-left">
-                  <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
-                  <p className="text-gray-600 text-sm">{blog.excerpt}</p>
-                </div>
-              </Link>
-            </div>
+              </div>
+              <div className="p-4">
+                <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
+                <p className="text-gray-600 text-sm">{blog.excerpt}</p>
+              </div>
+            </Link>
           ))}
         </div>
       ) : (

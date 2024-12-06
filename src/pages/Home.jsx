@@ -64,11 +64,13 @@ const Home = () => {
                 <img
                   src={recipe.image}
                   alt={recipe.title}
-                  className="w-full h-full object-cover rounded"
+                  className="w-full h-full object-cover"
                 />
               </div>
-
-              <h3 className="mt-2 text-lg font-bold">{recipe.title}</h3>
+              <div className="p-4">
+                <h3 className="mt-2 text-lg font-bold mb-2">{recipe.title}</h3>
+                <p className="text-gray-600 text-sm">{recipe.description}</p>
+              </div>
             </Link>
           ))}
         </div>
@@ -87,11 +89,13 @@ const Home = () => {
                 <img
                   src={blog.image}
                   alt={blog.title}
-                  className="w-full h-full object-cover rounded"
+                  className="w-full h-full object-cover"
                 />
               </div>
-
-              <h3 className="mt-2 text-lg font-bold">{blog.title}</h3>
+              <div className="p-4">
+                <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
+                <p className="text-gray-600 text-sm">{blog.excerpt}</p>
+              </div>
             </Link>
           ))}
         </div>
