@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import List from "../components/List";
 import client from "../sanityClient";
 import { Link } from "react-router-dom";
 
@@ -116,7 +115,7 @@ const Blog = () => {
       {/* Loading Indicator */}
 
       {loading ? (
-        <div className="felx justify-center items-center py-10">
+        <div className="flex justify-center items-center py-10">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
         </div>
       ) : filteredBlogs.length > 0 ? (
@@ -148,7 +147,7 @@ const Blog = () => {
 
       {/* Blog Grid */}
 
-      <List
+      {/* <List
         data={filteredBlogs}
         renderItem={(blog) => (
           <div
@@ -156,7 +155,7 @@ const Blog = () => {
             className="blog-thumbnail rounded-lg shadow-md overflow-hidden "
           ></div>
         )}
-      />
+      /> */}
     </div>
   );
 };

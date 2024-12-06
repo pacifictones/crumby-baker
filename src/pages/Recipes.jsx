@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import List from "../components/List";
 import client from "../sanityClient";
 import { Link } from "react-router-dom";
 
@@ -8,6 +7,7 @@ const Recipes = () => {
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [filterCategory, setFilteredCategory] = useState("All");
   const [sortOption, setSortOption] = useState("Newest");
+  const [loading, setLoading] = useState(true); // Track loading state
 
   const categories = ["All", "Pastry", "Cake", "Bread", "Cookie", "Pie"];
 
@@ -20,8 +20,12 @@ const Recipes = () => {
       .then((data) => {
         setRecipes(data);
         setFilteredRecipes(data);
+        setLoading(false); // Stop loading once data is fetched
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.error("Error fetching recipes:", error);
+        setLoading(false); // Stop loading even if there's an error
+      });
   }, []);
 
   //Update filteredRecipes when filterCategory or sortOption changes
@@ -58,13 +62,15 @@ const Recipes = () => {
   const handleSortChange = (e) => setSortOption(e.target.value);
 
   return (
-    <div className="max-w-screen-lg mx-auto p-4 py-6">
-      <h1 className="text-4xl font-bold text-center mb-4 text-gray-800">
-        Crumby Baker Recipes
-      </h1>
-      <p className="text-lg text-gray-700 text-center">
-        I hope you find something you like!
-      </p>
+    <div className="max-w-screen-lg mx-auto px-4">
+      <header className="text-center py-10">
+        <h1 className="text-4xl font-bold mb-4 text-gray-800">
+          Crumby Baker Recipes
+        </h1>
+        <p className="text-lg text-gray-700">
+          I hope you find something you like!
+        </p>
+      </header>
 
       {/* filter and sort controls */}
       <div className="filter-controls flex flex-wrap justify-center gap-4 my-6">
@@ -111,31 +117,42 @@ const Recipes = () => {
         </div>
       </div>
 
-      {/* Recipe Grid */}
+      {/* Loading Indicator */}
 
-      <List
-        data={filteredRecipes}
-        renderItem={(recipe) => (
+      {loading ? (
+        <div className="flex justify-center items-center py-10">
           <div
-            key={recipe.slug.current}
-            className="recipe-thumbnail text-center mx-auto border border-gray-200 rounded-lg shadow-md overflow-hidden"
-          >
-            <Link to={`/recipes/${recipe.slug.current}`} className="block">
-              <div className="w-full aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
-                <img
-                  src={recipe.image}
-                  alt={recipe.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4 flex-1 text-left">
-                <h3 className="text-xl font-bold mb-2">{recipe.title}</h3>
-                <p className="text-gray-600 text-sm">{recipe.description}</p>
-              </div>
-            </Link>
-          </div>
-        )}
-      />
+            className="animate-spin rounded-full h-8 w-8
+          border-t-2 border-b-2 border-gray-500"
+          ></div>
+        </div>
+      ) : filteredRecipes.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Recipe Grid */}
+          {filteredRecipes.map((recipe) => (
+            <div
+              key={recipe.slug.current}
+              className="recipe-thumbnail rounded-lg shadow-md overflow-hidden"
+            >
+              <Link to={`/recipes/${recipe.slug.current}`} className="block">
+                <div className="w-full aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-4 flex-1 text-left">
+                  <h3 className="text-xl font-bold mb-2">{recipe.title}</h3>
+                  <p className="text-gray-600 text-sm">{recipe.description}</p>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-gray-500">No recipes found.</p>
+      )}
     </div>
   );
 };
