@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import client from "../sanityClient";
 import { set } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
@@ -54,7 +55,11 @@ const Home = () => {
         <h2 className="text-2xl font-semibold mb-4">Latest Recipes</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {recipes.map((recipe) => (
-            <div key={recipe._id} className="  rounded shadow">
+            <Link
+              to={`/recipes/${recipe.slug.current}`}
+              key={recipe._id}
+              className="block rounded shadow"
+            >
               <div className="w-full aspect-square overflow-hidden">
                 <img
                   src={recipe.image}
@@ -64,7 +69,7 @@ const Home = () => {
               </div>
 
               <h3 className="mt-2 text-lg font-bold">{recipe.title}</h3>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -73,7 +78,11 @@ const Home = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* blog thumbs here */}
           {blogs.map((blog) => (
-            <div key={blog._id} className="  rounded shadow">
+            <Link
+              to={`/blog/${blog.slug.current}`}
+              key={blog._id}
+              className="block rounded shadow"
+            >
               <div className=" w-full aspect-square overflow-hidden">
                 <img
                   src={blog.image}
@@ -83,7 +92,7 @@ const Home = () => {
               </div>
 
               <h3 className="mt-2 text-lg font-bold">{blog.title}</h3>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
