@@ -100,6 +100,37 @@ const Home = () => {
           ))}
         </div>
       </section>
+      <section className="my-12 flex flex-col  items-center">
+        <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
+          About me
+        </h2>
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10 max-w-5xl px-4">
+          <img
+            src="/photos/Heather-Waterfall.jpg"
+            alt="waterFall"
+            className=" h-60 
+             w-auto md:h-64 rounded-md shadow-lg"
+          />
+          <div className="text-left leading-relaxed text-gray-700">
+            <p className=" mb-4">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde,
+              aperiam eaque veritatis cumque molestias recusandae temporibus
+              quos facilis, aspernatur vero asperiores blanditiis, accusamus rem
+              voluptates doloribus dolore quis eligendi quae. Lorem ipsum dolor
+              sit amet consectetur adipisicing elit. Commodi fuga similique
+              labore soluta obcaecati quia nisi, rerum natus illum quibusdam,
+              corporis aspernatur neque ducimus architecto quaerat repellendus
+              doloribus impedit perferendis.
+            </p>
+            <p>
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam
+              laudantium doloremque nesciunt expedita blanditiis aperiam aliquam
+              hic odit rem deleniti, repellendus pariatur officia corrupti
+              suscipit dignissimos iusto a eveniet temporibus!
+            </p>
+          </div>
+        </div>
+      </section>
     </>
   );
 };
