@@ -61,7 +61,7 @@ const Home = () => {
           renderItem={(recipe) => (
             <Link
               to={`/recipes/${recipe.slug.current}`}
-              className="rounded shadow w-80 h-96 flex flex-col"
+              className="rounded shadow w-80 h-120 flex flex-col"
             >
               <div className="w-full aspect-square overflow-hidden">
                 <img
@@ -72,7 +72,9 @@ const Home = () => {
               </div>
               {/* Text Section */}
               <div className="p-4 flex-1 flex flex-col justify-between">
-                <h3 className="mt-2 text-lg font-bold mb-2">{recipe.title}</h3>
+                <h3 className="mt-2 text-lg font-bold mb-2 text-center">
+                  {recipe.title}
+                </h3>
                 <p className="text-gray-600 text-sm line-clamp-3">
                   {recipe.description}
                 </p>
@@ -81,30 +83,36 @@ const Home = () => {
           )}
         />
       </section>
-      <section className="my-8 flex flex-col justify-center items-center">
-        <h2 className="text-2xl font-semibold mb-4">Latest Blogs</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* blog thumbs here */}
-          {blogs.map((blog) => (
+      <section className="my-8 w-full max-w-screen-lg mx-auto">
+        <h2 className="text-2xl font-semibold mb-4 text-center">
+          Latest Blogs
+        </h2>
+        <ResponsiveCarouselGrid
+          items={blogs}
+          renderItem={(blog) => (
             <Link
-              to={`/blog/${blog.slug.current}`}
-              key={blog._id}
-              className="block rounded shadow"
+              to={`/blogs/${blog.slug.current}`}
+              className="rounded shadow w-80 h-120 flex flex-col"
             >
-              <div className=" w-full aspect-square overflow-hidden">
+              <div className="w-full aspect-square overflow-hidden">
                 <img
                   src={blog.image}
                   alt={blog.title}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="p-4">
-                <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
-                <p className="text-gray-600 text-sm">{blog.excerpt}</p>
+              {/* Text Section */}
+              <div className="p-4 flex-1 flex flex-col justify-between">
+                <h3 className="mt-2 text-lg font-bold mb-2 text-center">
+                  {blog.title}
+                </h3>
+                <p className="text-gray-600 text-sm line-clamp-3">
+                  {blog.excerpt}
+                </p>
               </div>
             </Link>
-          ))}
-        </div>
+          )}
+        />
       </section>
       <section className="my-12 flex flex-col  items-center">
         <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
