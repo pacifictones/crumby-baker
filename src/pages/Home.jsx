@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import client from "../sanityClient";
 import { set } from "react-hook-form";
 import { Link } from "react-router-dom";
+import ResponsiveCarouselGrid from "../components/ResponsiveCarouselGrid";
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
@@ -51,14 +52,16 @@ const Home = () => {
         </p>
       </header>
       {/* Latest Recipe Section */}
-      <section className="my-8 flex flex-col justify-center items-center">
-        <h2 className="text-2xl font-semibold mb-4">Latest Recipes</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recipes.map((recipe) => (
+      <section className="my-8 w-full max-w-screen-lg mx-auto">
+        <h2 className="text-2xl font-semibold mb-4 text-center">
+          Latest Recipes
+        </h2>
+        <ResponsiveCarouselGrid
+          items={recipes}
+          renderItem={(recipe) => (
             <Link
               to={`/recipes/${recipe.slug.current}`}
-              key={recipe._id}
-              className="block rounded shadow"
+              className="rounded shadow w-80 h-96 flex flex-col"
             >
               <div className="w-full aspect-square overflow-hidden">
                 <img
@@ -67,13 +70,16 @@ const Home = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="p-4">
+              {/* Text Section */}
+              <div className="p-4 flex-1 flex flex-col justify-between">
                 <h3 className="mt-2 text-lg font-bold mb-2">{recipe.title}</h3>
-                <p className="text-gray-600 text-sm">{recipe.description}</p>
+                <p className="text-gray-600 text-sm line-clamp-3">
+                  {recipe.description}
+                </p>
               </div>
             </Link>
-          ))}
-        </div>
+          )}
+        />
       </section>
       <section className="my-8 flex flex-col justify-center items-center">
         <h2 className="text-2xl font-semibold mb-4">Latest Blogs</h2>
