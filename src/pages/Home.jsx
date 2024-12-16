@@ -3,6 +3,7 @@ import client from "../sanityClient";
 import { set } from "react-hook-form";
 import { Link } from "react-router-dom";
 import ResponsiveCarouselGrid from "../components/ResponsiveCarouselGrid";
+import SeeMoreCard from "../components/SeeMoreCard";
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
@@ -57,30 +58,40 @@ const Home = () => {
           Latest Recipes
         </h2>
         <ResponsiveCarouselGrid
-          items={recipes}
-          renderItem={(recipe) => (
-            <Link
-              to={`/recipes/${recipe.slug.current}`}
-              className="rounded shadow w-80 h-120 flex flex-col"
-            >
-              <div className="w-full aspect-square overflow-hidden">
-                <img
-                  src={recipe.image}
-                  alt={recipe.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              {/* Text Section */}
-              <div className="p-4 flex-1 flex flex-col justify-between">
-                <h3 className="mt-2 text-lg font-bold mb-2 text-center">
-                  {recipe.title}
-                </h3>
-                <p className="text-gray-600 text-sm line-clamp-3">
-                  {recipe.description}
-                </p>
-              </div>
-            </Link>
-          )}
+          items={[...recipes, { isSeeMore: true }]} // Append "See More Card"
+          renderItem={(recipe) =>
+            recipe.isSeeMore ? (
+              <SeeMoreCard
+                to="/recipes"
+                title="See All Recipes"
+                description="Explore our full collection of recipes!"
+                className="lg:hidden" // Hide on larger screens
+                backgroundImage={null} // Or pass an image path
+              />
+            ) : (
+              <Link
+                to={`/recipes/${recipe.slug.current}`}
+                className="rounded shadow w-72 flex flex-col"
+              >
+                <div className="w-full aspect-square overflow-hidden">
+                  <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {/* Text Section */}
+                <div className="p-4 flex-1 flex flex-col justify-between">
+                  <h3 className="mt-2 text-lg font-bold mb-2 text-center">
+                    {recipe.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm line-clamp-3">
+                    {recipe.description}
+                  </p>
+                </div>
+              </Link>
+            )
+          }
         />
       </section>
       <section className="my-8 w-full max-w-screen-lg mx-auto">
@@ -88,30 +99,40 @@ const Home = () => {
           Latest Blogs
         </h2>
         <ResponsiveCarouselGrid
-          items={blogs}
-          renderItem={(blog) => (
-            <Link
-              to={`/blogs/${blog.slug.current}`}
-              className="rounded shadow w-80 h-120 flex flex-col"
-            >
-              <div className="w-full aspect-square overflow-hidden">
-                <img
-                  src={blog.image}
-                  alt={blog.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              {/* Text Section */}
-              <div className="p-4 flex-1 flex flex-col justify-between">
-                <h3 className="mt-2 text-lg font-bold mb-2 text-center">
-                  {blog.title}
-                </h3>
-                <p className="text-gray-600 text-sm line-clamp-3">
-                  {blog.excerpt}
-                </p>
-              </div>
-            </Link>
-          )}
+          items={[...blogs, { isSeeMore: true }]} // Append See More Card
+          renderItem={(blog) =>
+            blog.isSeeMore ? (
+              <SeeMoreCard
+                to="/blogs"
+                title="See All Blogs"
+                description="Explore our full collection of blogs!"
+                className="lg:hidden" // Hide on larger screens
+                backgroundImage={null} // Optional image
+              />
+            ) : (
+              <Link
+                to={`/blogs/${blog.slug.current}`}
+                className="rounded shadow w72 flex flex-col"
+              >
+                <div className="w-full aspect-square overflow-hidden">
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {/* Text Section */}
+                <div className="p-4 flex-1 flex flex-col justify-between">
+                  <h3 className="mt-2 text-lg font-bold mb-2 text-center">
+                    {blog.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm line-clamp-3">
+                    {blog.excerpt}
+                  </p>
+                </div>
+              </Link>
+            )
+          }
         />
       </section>
       <section className="my-12 flex flex-col  items-center">
