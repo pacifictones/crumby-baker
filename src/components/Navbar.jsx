@@ -12,16 +12,18 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative bg-gray-700">
+    <nav className="relative bg-gray-100">
       <div className="container mx-auto px-4 py-2">
         {/* Small Screen Layout */}
         <div className="flex items-center justify-between sm:hidden">
           {/* Title (Visible on Small Screens) */}
-          <h1 className="text-lg font-bold">The Crumby Baker</h1>
+          <h1 className="font-chelseaMarket text-lg font-bold">
+            The Crumby Baker
+          </h1>
 
           {/* Hamburger Menu */}
           <button
-            className="block sm:hidden text-white focus:outline-none bg-transparent border-0"
+            className="block sm:hidden text-black focus:outline-none bg-transparent border-0"
             onClick={toggleMenu}
           >
             <svg
@@ -42,7 +44,7 @@ const Navbar = () => {
         </div>
 
         {/* Full Menu (visible on Large Screens) */}
-        <ul className=" hidden sm:flex justify-center gap-8 text-white">
+        <ul className=" hidden sm:flex justify-center gap-8 ">
           <li>
             <Link className=" block py-1 sm:py-2 " to="/">
               Home
