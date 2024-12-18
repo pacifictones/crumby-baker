@@ -54,10 +54,14 @@ const Home = () => {
       </header> */}
       {/* Latest Recipe Section */}
       <section className=" w-full ">
-        <div className="max-w-screen-lg mx-auto px-4">
-          <h2 className="font-heading text-2xl font-semibold ">
+        <div className="max-w-screen-lg mx-auto px-2 sm:px-4">
+          <Link
+            className="font-heading text-2xl font-semibold hover:text-gray-600"
+            to="/recipes"
+          >
             Latest Recipes
-          </h2>
+          </Link>
+
           <ResponsiveCarouselGrid
             items={[...recipes, { isSeeMore: true }]} // Append "See More Card"
             renderItem={(recipe) =>
@@ -66,7 +70,7 @@ const Home = () => {
                   to="/recipes"
                   title="See All Recipes"
                   description="Explore our full collection of recipes!"
-                  className=" font-heading lg:hidden" // Hide on larger screens
+                  className=" font-heading w-full aspect-square lg:hidden" // Hide on larger screens
                   backgroundImage={null} // Or pass an image path
                 />
               ) : (
@@ -97,10 +101,14 @@ const Home = () => {
         </div>
       </section>
       <section className="py-10 w-full ">
-        <div className=" border-gray-500 max-w-screen-lg mx-auto px-4">
-          <h2 className="font-heading text-2xl font-semibold  ">
+        <div className=" border-gray-500 max-w-screen-lg mx-auto px-2 sm:px-4">
+          <Link
+            className="font-heading text-2xl font-semibold hover:text-gray-600"
+            to="/blogs"
+          >
             Latest Blogs
-          </h2>
+          </Link>
+
           <ResponsiveCarouselGrid
             items={[...blogs, { isSeeMore: true }]} // Append See More Card
             renderItem={(blog) =>
@@ -109,7 +117,7 @@ const Home = () => {
                   to="/blogs"
                   title="See All Blogs"
                   description="Explore our full collection of blogs!"
-                  className="font-heading lg:hidden" // Hide on larger screens
+                  className="font-heading w-full aspect-square lg:hidden" // Hide on larger screens
                   backgroundImage={null} // Optional image
                 />
               ) : (
