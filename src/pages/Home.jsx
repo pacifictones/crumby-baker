@@ -55,7 +55,7 @@ const Home = () => {
       {/* Latest Recipe Section */}
       <section className=" w-full ">
         <div className="max-w-screen-lg mx-auto px-4">
-          <h2 className="font-heading text-2xl font-semibold mb-6 text-center">
+          <h2 className="font-heading text-2xl font-semibold ">
             Latest Recipes
           </h2>
           <ResponsiveCarouselGrid
@@ -97,8 +97,8 @@ const Home = () => {
         </div>
       </section>
       <section className="py-10 w-full ">
-        <div className="max-w-screen-lg mx-auto px-4">
-          <h2 className="font-heading text-2xl font-semibold mb-6 text-center">
+        <div className=" border-gray-500 max-w-screen-lg mx-auto px-4">
+          <h2 className="font-heading text-2xl font-semibold  ">
             Latest Blogs
           </h2>
           <ResponsiveCarouselGrid
