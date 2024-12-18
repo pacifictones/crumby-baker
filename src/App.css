@@ -5,3 +5,7 @@
 html body {
   display: block !important;
 }
+
+p {
+  font: 400;
+}

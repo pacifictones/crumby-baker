@@ -70,14 +70,14 @@ const ContactForm = () => {
     >
       <div className="mb-4">
         <label
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="font-heading block text-gray-700 text-sm font-bold mb-2"
           htmlFor="name"
         >
           Name
         </label>
         <input
           {...register("name")}
-          className=" bg-white shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
+          className="font-body bg-white shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
           id="name"
           type="text"
           placeholder="Your name"
@@ -89,13 +89,13 @@ const ContactForm = () => {
       <div className="mb-4">
         <label
           htmlFor="email"
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="font-heading block text-gray-700 text-sm font-bold mb-2"
         >
           Email
         </label>
         <input
           {...register("email")}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-black bg-white leading-tight focus:outline-none focus:shadow-outline"
+          className="font-body shadow appearance-none border rounded w-full py-2 px-3 text-black bg-white leading-tight focus:outline-none focus:shadow-outline"
           id="email"
           type="email"
           placeholder="Your email"
@@ -107,13 +107,13 @@ const ContactForm = () => {
       <div className="mb-6">
         <label
           htmlFor="message"
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="font-heading block text-gray-700 text-sm font-bold mb-2"
         >
           Message
         </label>
         <textarea
           {...register("message")}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-black bg-white leading-tight focus:outline-none focus:shadow-outline"
+          className="font-body shadow appearance-none border rounded w-full py-2 px-3 text-black bg-white leading-tight focus:outline-none focus:shadow-outline"
           id="message"
           placeholder="Your message"
           rows="5"
@@ -127,7 +127,7 @@ const ContactForm = () => {
 
       <div>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="font-heading bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
           Send

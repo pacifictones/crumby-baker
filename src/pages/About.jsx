@@ -36,7 +36,7 @@ const About = () => {
 
   return (
     <div className="max-w-screen-lg mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-4">
+      <h1 className="font-heading text-3xl font-bold text-center mb-4">
         {aboutContent.title}
       </h1>
       {aboutContent.image && (
@@ -47,7 +47,7 @@ const About = () => {
         />
       )}
 
-      <div className="prose max-w-none">
+      <div className="font-body prose max-w-none">
         <PortableText value={aboutContent.content} components={components} />
         {aboutContent.content.map((block, index) => (
           <p key={index}>{block.children[0]?.text}</p>

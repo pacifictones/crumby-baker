@@ -25,13 +25,13 @@ function BlogDetail() {
 
   return (
     <div className="max-w-screen-lg mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-4">{blog.title}</h1>
+      <h1 className="font-heading text-3xl font-bold mb-4">{blog.title}</h1>
       <img
         src={urlFor(blog.image).width(400).url()}
         alt={blog.title}
-        className="rounded-lg mb-4"
+        className="my-8 rounded-lg mb-4"
       />
-      <div className="prose max-w-none">
+      <div className="my-8 font-body prose max-w-none">
         <PortableText
           value={blog.content}
           components={{

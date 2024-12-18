@@ -44,7 +44,7 @@ const Navbar = () => {
         </div>
 
         {/* Full Menu (visible on Large Screens) */}
-        <ul className=" hidden sm:flex justify-center gap-8 ">
+        <ul className="font-heading text-lg  hidden sm:flex justify-center gap-8 ">
           <li>
             <Link className=" block py-1 sm:py-2 " to="/">
               Home

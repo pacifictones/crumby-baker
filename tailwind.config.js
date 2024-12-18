@@ -6,6 +6,8 @@ export default {
       fontFamily: {
         cabinSketch: ['"Cabin Sketch", serif'],
         chelseaMarket: ['"Chelsea Market", serif'],
+        heading: ['"Alice", serif'],
+        body: ['"Quattrocento Sans", serif'],
       },
     },
   },

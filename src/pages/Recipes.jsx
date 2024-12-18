@@ -64,16 +64,16 @@ const Recipes = () => {
   return (
     <div className="max-w-screen-lg mx-auto px-4">
       <header className="text-center py-10">
-        <h1 className="text-4xl font-bold mb-4 text-gray-800">
+        <h1 className="font-heading text-4xl font-bold mb-4 text-gray-800">
           Crumby Baker Recipes
         </h1>
-        <p className="text-lg text-gray-700">
+        {/* <p className="text-lg text-gray-700">
           I hope you find something you like!
-        </p>
+        </p> */}
       </header>
 
       {/* filter and sort controls */}
-      <div className="filter-controls flex flex-wrap justify-center gap-4 my-6">
+      <div className="font-heading filter-controls flex flex-wrap justify-center gap-4 my-6">
         {/* category filter */}
         <div className="flex items-center gap-2">
           <label
@@ -143,8 +143,12 @@ const Recipes = () => {
                 />
               </div>
               <div className="p-4">
-                <h3 className="text-xl font-bold mb-2">{recipe.title}</h3>
-                <p className="text-gray-600 text-sm">{recipe.description}</p>
+                <h3 className="font-heading text-xl font-bold mb-2">
+                  {recipe.title}
+                </h3>
+                <p className="font-body  text-gray-600 text-sm">
+                  {recipe.description}
+                </p>
               </div>
             </Link>
           ))}
