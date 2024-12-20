@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,12 +12,17 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
+  const navLinkClass = ({ isActive }) =>
+    ` block py-1 sm:py-2 ${
+      isActive ? "text-blue-600 pointer-events-none" : "hover:text-gray-600"
+    }`;
+
   return (
     <header className="sticky top-0 w-full  bg-gray-100">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         {/* Title */}
         <Link
-          className="font-chelseaMarket text-lg sm:text-2xl font-bold hover:text-gray-700"
+          className="font-chelseaMarket text-lg sm:text-2xl font-bold hover:text-black"
           to="/"
         >
           The Crumby Baker
@@ -26,41 +32,29 @@ const Navbar = () => {
         <nav className="flex space-x-4">
           <ul className="font-heading text-lg  hidden sm:flex space-x-4 ">
             <li>
-              <Link className="hover:text-gray-600 block py-1 sm:py-2 " to="/">
+              <NavLink className={navLinkClass} to="/">
                 Home
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
-                className="hover:text-gray-600 block py-1 sm:py-2 "
-                to="/recipes"
-              >
+              <NavLink className={navLinkClass} to="/recipes">
                 Recipes
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
-                className="hover:text-gray-600 block py-1 sm:py-2"
-                to="/blog"
-              >
+              <NavLink className={navLinkClass} to="/blog">
                 Blog
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
-                className="hover:text-gray-600 block py-1 sm:py-2"
-                to="/about"
-              >
+              <NavLink className={navLinkClass} to="/about">
                 About
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
-                className="hover:text-gray-600 block py-1 sm:py-2"
-                to="/contact"
-              >
+              <NavLink className={navLinkClass} to="/contact">
                 Contact
-              </Link>
+              </NavLink>
             </li>
           </ul>
 
@@ -92,49 +86,29 @@ const Navbar = () => {
       {isOpen && (
         <ul className=" absolute top-full left-0 w-full  bg-gray-800 text-white text-center z-50 shadow-lg sm:hidden">
           <li>
-            <Link
-              className="block py-2 hover:bg-gray-700"
-              to="/"
-              onClick={closeMenu}
-            >
+            <NavLink className={navLinkClass} to="/" onClick={closeMenu}>
               Home
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link
-              className="block py-2 hover:bg-gray-700"
-              to="/recipes"
-              onClick={closeMenu}
-            >
+            <NavLink className={navLinkClass} to="/recipes" onClick={closeMenu}>
               Recipes
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link
-              className="block py-2 hover:bg-gray-700"
-              to="/blog"
-              onClick={closeMenu}
-            >
+            <NavLink className={navLinkClass} to="/blog" onClick={closeMenu}>
               Blog
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link
-              className="block py-2 hover:bg-gray-700"
-              to="/about"
-              onClick={closeMenu}
-            >
+            <NavLink className={navLinkClass} to="/about" onClick={closeMenu}>
               About
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link
-              className="block py-2 hover:bg-gray-700"
-              to="/contact"
-              onClick={closeMenu}
-            >
+            <NavLink className={navLinkClass} to="/contact" onClick={closeMenu}>
               Contact
-            </Link>
+            </NavLink>
           </li>
         </ul>
       )}
