@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import Breadcrumbs from "./BreadCrumbs";
+import Breadcrumbs from "./Breadcrumbs";
 
 const Layout = ({ children }) => {
   return (
