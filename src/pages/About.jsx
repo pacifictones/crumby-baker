@@ -21,7 +21,7 @@ const About = () => {
       .catch(console.error);
   }, []);
 
-  if (!aboutContent) return <div>Loading...</div>;
+  if (!aboutContent) return <div className="font-heading">Loading...</div>;
 
   // Custom components for PortableText
   const components = {

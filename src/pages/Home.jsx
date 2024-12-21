@@ -122,7 +122,7 @@ const Home = () => {
                 />
               ) : (
                 <Link
-                  to={`/blogs/${blog.slug.current}`}
+                  to={`/blog/${blog.slug.current}`}
                   className="rounded shadow w-72 flex flex-col"
                 >
                   <div className="w-full aspect-square overflow-hidden">
