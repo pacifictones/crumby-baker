@@ -63,7 +63,7 @@ const Search = ({ type }) => {
 
       <button
         onClick={() => setShowSearch(!showSearch)}
-        className="text-gray-700 hover:text-black focus:outline-none"
+        className="text-gray-700 hover:text-black focus:outline-none mt-2"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +127,7 @@ const Search = ({ type }) => {
 
             {/* Search Results */}
             {!loading && results.length > 0 && (
-              <ul className="mt-4 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4  gap-6 space-y-2">
+              <ul className="mt-4 grid grid-cols-1 flex items-center sm:grid-cols-3 lg:grid-cols-4  gap-6 space-y-2">
                 {results.map((item) => (
                   <li key={item._id} className="flex items-center space-x-4">
                     <Link

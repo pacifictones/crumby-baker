@@ -89,6 +89,9 @@ const Navbar = () => {
       {/* Dropdown Menu (visible on Small Screens) */}
       {isOpen && (
         <ul className=" absolute top-full left-0 w-full  bg-gray-800 text-white text-center z-50 shadow-lg sm:hidden">
+          <li className="p-2 border-b border-gray-600 text-black">
+            <Search />
+          </li>
           <li>
             <NavLink className={navLinkClass} to="/" onClick={closeMenu}>
               Home
