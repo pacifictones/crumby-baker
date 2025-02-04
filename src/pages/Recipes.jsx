@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import client from "../sanityClient";
 import { Link } from "react-router-dom";
+import Search from "../components/Search";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]); // All recipes fetched from Sanity
@@ -11,7 +12,7 @@ const Recipes = () => {
 
   const categories = ["All", "Pastry", "Cake", "Bread", "Cookie", "Pie"];
 
-  // Fetch recipes form Sanity
+  // Fetch recipes from Sanity
   useEffect(() => {
     client
       .fetch(
@@ -63,10 +64,12 @@ const Recipes = () => {
 
   return (
     <div className="max-w-screen-lg mx-auto px-4">
+      <Search type="recipe" />
       <header className="text-center py-10">
         <h1 className="font-heading text-4xl font-bold mb-4 text-gray-800">
           Crumby Baker Recipes
         </h1>
+
         {/* <p className="text-lg text-gray-700">
           I hope you find something you like!
         </p> */}

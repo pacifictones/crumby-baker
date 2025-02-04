@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import Search from "./Search";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,8 +30,8 @@ const Navbar = () => {
         </Link>
 
         {/* Links */}
-        <nav className="">
-          <ul className="font-heading text-lg  hidden sm:flex space-x-8 ">
+        <nav className="ml-2 mr-4">
+          <ul className=" font-heading text-lg  hidden sm:flex space-x-8 ">
             <li>
               <NavLink className={navLinkClass} to="/">
                 Home
@@ -55,6 +56,9 @@ const Navbar = () => {
               <NavLink className={navLinkClass} to="/contact">
                 Contact
               </NavLink>
+            </li>
+            <li>
+              <Search />
             </li>
           </ul>
 
