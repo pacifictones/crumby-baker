@@ -164,11 +164,7 @@ const Home = () => {
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde,
                 aperiam eaque veritatis cumque molestias recusandae temporibus
                 quos facilis, aspernatur vero asperiores blanditiis, accusamus
-                rem voluptates doloribus dolore quis eligendi quae. Lorem ipsum
-                dolor sit amet consectetur adipisicing elit. Commodi fuga
-                similique labore soluta obcaecati quia nisi, rerum natus illum
-                quibusdam, corporis aspernatur neque ducimus architecto quaerat
-                repellendus doloribus impedit perferendis.
+                rem voluptates doloribus dolore quis eligendi quae.
               </p>
               <p>
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam
