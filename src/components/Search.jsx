@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import client from "../sanityClient";
 import { urlFor } from "../sanityClient";
 import { Link } from "react-router-dom";
@@ -58,6 +58,14 @@ const Search = ({ type }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (showSearch) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [showSearch]);
   return (
     <div className="relative">
       {/* Magnifying Glass Icon */}
