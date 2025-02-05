@@ -64,7 +64,7 @@ const Search = ({ type }) => {
 
       <button
         onClick={() => setShowSearch(!showSearch)}
-        className="text-gray-700 hover:text-black focus:outline-none mt-2"
+        className=" text-gray-700 hover:text-black focus:outline-none mt-2 bg-transparent border-none"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
