@@ -92,7 +92,7 @@ const Search = ({ type }) => {
           }}
         >
           <div
-            className="fixed top-[60px] left-1/2 transform -translate-x-1/2 w-full max-w-screen-lg bg-white shadow-lg rounded z-50 border p-6"
+            className="fixed top-[60px] left-1/2 transform -translate-x-1/2 w-full max-w-screen-lg bg-white shadow-lg rounded z-50 border p-6 max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
@@ -129,7 +129,7 @@ const Search = ({ type }) => {
             {!loading && results.length > 0 && (
               <ul className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-6 ">
                 {results.map((item) => (
-                  <li key={item._id} className="flex items-center space-x-4">
+                  <li key={item._id} className="w-full">
                     <Link
                       to={`/${item._type === "recipe" ? "recipes" : "blog"}/${
                         item.slug.current

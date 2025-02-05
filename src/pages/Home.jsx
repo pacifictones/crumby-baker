@@ -114,7 +114,7 @@ const Home = () => {
             renderItem={(blog) =>
               blog.isSeeMore ? (
                 <SeeMoreCard
-                  to="/blogs"
+                  to="/blog"
                   title="See All Blogs"
                   description="Explore our full collection of blogs!"
                   className="font-heading w-full aspect-square lg:hidden" // Hide on larger screens
