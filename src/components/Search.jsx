@@ -127,7 +127,7 @@ const Search = ({ type }) => {
 
             {/* Search Results */}
             {!loading && results.length > 0 && (
-              <ul className="mt-4 grid grid-cols-1 flex items-center sm:grid-cols-3 lg:grid-cols-4  gap-6 space-y-2">
+              <ul className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-6 ">
                 {results.map((item) => (
                   <li key={item._id} className="flex items-center space-x-4">
                     <Link
