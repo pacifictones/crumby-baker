@@ -9,15 +9,16 @@ const Search = ({ type }) => {
   const [loading, setLoading] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [error, setError] = useState(null);
+  const [searchSubmitted, setSearchSubmitted] = useState(false);
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (term.trim() === "") return;
+    if (term.trim() === "") return; // Ignore empty searches
 
+    setSearchSubmitted(true);
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
-
       const searchWords = term.trim().split(/\s+/); // split by spaces
 
       const searchConditions = searchWords
@@ -110,7 +111,10 @@ const Search = ({ type }) => {
               <input
                 type="text"
                 value={term}
-                onChange={(e) => setTerm(e.target.value)}
+                onChange={(e) => {
+                  setTerm(e.target.value);
+                  setSearchSubmitted(false);
+                }}
                 placeholder="Search for recipes or blogs..."
                 className="w-full border p-2 rounded"
               />
@@ -157,7 +161,7 @@ const Search = ({ type }) => {
               </ul>
             )}
 
-            {!loading && results.length === 0 && term && (
+            {!loading && searchSubmitted && results.length === 0 && (
               <p className="mt-2 text-gray-500">No results found.</p>
             )}
           </div>
