@@ -104,7 +104,7 @@ const Home = () => {
         <div className=" border-gray-500 max-w-screen-lg mx-auto px-2 sm:px-4">
           <Link
             className="font-heading text-2xl font-semibold hover:text-gray-600"
-            to="/blogs"
+            to="/blog"
           >
             Latest Blogs
           </Link>
@@ -148,10 +148,13 @@ const Home = () => {
         </div>
       </section>
       <section className="py-10 w-full ">
-        <div className="max-w-screen-lg mx-auto px-4">
-          <h2 className="font-heading text-2xl font-semibold mb-6 text-center text-gray-800">
+        <div className="flex flex-col ">
+          <Link
+            className="font-heading text-2xl font-semibold hover:text-gray-600 mb-4"
+            to="/about"
+          >
             About me
-          </h2>
+          </Link>
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10 max-w-5xl px-4">
             <img
               src="/photos/Heather-Waterfall.jpg"
