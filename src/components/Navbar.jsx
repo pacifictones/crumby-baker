@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import Search from "./Search";
+import SocialIcons from "./SocialIcons";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -116,6 +117,9 @@ const Navbar = () => {
             <NavLink className={navLinkClass} to="/contact" onClick={closeMenu}>
               Contact
             </NavLink>
+          </li>
+          <li className="border-t pt-4 mt-4 pb-4">
+            <SocialIcons size="w-7 h-7" className="justify-center" />
           </li>
         </ul>
       )}
