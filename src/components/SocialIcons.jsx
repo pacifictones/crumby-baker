@@ -5,6 +5,12 @@ const SocialIcons = ({ size = "w-6 h-6", className = "" }) => {
     <div className={`flex space-x-4 ${className}`}>
       <a
         href="https://instagram.com/heatheralisonp"
+        onClick={(e) => {
+          if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            e.preventDefault(); // Prevents opening in the browser
+            window.location.href = "instagram://user?username=heatheralisonp";
+          }
+        }}
         target="_blank"
         rel="noopener noreferrer"
         className=" text-white sm:text-gray-600 hover:text-gray-500"
