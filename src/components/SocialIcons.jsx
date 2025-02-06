@@ -1,6 +1,10 @@
 import React from "react";
 
-const SocialIcons = ({ size = "w-6 h-6", className = "" }) => {
+const SocialIcons = ({
+  size = "w-6 h-6",
+  color = "text-white",
+  className = "",
+}) => {
   return (
     <div className={`flex space-x-4 ${className}`}>
       <a
@@ -13,7 +17,7 @@ const SocialIcons = ({ size = "w-6 h-6", className = "" }) => {
         }}
         target="_blank"
         rel="noopener noreferrer"
-        className=" text-white sm:text-gray-600 hover:text-gray-500"
+        className="{`${color} hover:opacity-80 transition sm:text-gray-600 `} "
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

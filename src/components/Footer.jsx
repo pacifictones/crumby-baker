@@ -8,7 +8,11 @@ const Footer = () => {
         © {new Date().getFullYear()} The Crumby Baker
       </p>
 
-      <SocialIcons size="w-8 h-8" className="justify-center mt-4" />
+      <SocialIcons
+        size="w-8 h-8"
+        color="text-black"
+        className="justify-center mt-4"
+      />
     </footer>
   );
 };
