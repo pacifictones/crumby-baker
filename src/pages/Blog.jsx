@@ -12,7 +12,7 @@ const Blog = () => {
   useEffect(() => {
     client
       .fetch(
-        '*[_type == "blog"]{title, "image": image.asset->url, slug, excerpt, content, _createdAt}'
+        '*[_type == "blog"]{title, "image": mainImage.asset->url, slug, excerpt, content, _createdAt}'
       )
       .then((data) => {
         setBlogs(data);

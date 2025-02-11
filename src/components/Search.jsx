@@ -34,7 +34,7 @@ const Search = ({ type }) => {
             _id,
             title,
             slug,
-            image,
+            mainImage,
             description,
             _type
             },
@@ -42,7 +42,7 @@ const Search = ({ type }) => {
             _id,
             title,
             slug,
-            image,
+            mainImage,
             description,
             _type
             }
@@ -151,7 +151,7 @@ const Search = ({ type }) => {
                     >
                       <div className="w-full aspect-square overflow-hidden rounded">
                         <img
-                          src={urlFor(item.image).width(300).url()}
+                          src={urlFor(item.mainImage).width(300).url()}
                           alt="{item.title}"
                           className="w-full h-full object-cover rounded"
                         />

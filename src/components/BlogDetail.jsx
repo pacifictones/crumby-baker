@@ -12,7 +12,7 @@ function BlogDetail() {
       .fetch(
         `*[_type == "blog" && slug.current == $slug][0]{
         title,
-        image,
+        mainImage,
         content
         }`,
         { slug }
@@ -27,7 +27,7 @@ function BlogDetail() {
     <div className="max-w-screen-lg mx-auto p-4">
       <h1 className="font-heading text-3xl font-bold mb-4">{blog.title}</h1>
       <img
-        src={urlFor(blog.image).width(400).url()}
+        src={urlFor(blog.mainImage).width(400).url()}
         alt={blog.title}
         className="my-8 rounded-lg mb-4"
       />

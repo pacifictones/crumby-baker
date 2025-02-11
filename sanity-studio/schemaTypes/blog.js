@@ -15,12 +15,18 @@ export default {
       of: [{type: 'block'}], //Allows rich text content
     },
     {
-      name: 'image',
-      title: 'Image',
+      name: 'mainImage',
+      title: 'Main Image',
       type: 'image',
       options: {
-        hotspot: true, // Makes it easier to adjust the image crop
+        hotspot: true,
       },
+    },
+    {
+      name: 'gallery',
+      title: 'Gallery',
+      type: 'array',
+      of: [{type: 'image', options: {hotspot: true}}],
     },
     {
       name: 'excerpt',

@@ -30,7 +30,7 @@ const Home = () => {
           _id,
           title, 
           slug,
-          "image": image.asset->url,
+          "image": mainImage.asset->url,
           excerpt
           }`
         );
