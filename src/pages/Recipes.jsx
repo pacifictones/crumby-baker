@@ -15,7 +15,7 @@ const Recipes = () => {
   useEffect(() => {
     client
       .fetch(
-        '*[_type == "recipe"]{title, "image": image.asset->url, slug, category, description, _createdAt}'
+        '*[_type == "recipe"]{title, "image": mainImage.asset->url, slug, category, description, _createdAt}'
       )
       .then((data) => {
         setRecipes(data);
