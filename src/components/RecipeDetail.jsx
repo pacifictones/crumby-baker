@@ -7,10 +7,24 @@ import "yet-another-react-lightbox/styles.css";
 import Breadcrumbs from "./Breadcrumbs";
 import ThumbnailCarousel from "./ThumbnailCarousel";
 
+// Swiper Imports
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Thumbs } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+
 function RecipeDetail() {
   const { slug } = useParams(); // Get the slug from the URL
   const [recipe, setRecipe] = useState(null); // State to store recipe data
+
+  //delete soon
   const [showImages, setShowImages] = useState(true);
+
+  // For Swiper thumbs
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
+  // For Lightbox
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
@@ -44,7 +58,7 @@ function RecipeDetail() {
 
   if (!recipe) return <div>Loading...</div>;
 
-  const thumbnailImages = recipe.gallery.map((img) => urlFor(img).url());
+  const imageUrls = recipe.gallery.map((img) => urlFor(img).url());
 
   return (
     <div className="max-w-6xl mx-auto px-4">
@@ -79,27 +93,47 @@ function RecipeDetail() {
           </p>
         </div>
 
-        {/* Right: Gallery */}
+        {/* Right: Swiper Main + Thumbnails */}
         <div>
-          {/* Large Primary photo */}
+          {/* Big image */}
           <img
-            src={urlFor(recipe.gallery[0]).url()}
-            alt="Finished dish"
+            src={imageUrls[0]}
+            alt="Main dish"
             className="w-full h-auto rounded shadow mb-4 cursor-pointer"
             onClick={() => {
-              setLightboxOpen(true);
               setLightboxIndex(0);
+              setLightboxOpen(true);
             }}
           />
 
-          {/* Mini carousel */}
-          <ThumbnailCarousel
-            images={thumbnailImages}
-            onThumbnailClick={(idx) => {
-              setLightboxIndex(idx);
-              setLightboxOpen(true);
-            }}
-          />
+          {/* Thumbnail Swiper */}
+          <Swiper
+            key={imageUrls.length}
+            modules={[Navigation, Thumbs]}
+            navigation
+            onSwiper={setThumbsSwiper}
+            slidesPerView={2.5} // Show 3 thumbs at a time
+            slidesPerGroup={1}
+            spaceBetween={10}
+            watchSlidesProgress
+            className="cursor-pointer h-40"
+          >
+            {imageUrls.slice(1).map((url, idx) => (
+              <SwiperSlide key={idx}>
+                <div className="w-full aspect-square overflow-hidden">
+                  <img
+                    src={url}
+                    alt={`Thumbnail ${idx + 1}`}
+                    className="w-full h-full object-cover rounded shadow"
+                    onClick={() => {
+                      setLightboxIndex(idx + 1);
+                      setLightboxOpen(true);
+                    }}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </section>
 
@@ -108,7 +142,7 @@ function RecipeDetail() {
         <Lightbox
           open={lightboxOpen}
           close={() => setLightboxOpen(false)}
-          slides={recipe.gallery.map((img) => ({ src: urlFor(img).url() }))}
+          slides={imageUrls.map((src) => ({ src }))}
           index={lightboxIndex}
           on={{
             view: ({ index }) => setLightboxIndex(index),
@@ -116,7 +150,7 @@ function RecipeDetail() {
         />
       )}
 
-      {/* Ingredients and Instructions Sectin */}
+      {/* Ingredients and Instructions Section */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left: Ingredients */}
         <div>

@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "swiper/css" @import "swiper/css/navigation" @import "swiper/css/thumbs"
-  html body {
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/thumbs";
+html body {
   display: block !important;
 }
