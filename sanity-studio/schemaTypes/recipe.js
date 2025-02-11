@@ -1,3 +1,5 @@
+import step from './step'
+
 export default {
   name: 'recipe',
   title: 'Recipe',
@@ -18,15 +20,21 @@ export default {
       name: 'instructions',
       title: 'Instructions',
       type: 'array',
-      of: [{type: 'block'}], // Allows rich text content
+      of: [{type: 'step'}], // Reference custom step object
     },
     {
-      name: 'image',
-      title: 'Image',
+      name: 'mainImage',
+      title: 'Main Image',
       type: 'image',
       options: {
         hotspot: true,
       },
+    },
+    {
+      name: 'gallery',
+      title: 'Gallery',
+      type: 'array',
+      of: [{type: 'image', options: {hotspot: true}}],
     },
     {
       name: 'category',
@@ -45,6 +53,26 @@ export default {
     {
       name: 'description',
       title: 'Description',
+      type: 'string',
+    },
+    {
+      name: 'prepTime',
+      title: 'Prep Time (mins)',
+      type: 'number',
+    },
+    {
+      name: 'cookTime',
+      title: 'Cook Time (mins)',
+      type: 'number',
+    },
+    {
+      name: 'totalTime',
+      title: 'Total Time (mins)',
+      type: 'number',
+    },
+    {
+      name: 'servings',
+      title: 'Servings/Yield',
       type: 'string',
     },
     {

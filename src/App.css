@@ -2,10 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-html body {
+@import "swiper/css" @import "swiper/css/navigation" @import "swiper/css/thumbs"
+  html body {
   display: block !important;
-}
-
-p {
-  font: 400;
 }

@@ -16,7 +16,7 @@ const Breadcrumbs = () => {
         <ul className="flex space-x-2">
           {/* Home Link */}
           <li>
-            <Link to="/" className="text-blue-600 hover:underLine">
+            <Link to="/" className="text-[#ED6A5A] hover:underLine">
               Home
             </Link>
           </li>
@@ -32,7 +32,7 @@ const Breadcrumbs = () => {
                     {value.replace(/-/g, "")}
                   </span>
                 ) : (
-                  <Link to={to} className="text-blue-600 hover:underline">
+                  <Link to={to} className="text-[#ED6A5A] hover:underline">
                     {value.replace(/-/g, "")}
                   </Link>
                 )}

@@ -128,7 +128,7 @@ const Search = ({ type }) => {
               />
               <button
                 type="submit"
-                className=" p-2 bg-blue-600 text-white rounded "
+                className=" p-2 bg-[#ED6A5A] text-white rounded "
               >
                 Search
               </button>

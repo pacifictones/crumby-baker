@@ -53,7 +53,7 @@ const Home = () => {
         </p>
       </header> */}
       {/* Latest Recipe Section */}
-      <section className=" w-full ">
+      <section className=" w-full mb-10">
         <div className="max-w-screen-lg mx-auto px-2 sm:px-4">
           <Link
             className="font-heading text-2xl font-semibold hover:text-gray-600"
@@ -100,8 +100,8 @@ const Home = () => {
           />
         </div>
       </section>
-      <section className="py-10 w-full ">
-        <div className=" border-gray-500 max-w-screen-lg mx-auto px-2 sm:px-4">
+      <section className="py-10 w-full mb-10 ">
+        <div className="  border-gray-500 max-w-screen-lg mx-auto px-2 sm:px-4 p-4">
           <Link
             className="font-heading text-2xl font-semibold hover:text-gray-600"
             to="/blog"
@@ -147,7 +147,7 @@ const Home = () => {
           />
         </div>
       </section>
-      <section className="py-10 w-full ">
+      <section className="py-10 w-full mb-10">
         <div className="flex flex-col ">
           <Link
             className="font-heading text-2xl font-semibold hover:text-gray-600 mb-4"

@@ -16,12 +16,12 @@ const Navbar = () => {
 
   const navLinkClass = ({ isActive }) =>
     ` block py-1 sm:py-2 ${
-      isActive ? "text-blue-600 pointer-events-none" : "hover:text-gray-600"
+      isActive ? "text-[#ED6A5A] pointer-events-none" : "hover:text-gray-600"
     }`;
 
   return (
-    <header className="sticky top-0 w-full  bg-white">
-      <div className="max-w-screen-lg mx-auto px-4 py-2 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full  bg-white mb-10">
+      <div className="max-w-screen-lg mx-auto px-4 py-4 flex items-center justify-between">
         {/* Title */}
         <Link
           className="font-chelseaMarket text-lg sm:text-2xl font-bold hover:text-black whitespace-nowrap"
