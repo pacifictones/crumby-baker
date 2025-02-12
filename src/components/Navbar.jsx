@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import Search from "./Search";
 import SocialIcons from "./SocialIcons";
+import Breadcrumbs from "./Breadcrumbs";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +21,7 @@ const Navbar = () => {
     }`;
 
   return (
-    <header className="sticky top-0 z-50 w-full  bg-white mb-10">
+    <header className="sticky top-0 z-50 w-full  bg-white">
       <div className="max-w-screen-lg mx-auto px-4 py-4 flex items-center justify-between">
         {/* Title */}
         <Link
