@@ -4,8 +4,7 @@ import client, { urlFor } from "../sanityClient";
 import { PortableText } from "@portabletext/react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import Breadcrumbs from "./Breadcrumbs";
-import ThumbnailCarousel from "./ThumbnailCarousel";
+import StarRating from "./StarRating";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -43,8 +42,12 @@ function RecipeDetail() {
         ingredients,
         instructions []{
         text,
-        image
-        }
+        image,
+        },
+        "reviews": *[
+        _type == "review" && recipe._ref == ^._id &&
+        confirmed == true
+        ] | order(_createdAt desc)
         }`,
         { slug }
       )
@@ -59,6 +62,21 @@ function RecipeDetail() {
   if (!recipe) return <div>Loading...</div>;
 
   const imageUrls = recipe.gallery.map((img) => urlFor(img).url());
+
+  const reviews = recipe.reviews || [];
+  const averageRating = reviews.length
+    ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
+    : 0;
+
+  function StarRatingDisplay({ rating }) {
+    return (
+      <StarRating
+        rating={rating}
+        maxStars={5}
+        //No setRating, so read-only
+      />
+    );
+  }
 
   return (
     <div className="w-full">
@@ -79,7 +97,12 @@ function RecipeDetail() {
       {/* Info and Gallery section */}
       <section className="max-w-screen-lg mx-auto font-body px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         {/* Left: Description and Info */}
+
         <div>
+          <div>
+            <StarRating rating={Math.round(averageRating)} />
+            <p>{reviews.length} reviews</p>
+          </div>
           <p className="mb-8">{recipe.description}</p>
           {/* Row 1: Prep, Cook, Total */}
           <div className="grid grid-cols-3 gap-y-4 text-center mb-4">
