@@ -5,6 +5,8 @@ import { PortableText } from "@portabletext/react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import StarRating from "./StarRating";
+import ReviewForm from "./ReviewForm";
+import { createClient } from "@sanity/client";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,6 +14,12 @@ import { Navigation, Thumbs } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+
+const readClient = createClient({
+  projectId: "ulggaxa8",
+  dataset: "production",
+  useCdn: true, // read
+});
 
 function RecipeDetail() {
   const { slug } = useParams(); // Get the slug from the URL
@@ -26,6 +34,13 @@ function RecipeDetail() {
   // For Lightbox
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  //Modal visibility state
+  const [showReviewModal, setShowReviewModal] = useState(false);
+
+  // Store reviews
+  const [reviews, setReviews] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(5);
 
   useEffect(() => {
     client
@@ -63,10 +78,17 @@ function RecipeDetail() {
 
   const imageUrls = recipe.gallery.map((img) => urlFor(img).url());
 
-  const reviews = recipe.reviews || [];
+  // const reviews = recipe.reviews || [];
   const averageRating = reviews.length
     ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
     : 0;
+
+  const displayedReviews = reviews.slice(0, visibleCount);
+
+  const handleReviewSubmitted = (newReview) => {
+    setReviews([newReview, ...reviews]);
+    setShowReviewModal(false);
+  };
 
   function StarRatingDisplay({ rating }) {
     return (
@@ -244,6 +266,69 @@ function RecipeDetail() {
           </section>
         </div>
       </div>
+
+      {/* ============ Reviews section at bottom ============ */}
+      <section className="max-w-screen-lg mx-auto px-4 py-8">
+        <h2 className="font-heading text-2xl font-bold mb-4">Reviews</h2>
+
+        {/* If no reviews, show a message */}
+        {!reviews.length && <p>No reviews yet. Be the first!</p>}
+
+        {/* Show only "visibleCount" reviews */}
+        {displayedReviews.map((review) => (
+          <div key={review.id} className="border-b py-4 mb-4">
+            {/* StarRatingDisplay */}
+            <div className="flex items-center gap-2 mb-1">
+              <StarRatingsDisplay rating={review.rating} />
+              <span className="text-sm text-gray-600">
+                {review.authorName || "Anonymous"}
+              </span>
+            </div>
+            <p className="text-gray-800">{review.reviewText}</p>
+          </div>
+        ))}
+
+        {/* Load More button if more reivews that visibleCount */}
+        {reviews.length > visibleCount && (
+          <button
+            onClick={() => setVisibleCount(visibleCount + 5)}
+            className="bg-[#ED6A5A] text-white px-3 py-1 rounded"
+          >
+            Load More
+          </button>
+        )}
+
+        {/* Add review button*/}
+        <div className="mt-8">
+          <button
+            onClick={() => setShowReviewModal(true)}
+            className="bg-[#ED6A5A] text-white px-3 py-1 rounded"
+          >
+            Write a Review
+          </button>
+        </div>
+        {/* Review form modal */}
+        {showReviewModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white w-full max-w-md mx-auto p-6 rounded shadow-lg relative">
+              {/* Close button */}
+              <button
+                className="absolute top-2 right-2 text-gray-600"
+                onClick={() => setShowReviewModal(false)}
+              >
+                ✕
+              </button>
+
+              <h3 className="text-xl font-semibold mb-4">Leave a Review</h3>
+              {/* ReviewForm */}
+              <ReviewForm
+                recipeId={recipe._id}
+                onReviewSubmitted={handleReviewSubmitted}
+              />
+            </div>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
