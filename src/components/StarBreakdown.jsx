@@ -17,6 +17,10 @@ function StarBreakdown({ reviews, maxStars = 5 }) {
       {[5, 4, 3, 2, 1].map((star) => {
         const count = starCounts[star];
         const percentage = (count / total) * 100;
+        console.log(
+          `Star ${star} | Count: ${count} | Total: ${total} | Percentage: ${percentage}%`
+        );
+
         return (
           <div key={star} className="flex items-center gap-3 w-full h-6">
             {/* Number */}
