@@ -279,7 +279,7 @@ function RecipeDetail() {
           <div key={review.id} className="border-b py-4 mb-4">
             {/* StarRatingDisplay */}
             <div className="flex items-center gap-2 mb-1">
-              <StarRatingsDisplay rating={review.rating} />
+              <StarRatingDisplay rating={review.rating} />
               <span className="text-sm text-gray-600">
                 {review.authorName || "Anonymous"}
               </span>
