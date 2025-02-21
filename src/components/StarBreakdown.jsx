@@ -18,24 +18,32 @@ function StarBreakdown({ reviews, maxStars = 5 }) {
         const count = starCounts[star];
         const percentage = (count / total) * 100;
         return (
-          <div key={star} className="flex items-center gap-2">
-            {/* Star label */}
-            <div className="w-16 flex items-center">
+          <div key={star} className="flex items-center gap-3 w-full h-6">
+            {/* Number */}
+            <span className="w-6 text-right font-semibold">{star}</span>
+            {/* Star icon */}
+            <svg
+              className="w-4 h-4 text-[#FFC107]"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              {" "}
+              <path d="M12 .587l3.668 7.431 8.213 1.193-5.93 5.779 1.401 8.178L12 18.896l-7.352 3.872 1.401-8.178L.119 9.211l8.213-1.193z" />
+            </svg>
+            {/* <div className="w-24 flex justify-start">
               <StarRating rating={star} />
-            </div>
+            </div> */}
 
             {/* Bar */}
-            <div className="flex-1 bg-gray-200 h-3 rounded">
+            <div className="flex-1 h-4 bg-gray-200 rounded overflow-hidden">
               <div
-                className="h-3 bg-[#ED6A5A] rounded"
+                className="absolute left-0 top-0 bottom-0  bg-[#ED6A5A] rounded"
                 style={{ width: `${percentage}%` }}
               ></div>
             </div>
 
             {/* Number of reviews */}
-            <span className="text-sm text-gray-700 w-8 text-right">
-              {count}
-            </span>
+            <span className=" text-gray-700 w-8 text-right ml-2">{count}</span>
           </div>
         );
       })}

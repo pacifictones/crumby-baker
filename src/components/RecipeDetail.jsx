@@ -7,6 +7,7 @@ import "yet-another-react-lightbox/styles.css";
 import StarRating from "./StarRating";
 import ReviewForm from "./ReviewForm";
 import { createClient } from "@sanity/client";
+import StarBreakdown from "./StarBreakdown";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -276,10 +277,40 @@ function RecipeDetail() {
 
       {/* ============ Reviews section at bottom ============ */}
       <section id="reviews" className="max-w-screen-lg mx-auto px-4 py-8">
-        <h2 className="font-heading text-2xl font-bold mb-4">Reviews</h2>
+        <h2 className="font-heading text-3xl font-bold mb-4">Reviews</h2>
+        {/* Reviews Header and Hero section */}
+        <div className="border-b border-gray-300 pb-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-y-4">
+            {/* Left: Average Rating and Stars */}
+            <div className="flex flex-col items-center  py-4">
+              <p className="text-4xl font-bold">{averageRating.toFixed(1)}</p>
+              <StarRating rating={averageRating} />
+              <p className="text-gray-600">
+                {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+            {/* Middle: StarBreakdown */}
+            <div className="flex flex-col justify-center px-6 sm:border-r border-gray-300 sm:border-l border-gray-300 py-4">
+              <StarBreakdown reviews={reviews} maxStars={5} />
+            </div>
+            <div>
+              {/* Right: Write a review button*/}
+              <div className="flex items-center justify-center py-4">
+                <button
+                  onClick={() => setShowReviewModal(true)}
+                  className="bg-[#ED6A5A] text-white px-3 py-1 rounded"
+                >
+                  Write a Review
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* If no reviews, show a message */}
-        {!reviews.length && <p>No reviews yet. Be the first!</p>}
+        {!reviews.length && (
+          <p className="text-gray-600">No reviews yet. Be the first!</p>
+        )}
 
         {/* Show only "visibleCount" reviews */}
         {displayedReviews.map((review) => (
@@ -305,15 +336,6 @@ function RecipeDetail() {
           </button>
         )}
 
-        {/* Add review button*/}
-        <div className="mt-8">
-          <button
-            onClick={() => setShowReviewModal(true)}
-            className="bg-[#ED6A5A] text-white px-3 py-1 rounded"
-          >
-            Write a Review
-          </button>
-        </div>
         {/* Review form modal */}
         {showReviewModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
