@@ -35,9 +35,9 @@ function StarBreakdown({ reviews, maxStars = 5 }) {
             </div> */}
 
             {/* Bar */}
-            <div className="flex-1 h-4 bg-gray-200 rounded overflow-hidden">
+            <div className=" flex-1 h-4 bg-gray-200 rounded overflow-hidden">
               <div
-                className="  bg-[#ED6A5A] rounded"
+                className="h-full transition-all bg-[#ED6A5A] rounded duration-300"
                 style={{ width: `${percentage}%` }}
               ></div>
             </div>
