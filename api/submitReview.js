@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   try {
     //parse incoming JSON
-    const { recipeId, rating, reviewText, authorName } = JSON.parse(req.body);
+    const { recipeId, rating, reviewText, authorName } = req.body;
 
     // Create Sanity client using secret token from Vercel
     const client = createClient({
