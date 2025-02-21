@@ -121,9 +121,16 @@ function RecipeDetail() {
         {/* Left: Description and Info */}
 
         <div>
-          <div>
+          <div className="felx items-center gap-2 mb-2">
             <StarRating rating={Math.round(averageRating)} />
-            <p>{reviews.length} reviews</p>
+            <p>
+              <a
+                href="#reviews"
+                className="text-[#ED6A5A] hover:underline text-sm"
+              >
+                {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+              </a>
+            </p>
           </div>
           <p className="mb-8">{recipe.description}</p>
           {/* Row 1: Prep, Cook, Total */}
@@ -268,7 +275,7 @@ function RecipeDetail() {
       </div>
 
       {/* ============ Reviews section at bottom ============ */}
-      <section className="max-w-screen-lg mx-auto px-4 py-8">
+      <section id="reviews" className="max-w-screen-lg mx-auto px-4 py-8">
         <h2 className="font-heading text-2xl font-bold mb-4">Reviews</h2>
 
         {/* If no reviews, show a message */}
