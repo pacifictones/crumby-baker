@@ -123,7 +123,7 @@ function RecipeDetail() {
         <div>
           <div className="felx items-center gap-2 mb-2">
             <StarRating rating={Math.round(averageRating)} />
-            <p>
+            <p className="mt-2">
               <a
                 href="#reviews"
                 className="text-[#ED6A5A] hover:underline text-sm"
