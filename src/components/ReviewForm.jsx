@@ -87,7 +87,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
         type="submit"
         className="bg-[#ED6A5A] py-2 rounded text-white px-4 mt-4"
       >
-        Submit Reivew
+        Submit Review
       </button>
     </form>
   );
