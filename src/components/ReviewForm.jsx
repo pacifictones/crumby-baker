@@ -10,6 +10,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("revieved recipeId in submitReview:", recipeId);
+    console.log("Form data:", { rating, reviewText, authorName });
     try {
       const payload = {
         recipeId,
@@ -34,6 +35,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
       }
 
       const newReview = await response.json();
+      console.log("Review successfully submitted:", newReview);
       onReviewSubmitted(newReview);
 
       // Reset form

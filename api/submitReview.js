@@ -9,6 +9,13 @@ export default async function handler(req, res) {
     //parse incoming JSON
     const { recipeId, rating, reviewText, authorName } = req.body;
 
+    console.log("Recieved recipeId in API:", recipeId);
+    console.log("Full payload:", { recipeId, rating, reviewText, authorName });
+
+    if (!recipeId) {
+      throw new Error("Missing recipeId in request");
+    }
+
     // Create Sanity client using secret token from Vercel
     const client = createClient({
       projectId: process.env.SANITY_PROJECT_ID,
@@ -21,7 +28,11 @@ export default async function handler(req, res) {
     // Create new review
     const newReview = await client.create({
       _type: "review",
-      recipe: { _type: "reference", _ref: recipeId },
+      recipe: {
+        _type: "reference",
+        _ref: recipeId,
+        _weak: false,
+      },
       rating,
       reviewText,
       authorName,
