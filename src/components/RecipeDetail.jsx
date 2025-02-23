@@ -47,6 +47,7 @@ function RecipeDetail() {
     try {
       const data = await client.fetch(
         `*[_type == "recipe" && slug.current == $slug][0]{
+        _id,
         title,
         mainImage,
         gallery,
