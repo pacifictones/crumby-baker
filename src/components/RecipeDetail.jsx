@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import client, { urlFor } from "../sanityClient";
 import { PortableText } from "@portabletext/react";
@@ -43,9 +43,9 @@ function RecipeDetail() {
   const [reviews, setReviews] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
 
-  useEffect(() => {
-    client
-      .fetch(
+  const fetchRecipe = async () => {
+    try {
+      const data = await client.fetch(
         `*[_type == "recipe" && slug.current == $slug][0]{
         title,
         mainImage,
@@ -66,13 +66,17 @@ function RecipeDetail() {
         ] | order(_createdAt desc)
         }`,
         { slug }
-      )
-      .then((data) => {
-        console.log("fetched recipe:", data);
-        setRecipe(data);
-      })
+      );
+      console.log("Fetched recipe:", data);
+      setRecipe(data);
+      setReviews(data?.reviews || []);
+    } catch (error) {
+      console.error("Error fetching recipe:", error);
+    }
+  };
 
-      .catch(console.error);
+  useEffect(() => {
+    fetchRecipe();
   }, [slug]);
 
   if (!recipe) return <div>Loading...</div>;
@@ -88,18 +92,7 @@ function RecipeDetail() {
 
   const handleReviewSubmitted = async (newReview) => {
     setShowReviewModal(false);
-
-    setTimeout(() => {
-      client
-        .fetch(
-          `*[_type == "review" && recipe.ref == $recipeId && confirmed == true ] | order(_createdAt desc)`,
-          { recipeId: recipe._id }
-        )
-        .then((updatedReviews) => {
-          setReviews(updatedReviews);
-        })
-        .catch(console.error);
-    }, 500);
+    fetchRecipe();
   };
 
   // const handleReviewSubmitted = (newReview) => {
