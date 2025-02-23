@@ -9,6 +9,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("revieved recipeId in submitReview:", recipeId);
     try {
       const payload = {
         recipeId,

@@ -353,6 +353,7 @@ function RecipeDetail() {
               <button
                 className="absolute top-2 right-2 text-gray-600"
                 onClick={() => setShowReviewModal(false)}
+                
               >
                 ✕
               </button>
@@ -362,7 +363,9 @@ function RecipeDetail() {
               <ReviewForm
                 recipeId={recipe._id}
                 onReviewSubmitted={handleReviewSubmitted}
+                
               />
+              {console.log("Passing recipeID to ReviewForm:" recipe?._id)}
             </div>
           </div>
         )}
