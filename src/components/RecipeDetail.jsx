@@ -86,10 +86,26 @@ function RecipeDetail() {
 
   const displayedReviews = reviews.slice(0, visibleCount);
 
-  const handleReviewSubmitted = (newReview) => {
-    setReviews([newReview, ...reviews]);
+  const handleReviewSubmitted = async (newReview) => {
     setShowReviewModal(false);
+
+    setTimeout(() => {
+      client
+        .fetch(
+          `*[_type == "review" && recipe.ref == $recipeId && confirmed == true ] | order(_createdAt desc)`,
+          { recipeId: recipe._id }
+        )
+        .then((updatedReviews) => {
+          setReviews(updatedReviews);
+        })
+        .catch(console.error);
+    }, 500);
   };
+
+  // const handleReviewSubmitted = (newReview) => {
+  //   setReviews([newReview, ...reviews]);
+  //   setShowReviewModal(false);
+  // };
 
   function StarRatingDisplay({ rating }) {
     return (
