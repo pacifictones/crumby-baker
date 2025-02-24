@@ -6,6 +6,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [authorName, setAuthorName] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,6 +18,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
         rating,
         reviewText,
         authorName,
+        email,
       };
 
       const response = await fetch("/api/submitReview", {
@@ -62,6 +64,16 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
           value={rating}
           onChange={(e) => setRating(Number(e.target.value))}
         /> */}
+      </div>
+      <div>
+        <label className="block">Email (required)</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="border p-2 w-full"
+          required
+        />
       </div>
       <div>
         <label className="block mb-1 font-semibold text-gray-700">
