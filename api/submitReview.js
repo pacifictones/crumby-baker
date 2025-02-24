@@ -7,10 +7,16 @@ export default async function handler(req, res) {
 
   try {
     //parse incoming JSON
-    const { recipeId, rating, reviewText, authorName } = req.body;
+    const { recipeId, rating, reviewText, authorName, email } = req.body;
 
     console.log("Recieved recipeId in API:", recipeId);
-    console.log("Full payload:", { recipeId, rating, reviewText, authorName });
+    console.log("Full payload:", {
+      recipeId,
+      rating,
+      reviewText,
+      authorName,
+      email,
+    });
 
     if (!recipeId) {
       throw new Error("Missing recipeId in request");
@@ -25,6 +31,9 @@ export default async function handler(req, res) {
       apiVersion: "2023-03-01",
     });
 
+    // Create a unique confirmationCode
+    const confirmationCode = crypto.randomBytes(16).toString("hex");
+
     // Create new review
     const newReview = await client.create({
       _type: "review",
@@ -36,11 +45,35 @@ export default async function handler(req, res) {
       rating,
       reviewText,
       authorName,
-      confirmed: true,
+      email,
+      confirmed: false,
+      confirmationCode,
     });
 
-    // Return the new review
-    return res.status(200).json(newReview);
+    console.log("New review doc in Sanity:", newReview);
+
+    // Send confirmation email by calling sendReviewConfirmation
+    await fetch(
+      `${process.env.crumby - baker.vercel.app}/api/sendReviewConfirmation`,
+      {
+        method: "POST",
+        headers: { "Conent-Type": "application/json" },
+        body: JSON.stringify({
+          reviewId: newReview._id,
+          email,
+          confirmationCode,
+        }),
+      }
+    );
+
+    console.log("Confirmation email triggered!");
+
+    // Return a success response
+    return res
+      .status(200)
+      .json({
+        message: "Review submitted, check your email for confirmation!",
+      });
   } catch (error) {
     console.error("Error in submitReview", error);
     return res.status(500).json({ message: "Internal server error" });
