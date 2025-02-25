@@ -32,7 +32,9 @@ export default async function handler(req, res) {
     });
 
     // Create a unique confirmationCode
-    const confirmationCode = crypto.randomBytes(16).toString("hex");
+    const confirmationCode = [...crypto.getRandomValues(new Uint8Array(16))]
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
 
     // Create new review
     const newReview = await client.create({
