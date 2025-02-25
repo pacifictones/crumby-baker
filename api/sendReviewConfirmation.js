@@ -2,6 +2,9 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+console.log("⚠️ [sendReviewConfirmation] route invoked!");
+console.log("⚠️ [sendReviewConfirmation] method:", req.method);
+
 export default async function handler(req, res) {
   console.log("⚠️ [sendReviewConfirmation] API route called!");
   console.log("⚠️ [sendReviewConfirmation] Request body:", req.body);
