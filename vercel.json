@@ -8,12 +8,20 @@
     {
       "src": "api/submitReview.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/sendReviewConfirmation.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/submitReview",
       "dest": "api/submitReview.js"
+    },
+    {
+      "src": "/api/sendReviewConfirmation",
+      "dest": "api/sendReviewConfirmation.js"
     },
     {
       "handle": "filesystem"
