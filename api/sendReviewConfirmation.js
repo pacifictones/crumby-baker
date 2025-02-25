@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
     // Send confirmation email
     await resend.emails.send({
-      from: "The Crumby Baker <no-reply@crumby-baker.vercel.app>",
+      from: "The Crumby Baker <no-reply@thecrumbybaker.com>",
       to: email,
       subject: "Confirm Your Review",
       html: `<p>Click <a href="https://crumby-baker.vercel.app/api/confirmReview?code=${confirmationCode}">here</a> to confirm your review.</p>`,
