@@ -53,6 +53,10 @@ export default async function handler(req, res) {
     });
 
     console.log("New review doc in Sanity:", newReview);
+    console.log(
+      "⚠️ [submitReview] sendReviewConfirmation URL:",
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/sendReviewConfirmation`
+    );
 
     // Send confirmation email by calling sendReviewConfirmation
     await fetch(
