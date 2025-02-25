@@ -2,10 +2,10 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-console.log("⚠️ [sendReviewConfirmation] route invoked!");
-console.log("⚠️ [sendReviewConfirmation] method:", req.method);
-
 export default async function handler(req, res) {
+  console.log("⚠️ [sendReviewConfirmation] route invoked!");
+  console.log("⚠️ [sendReviewConfirmation] method:", req.method);
+
   console.log("⚠️ [sendReviewConfirmation] API route called!");
   console.log("⚠️ [sendReviewConfirmation] Request body:", req.body);
   console.log(
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     !!process.env.RESEND_API_KEY
   );
 
-  if (req.method != "POST") {
+  if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
