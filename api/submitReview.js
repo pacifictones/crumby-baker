@@ -59,7 +59,7 @@ export default async function handler(req, res) {
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/sendReviewConfirmation`,
       {
         method: "POST",
-        headers: { "Conent-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           reviewId: newReview._id,
           email,
