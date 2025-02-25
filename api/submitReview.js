@@ -59,7 +59,7 @@ export default async function handler(req, res) {
     );
 
     // Send confirmation email by calling sendReviewConfirmation
-    await fetch(
+    const confirmResp = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/sendReviewConfirmation`,
       {
         method: "POST",
@@ -71,6 +71,14 @@ export default async function handler(req, res) {
         }),
       }
     );
+
+    console.log(
+      "🔎 Confirmation call status:",
+      confirmResp.status,
+      confirmResp.ok
+    );
+    const confirmText = await confirmResp.text();
+    console.log("🔎 Confirmation call response:", confirmText);
 
     console.log("Confirmation email triggered!");
 
