@@ -56,7 +56,7 @@ export default async function handler(req, res) {
 
     // Send confirmation email by calling sendReviewConfirmation
     await fetch(
-      `${process.env.crumby - baker.vercel.app}/api/sendReviewConfirmation`,
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/sendReviewConfirmation`,
       {
         method: "POST",
         headers: { "Conent-Type": "application/json" },
