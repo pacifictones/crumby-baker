@@ -69,11 +69,9 @@ export default async function handler(req, res) {
     console.log("Confirmation email triggered!");
 
     // Return a success response
-    return res
-      .status(200)
-      .json({
-        message: "Review submitted, check your email for confirmation!",
-      });
+    return res.status(200).json({
+      message: "Review submitted, check your email for confirmation!",
+    });
   } catch (error) {
     console.error("Error in submitReview", error);
     return res.status(500).json({ message: "Internal server error" });
