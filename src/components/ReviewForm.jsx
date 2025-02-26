@@ -13,7 +13,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [wasSuccessful, setWasSuccessful] = false;
+  const [wasSuccessful, setWasSuccessful] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
