@@ -20,7 +20,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
 
     //Disable form interaction and clear old messages
     setIsSubmitting(true);
-    setMessage("");
+    setModalMessage("");
 
     // console.log("revieved recipeId in submitReview:", recipeId);
     // console.log("Form data:", { rating, reviewText, authorName });
