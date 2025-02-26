@@ -8,6 +8,9 @@ const sanityClient = createClient({
 });
 
 export default async function handler(req, res) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ message: "Method not allowed" });
+  }
   const { code } = req.query;
 
   if (!code) {
@@ -17,10 +20,10 @@ export default async function handler(req, res) {
   try {
     //look up the reivew by confirmationCode
     const review = await sanityClient.fetch(
-      `[_type == "review" && confirmationCode == $code] [0]`,
+      `*[_type == "review" && confirmationCode == $code] [0]`,
       { code }
     );
-    if (!reivew) {
+    if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
 
@@ -28,9 +31,8 @@ export default async function handler(req, res) {
     await sanityClient.patch(review._id).set({ confirmed: true }).commit();
 
     // Send HTML response
-    return res
-      .status(200)
-      .send("<h1>Your review is now confirmed. Thanks!</h1>");
+    return res.redirect(302, "/").status(200);
+    //   .send("<h1>Your review is now confirmed. Thanks!</h1>");
   } catch (error) {
     console.error("Error confirming review:", error);
     return res.status(500).json({ message: "Server error confirming review" });
