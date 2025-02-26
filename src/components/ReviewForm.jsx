@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import StarRating from "./StarRating";
-import { useTransition } from "react";
 
 function ReviewForm({ recipeId, onReviewSubmitted }) {
   // Form fields
@@ -14,6 +13,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [wasSuccessful, setWasSuccessful] = false;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,24 +53,32 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
 
       // Success
       setModalMessage("✅ Confirmation email sent! Check your inbox.");
+      setWasSuccessful(true);
       setShowModal(true);
-
-      onReviewSubmitted && onReviewSubmitted(result);
 
       //
       console.log("Review successfully submitted:", result);
 
       // Reset form
-      setRating(0);
-      setReviewText("");
-      setAuthorName("");
-      setEmail("");
     } catch (error) {
       console.error("Fetch error:", error);
       setModalMessage("⚠️ Something went wrong. Please try again.");
       setShowModal(true);
     } finally {
       setIsSubmitting(false); // Re-enable form after submission
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+
+    if (wasSuccessful) {
+      setRating(0);
+      setReviewText("");
+      setAuthorName("");
+      setEmail("");
+
+      onReviewSubmitted && onReviewSubmitted();
     }
   };
 
@@ -82,7 +90,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
           <div className="bg-white p-6 rounded shadow-md text-center max-w-sm w-full">
             <p className="mb-4 text-lg font-semibold">{modalMessage}</p>
             <button
-              onClick={() => setShowModal(false)}
+              onClick={handleCloseModal}
               className="bg-[#ED6A5A] text-white px-4 py-2 rounded"
             >
               OK
