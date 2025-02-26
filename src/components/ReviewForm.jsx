@@ -52,7 +52,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
       }
 
       // Success
-      setModalMessage("✅ Confirmation email sent! Check your inbox.");
+      setModalMessage("Confirmation email sent! Check your inbox.");
       setWasSuccessful(true);
       setShowModal(true);
 
@@ -91,7 +91,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
             <p className="mb-4 text-lg font-semibold">{modalMessage}</p>
             <button
               onClick={handleCloseModal}
-              className="bg-[#ED6A5A] text-white px-4 py-2 rounded"
+              className="font-heading bg-[#ED6A5A] text-white px-4 py-2 rounded"
             >
               OK
             </button>
@@ -104,7 +104,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
       <form onSubmit={handleSubmit} className="space-y-4 p-4">
         {/* Rating Field */}
         <div>
-          <label className="block mb-1 font-semibold text-gray-700">
+          <label className="font-heading block mb-1 font-semibold text-gray-700">
             Rating (1-5):
           </label>
           <StarRating rating={rating} setRating={setRating} />
@@ -112,12 +112,12 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
 
         {/* Email Field */}
         <div>
-          <label className="block">Email (required)</label>
+          <label className=" font-heading block">Email (required)</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="border p-2 w-full"
+            className="font-body border p-2 w-full"
             required
             disabled={isSubmitting}
           />
@@ -125,27 +125,27 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
 
         {/* Author Name Field */}
         <div>
-          <label className="block mb-1 font-semibold text-gray-700">
+          <label className="font-heading block mb-1 font-semibold text-gray-700">
             Your Name (optional):
           </label>
           <input
             type="text"
             value={authorName}
             onChange={(e) => setAuthorName(e.target.value)}
-            className="border border-[#DEE7E7] rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ED6A5A]"
+            className="font-body border border-[#DEE7E7] rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ED6A5A]"
             disabled={isSubmitting}
           />
         </div>
 
         {/* Review Textarea */}
         <div>
-          <label className="block mb-1 font-semibold text-gray-700">
+          <label className="font-heading block mb-1 font-semibold text-gray-700">
             Review:
           </label>
           <textarea
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
-            className="border border-[#DEE7E7] rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ED6A5A]"
+            className="font-body border border-[#DEE7E7] rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ED6A5A]"
             disabled={isSubmitting}
           />
         </div>
@@ -160,7 +160,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`bg-[#ED6A5A] py-2 rounded text-white px-4 mt-4 ${
+          className={`font-heading bg-[#ED6A5A] py-2 rounded text-white px-4 mt-4 ${
             isSubmitting
               ? "opacity-50 cursor-not-allowed"
               : "hover:bg-[#D65A4A]"
