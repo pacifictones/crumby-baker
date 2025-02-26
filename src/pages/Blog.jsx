@@ -119,7 +119,7 @@ const Blog = () => {
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
         </div>
       ) : filteredBlogs.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
           {/* Blog Grid */}
           {filteredBlogs.map((blog) => (
             <Link
