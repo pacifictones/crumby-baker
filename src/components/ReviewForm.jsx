@@ -86,7 +86,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
     <div className="p-4">
       {/* ============ The Modal ============ */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded shadow-md text-center max-w-sm w-full">
             <p className="mb-4 text-lg font-semibold">{modalMessage}</p>
             <button
