@@ -111,6 +111,12 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
         />
       </div>
 
+      {message && (
+        <div className="text-center text-sm font-semibold text-gray-700 bg-gray-100 p-2 rounded-md">
+          {message}
+        </div>
+      )}
+
       <button
         type="submit"
         disabled={isSubmitting}
