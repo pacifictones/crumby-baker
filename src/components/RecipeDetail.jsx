@@ -137,7 +137,7 @@ function RecipeDetail() {
             <p className="mt-2">
               <a
                 href="#reviews"
-                className="text-[#ED6A5A] hover:underline text-sm"
+                className="font-heading text-[#ED6A5A] hover:underline text-md"
               >
                 {reviews.length} review{reviews.length !== 1 ? "s" : ""}
               </a>
@@ -145,7 +145,7 @@ function RecipeDetail() {
           </div>
           <p className="mb-8">{recipe.description}</p>
           {/* Row 1: Prep, Cook, Total */}
-          <div className="grid grid-cols-3 gap-y-4 text-center mb-4">
+          <div className="font-heading grid grid-cols-3 gap-y-4 text-center mb-4">
             <div>
               <p>Prep</p>
               <p>
@@ -292,7 +292,7 @@ function RecipeDetail() {
         <div className="border-b border-gray-300 pb-6 mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-y-4">
             {/* Left: Average Rating and Stars */}
-            <div className="flex flex-col items-center  py-4">
+            <div className="font-heading flex flex-col items-center  py-4">
               <p className="text-4xl font-bold">{averageRating.toFixed(1)}</p>
               <StarRating rating={averageRating} />
               <p className="text-gray-600">
@@ -300,7 +300,7 @@ function RecipeDetail() {
               </p>
             </div>
             {/* Middle: StarBreakdown */}
-            <div className="flex flex-col justify-center px-6 sm:border-r border-gray-300 sm:border-l border-gray-300 py-4">
+            <div className="flex flex-col justify-center px-6 sm:border-r sm:border-l border-gray-300 py-4">
               <StarBreakdown reviews={reviews} maxStars={5} />
             </div>
             <div>
@@ -308,7 +308,7 @@ function RecipeDetail() {
               <div className="flex items-center justify-center py-4">
                 <button
                   onClick={() => setShowReviewModal(true)}
-                  className="bg-[#ED6A5A] text-white px-3 py-1 rounded"
+                  className="font-heading bg-[#ED6A5A] text-white px-3 py-1 rounded"
                 >
                   Write a Review
                 </button>
@@ -319,7 +319,9 @@ function RecipeDetail() {
 
         {/* If no reviews, show a message */}
         {!reviews.length && (
-          <p className="text-gray-600">No reviews yet. Be the first!</p>
+          <p className="font-heading text-gray-600">
+            No reviews yet. Be the first!
+          </p>
         )}
 
         {/* Show only "visibleCount" reviews */}
@@ -328,11 +330,11 @@ function RecipeDetail() {
             {/* StarRatingDisplay */}
             <div className="flex items-center gap-2 mb-1">
               <StarRatingDisplay rating={review.rating} />
-              <span className="text-sm text-gray-600">
+              <span className="font-heading text-md text-gray-600">
                 {review.authorName || "Anonymous"}
               </span>
             </div>
-            <p className="text-gray-800">{review.reviewText}</p>
+            <p className="font-body text-gray-800">{review.reviewText}</p>
           </div>
         ))}
 
@@ -340,7 +342,7 @@ function RecipeDetail() {
         {reviews.length > visibleCount && (
           <button
             onClick={() => setVisibleCount(visibleCount + 5)}
-            className="bg-[#ED6A5A] text-white px-3 py-1 rounded"
+            className="font-heading bg-[#ED6A5A] text-white px-3 py-1 rounded"
           >
             Load More
           </button>
@@ -358,7 +360,9 @@ function RecipeDetail() {
                 ✕
               </button>
 
-              <h3 className="text-xl font-semibold mb-4">Leave a Review</h3>
+              <h3 className="font-heading text-2xl font-semibold mb-4">
+                Leave a Review
+              </h3>
               {/* ReviewForm */}
               <ReviewForm
                 recipeId={recipe._id}

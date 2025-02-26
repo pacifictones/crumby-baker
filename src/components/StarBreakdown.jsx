@@ -22,7 +22,10 @@ function StarBreakdown({ reviews, maxStars = 5 }) {
         );
 
         return (
-          <div key={star} className="flex items-center gap-3 w-full h-6">
+          <div
+            key={star}
+            className="font-heading flex items-center gap-3 w-full h-6"
+          >
             {/* Number */}
             <span className="w-6 text-right font-semibold">{star}</span>
             {/* Star icon */}
