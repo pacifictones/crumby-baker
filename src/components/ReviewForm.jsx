@@ -1,17 +1,26 @@
 import React, { useState } from "react";
 
 import StarRating from "./StarRating";
+import { useTransition } from "react";
 
 function ReviewForm({ recipeId, onReviewSubmitted }) {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    //Disable form interaction and clear old messages
+    setIsSubmitting(true);
+    setMessage("");
+
     console.log("revieved recipeId in submitReview:", recipeId);
     console.log("Form data:", { rating, reviewText, authorName });
+
     try {
       const payload = {
         recipeId,
@@ -29,16 +38,18 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
         body: JSON.stringify(payload),
       });
 
+      const newReview = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error response", errorData);
-        alert(errorData.message || "Error submitting review");
+        console.error("Error response", newReview);
+        alert(newReview.message || "Error submitting review");
         return;
       }
-
-      const newReview = await response.json();
       console.log("Review successfully submitted:", newReview);
       onReviewSubmitted(newReview);
+
+      // Show confirmation message
+      setMessage("✅ Confirmation email sent! Check your inbox.");
 
       // Reset form
       setRating(0);
@@ -46,7 +57,9 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
       setAuthorName("");
     } catch (error) {
       console.error("Fetch error:", error);
-      alert("Something went wrong");
+      setMessage("⚠️ Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false); // Re-enable form after submission
     }
   };
 
@@ -100,9 +113,12 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
 
       <button
         type="submit"
-        className="bg-[#ED6A5A] py-2 rounded text-white px-4 mt-4"
+        disabled={isSubmitting}
+        className={`bg-[#ED6A5A] py-2 rounded text-white px-4 mt-4 ${
+          isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-[#D65A4A]"
+        }`}
       >
-        Submit Review
+        {isSubmitting ? "Submit..." : "Submit Review"}
       </button>
     </form>
   );
