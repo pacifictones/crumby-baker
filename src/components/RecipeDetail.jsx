@@ -260,8 +260,8 @@ function RecipeDetail() {
 
             {/* Right: Instructions */}
             <div className="lg:col-span-4 bg-white p-10 rounded">
-              <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-4">
-                <h2 className="font-heading text-2xl font-bold mb-4">
+              <div className="flex w-full flex-col sm:flex-row sm:justify-between border-b border-gray-300 pb-2 mb-4 sm:mt-0 text-center sm:text-left">
+                <h2 className="font-heading text-2xl font-bold mb-2 sm:mb-0 w-full">
                   Instructions
                 </h2>
                 {recipe.instructions.some((step) => step.image) && (
