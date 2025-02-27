@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Yup from "yup";
+import * as yup from "yup";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const schema = yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  message: Yup.string()
+  name: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  message: yup
+    .string()
     .min(10, "Message should be at least 10 characters")
     .required("Message is required"),
 });
