@@ -66,3 +66,13 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+@media print {
+  nav,
+  header,
+  footer,
+  button,
+  #reviews {
+    display: none !important;
+  }
+}

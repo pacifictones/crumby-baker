@@ -8,6 +8,7 @@ import StarRating from "./StarRating";
 import ReviewForm from "./ReviewForm";
 import { createClient } from "@sanity/client";
 import StarBreakdown from "./StarBreakdown";
+import CookModeToggle from "./CookModeToggle";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -172,6 +173,11 @@ function RecipeDetail() {
                 <strong>{recipe.servings}</strong>
               </p>
             </div>
+
+            <div className="col-span-3 border-b border-gray-300 my-2"></div>
+            <div>
+              <button onClick={() => window.print()}>🖨️ Print</button>
+            </div>
           </div>
         </div>
 
@@ -234,7 +240,7 @@ function RecipeDetail() {
 
       {/* Ingredients and Instructions Section */}
 
-      <div className=" w-full bg-[#DEE7E7] py-8">
+      <div className=" printable-recipe w-full bg-[#DEE7E7] py-8">
         <div className="max-w-screen-lg mx-auto px-4">
           <section className="grid grid-cols-1 lg:grid-cols-6 gap-8 ">
             {/* Left: Ingredients */}
@@ -264,6 +270,9 @@ function RecipeDetail() {
                 >
                   {showImages ? "Hide Photos" : "Show Photos"}
                 </button>
+              </div>
+              <div className=" border-b border-gray-300 pb-2 mb-4">
+                <CookModeToggle />
               </div>
 
               <ol className="font-body list-decimal list-outside space-y-6">
@@ -378,32 +387,3 @@ function RecipeDetail() {
 }
 
 export default RecipeDetail;
-//  <h1 className="font-heading text-3xl">{recipe.title}</h1>
-//       <img
-//         className="my-8"
-//         src={urlFor(recipe.image).width(400).url()}
-//         alt={recipe.title}
-//       />
-//       <h2 className="font-heading text-2xl">Ingredients</h2>
-//       <ul className="font-body my-6">
-//         {recipe.ingredients.map((ingredient, index) => (
-//           <li key={index}>{ingredient}</li>
-//         ))}
-//       </ul>
-//       <div>
-//         <h2 className="font-heading text-2xl font-semibold mb-2">
-//           Instructions
-//         </h2>
-//         <div className="font-body my-6 prose max-w-none">
-//           <PortableText
-//             value={recipe.instructions}
-//             components={{
-//               block: {
-//                 normal: ({ children }) => (
-//                   <p className="text-justify indent-6 mb-4">{children}</p>
-//                 ),
-//               },
-//             }}
-//           />
-//         </div>
-//       </div>
