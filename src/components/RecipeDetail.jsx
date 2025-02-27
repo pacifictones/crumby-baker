@@ -264,12 +264,16 @@ function RecipeDetail() {
                 <h2 className="font-heading text-2xl font-bold mb-4">
                   Instructions
                 </h2>
-                <button
-                  onClick={() => setShowImages(!showImages)}
-                  className="mb-4 bg-[#ED6A5A] text-white font-heading px-3 py-1 rounded focus:outline-none focus:ring-0 active:outline-none active:ring-0"
-                >
-                  {showImages ? "Hide Photos" : "Show Photos"}
-                </button>
+                {recipe.instructions.some((step) => step.image) && (
+                  <div className="w-full flex justify-center sm:justify-end mt-2 sm:mt-0">
+                    <button
+                      onClick={() => setShowImages(!showImages)}
+                      className="mb-4 bg-[#ED6A5A] text-white font-heading px-2 py-2 rounded focus:outline-none focus:ring-0 active:outline-none active:ring-0  text-center"
+                    >
+                      {showImages ? "Hide Photos" : "Show Photos"}
+                    </button>
+                  </div>
+                )}
               </div>
               <div className=" border-b border-gray-300 pb-2 mb-4">
                 <CookModeToggle />

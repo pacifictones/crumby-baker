@@ -38,8 +38,8 @@ const CookModeToggle = () => {
   }, [isCookModeOn]);
 
   return (
-    <div className="flex items-center space-x-2">
-      <label className="flex items-center cursor-pointer">
+    <div className="flex flex-col sm:flex-row items-center sm:items-center space-y-1 sm:space-y-0 sm:space-x-3 mb-2 text-center">
+      <label className="flex items-center space-x-2 cursor-pointer">
         <input
           type="checkbox"
           className="sr-only"
@@ -47,23 +47,23 @@ const CookModeToggle = () => {
           onChange={() => setIsCookModeOn(!isCookModeOn)}
         />
         {/* Toggle Switch Background */}
-        <div className="w-10 h-5 bg-gray-300 rounded-full p-1 flex items-center transition-all duration-300 relative">
+        <div className="w-11 h-6 bg-gray-300 rounded-full p-1 flex items-center transition-all duration-300">
           {/* Moving Circle */}
           <div
-            className={`w-4 h-4 rounded-full shadow-md transition-all duration-300 absolute top-0.5 left-0.5 ${
+            className={`w-5 h-5 rounded-full shadow-md transition-all duration-300 ${
               isCookModeOn
-                ? "translate-x-5 bg-[#ED6A5A]"
-                : "translate-x-0 bg-white"
+                ? "translate-x-5 bg-[#ED6A5A]" // Red when on
+                : "translate-x-0 bg-white" // White when off
             }`}
           ></div>
         </div>
         <span className="ml-2 font-semibold font-heading text-lg">
           Cook Mode
         </span>
-        <span className="ml-1 text-gray-500 text-sm font-body">
-          Prevent your screen from dimming
-        </span>
       </label>
+      <span className="sm:ml-2 text-gray-500 text-sm text-left sm:text-base font-body sm:whitespace-nowrap">
+        Prevent your screen from dimming
+      </span>
     </div>
   );
 };
