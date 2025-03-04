@@ -176,7 +176,9 @@ function RecipeDetail() {
 
             <div className="col-span-3 border-b border-gray-300 my-2"></div>
             <div>
-              <button onClick={() => window.print()}>🖨️ Print</button>
+              <button onClick={() => window.open(`/print/${slug}`, "_blank")}>
+                🖨️ Print
+              </button>
             </div>
           </div>
         </div>
