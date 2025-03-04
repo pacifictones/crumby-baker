@@ -41,7 +41,7 @@ const PrintRecipe = () => {
   return (
     <div className="printable-recipe max-w-4xl mx-auto p-8 font-body">
       {/*  Toggle Buttons + Print Button */}
-      <div className="no-print mb-4 flex flex-wrap gap-4">
+      <div className="no-print mb-12 flex flex-wrap justify-center gap-4">
         <button
           onClick={() => setColumnCount(1)}
           className={` font-heading px-3 rounded ${
@@ -90,39 +90,53 @@ const PrintRecipe = () => {
 
       {/* Recipe Info */}
 
-      <h1 className="text-3xl font-heading mb-4">{recipe.title}</h1>
+      <div
+        className={`grid gap-6 border-b pb-4 border-gray-300 mb-12 ${
+          showImage ? "grid-cols-2" : "grid-cols-1"
+        }`}
+      >
+        <div>
+          {/* Title */}
+          <h1 className="text-3xl  font-heading mb-4">{recipe.title}</h1>
 
-      {showImage && recipe.mainImage && (
-        <img
-          src={urlFor(recipe.mainImage).url()}
-          alt={recipe.title}
-          className="mb-4 w-full rounded shadow"
-        />
-      )}
-      <div className="grid grid-cols-4 gap-2 text-center mb-6 border-b pb-4 border-gray-300">
-        <div>
-          <p className="font-heading">Prep</p>
-          <p className="font-heading font-bold">{recipe.prepTime} mins</p>
+          {/* Description  */}
+
+          {showDescription && recipe.description && (
+            <p className="mb-4 font-body">{recipe.description}</p>
+          )}
+
+          {/* Times */}
+          <div className="grid grid-cols-4 gap-2 text-center  ">
+            <div>
+              <p className="font-heading">Prep</p>
+              <p className="font-heading font-bold">{recipe.prepTime} mins</p>
+            </div>
+            <div>
+              <p className="font-heading">Cook</p>
+              <p className="font-heading font-bold">{recipe.cookTime} mins</p>
+            </div>
+            <div>
+              <p className="font-heading">Total</p>
+              <p className="font-heading font-bold">{recipe.totalTime} mins</p>
+            </div>
+            <div>
+              <p className="font-heading">Servings</p>
+              <p className="font-heading font-bold">{recipe.servings}</p>
+            </div>
+          </div>
         </div>
-        <div>
-          <p className="font-heading">Cook</p>
-          <p className="font-heading font-bold">{recipe.cookTime} mins</p>
-        </div>
-        <div>
-          <p className="font-heading">Total</p>
-          <p className="font-heading font-bold">{recipe.totalTime} mins</p>
-        </div>
-        <div>
-          <p className="font-heading">Servings</p>
-          <p className="font-heading font-bold">{recipe.servings}</p>
+        {/* Image */}
+
+        <div className="flex justify-center items-center">
+          {showImage && recipe.mainImage && (
+            <img
+              src={urlFor(recipe.mainImage).url()}
+              alt={recipe.title}
+              className=" w-56 h-auto rounded shadow"
+            />
+          )}
         </div>
       </div>
-
-      {/* Description  */}
-
-      {showDescription && recipe.description && (
-        <p className="mb-8 font-body">{recipe.description}</p>
-      )}
 
       <div
         className={
