@@ -93,7 +93,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
             </p>
             <button
               onClick={handleCloseModal}
-              className="font-heading bg-[#ED6A5A] text-white px-4 py-2 rounded"
+              className="font-heading btn-primary"
             >
               OK
             </button>
@@ -119,7 +119,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="font-body border p-2 w-full"
+            className="font-body border border-[#DEE7E7] rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             required
             disabled={isSubmitting}
           />
@@ -134,7 +134,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
             type="text"
             value={authorName}
             onChange={(e) => setAuthorName(e.target.value)}
-            className="font-body border border-[#DEE7E7] rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ED6A5A]"
+            className="font-body border border-[#DEE7E7] rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             disabled={isSubmitting}
           />
         </div>
@@ -147,7 +147,7 @@ function ReviewForm({ recipeId, onReviewSubmitted }) {
           <textarea
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
-            className="font-body border border-[#DEE7E7] rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ED6A5A]"
+            className="font-body border border-[#DEE7E7] rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             disabled={isSubmitting}
           />
         </div>

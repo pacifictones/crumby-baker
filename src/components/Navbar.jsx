@@ -17,7 +17,9 @@ const Navbar = () => {
 
   const navLinkClass = ({ isActive }) =>
     ` block py-1 sm:py-2 ${
-      isActive ? "text-[#ED6A5A] pointer-events-none" : "hover:text-gray-600"
+      isActive
+        ? "text-brand-primary pointer-events-none"
+        : "hover:text-brand-hover"
     }`;
 
   return (

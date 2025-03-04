@@ -138,7 +138,7 @@ function RecipeDetail() {
             <p className="mt-2">
               <a
                 href="#reviews"
-                className="font-heading text-[#ED6A5A] hover:underline text-md"
+                className="font-heading text-brand-primary hover:text-brand-hover text-md"
               >
                 {reviews.length} review{reviews.length !== 1 ? "s" : ""}
               </a>
@@ -268,7 +268,7 @@ function RecipeDetail() {
                   <div className="w-full flex justify-center sm:justify-end mt-2 sm:mt-0">
                     <button
                       onClick={() => setShowImages(!showImages)}
-                      className="mb-4 bg-[#ED6A5A] text-white font-heading px-2 py-2 rounded focus:outline-none focus:ring-0 active:outline-none active:ring-0  text-center"
+                      className="mb-4 btn-primary"
                     >
                       {showImages ? "Hide Photos" : "Show Photos"}
                     </button>
@@ -321,7 +321,7 @@ function RecipeDetail() {
               <div className="flex items-center justify-center py-4">
                 <button
                   onClick={() => setShowReviewModal(true)}
-                  className="font-heading bg-[#ED6A5A] text-white px-3 py-1 rounded"
+                  className="btn-primary"
                 >
                   Write a Review
                 </button>

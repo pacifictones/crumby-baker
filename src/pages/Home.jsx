@@ -56,7 +56,7 @@ const Home = () => {
       <section className=" py-10 bg-white">
         <div className="max-w-screen-lg mx-auto px-2 sm:px-4">
           <Link
-            className="font-heading text-2xl font-semibold hover:text-gray-600"
+            className="font-heading text-2xl font-semibold hover:text-brand-primary"
             to="/recipes"
           >
             Latest Recipes
@@ -76,7 +76,7 @@ const Home = () => {
               ) : (
                 <Link
                   to={`/recipes/${recipe.slug.current}`}
-                  className="rounded shadow w-72 flex flex-col"
+                  className="rounded shadow w-72 flex flex-col hover:text-brand-primary"
                 >
                   <div className="w-full aspect-square overflow-hidden">
                     <img
@@ -105,7 +105,7 @@ const Home = () => {
       <section className="py-10 bg-[#DEE7E7] ">
         <div className="  border-gray-500 max-w-screen-lg mx-auto px-2 sm:px-4 p-4">
           <Link
-            className="font-heading text-2xl font-semibold hover:text-gray-600"
+            className="font-heading text-2xl font-semibold hover:text-brand-primary"
             to="/blog"
           >
             Latest Blogs
@@ -125,9 +125,9 @@ const Home = () => {
               ) : (
                 <Link
                   to={`/blog/${blog.slug.current}`}
-                  className="rounded shadow w-72 flex flex-col"
+                  className="rounded shadow hover:text-brand-primary w-72 flex flex-col"
                 >
-                  <div className="w-full aspect-square overflow-hidden">
+                  <div className="w-full aspect-square overflow-hidden ">
                     <img
                       src={blog.image}
                       alt={blog.title}
@@ -154,7 +154,7 @@ const Home = () => {
       <section className="py-10 bg-white">
         <div className="max-w-screen-lg mx-auto px-4 ">
           <Link
-            className="font-heading text-2xl font-semibold hover:text-gray-600 mb-4 inline-block"
+            className="font-heading text-2xl font-semibold hover:text-brand-primary mb-4 inline-block"
             to="/about"
           >
             About me

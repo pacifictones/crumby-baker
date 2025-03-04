@@ -124,7 +124,7 @@ const Blog = () => {
           {filteredBlogs.map((blog) => (
             <Link
               to={`/blog/${blog.slug.current}`}
-              className="blog-thumbnail block rounded shadow"
+              className="blog-thumbnail block rounded shadow hover:text-brand-primary"
               key={blog.slug.current}
             >
               <div className="w-full aspect-square overflow-hidden">

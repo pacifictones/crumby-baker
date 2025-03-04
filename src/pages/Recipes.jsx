@@ -133,7 +133,7 @@ const Recipes = () => {
           {filteredRecipes.map((recipe) => (
             <Link
               to={`/recipes/${recipe.slug.current}`}
-              className="block rounded shadow"
+              className="block rounded shadow hover:text-brand-primary"
               key={recipe.slug.current}
             >
               <div className="w-full aspect-square overflow-hidden">

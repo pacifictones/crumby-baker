@@ -9,6 +9,12 @@ export default {
         heading: ['"Alice", serif'],
         body: ['"Quattrocento Sans", serif'],
       },
+      colors: {
+        brand: {
+          primary: "#ED6A5A",
+          hover: "#A480CF",
+        },
+      },
     },
   },
   plugins: [],
