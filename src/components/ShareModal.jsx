@@ -5,6 +5,7 @@ import {
   FaTwitter,
   FaFacebook,
   FaInstagram,
+  FaEnvelope,
 } from "react-icons/fa";
 
 const ShareModal = ({ url, image, title }) => {
@@ -24,6 +25,10 @@ const ShareModal = ({ url, image, title }) => {
       url
     )}`,
   };
+
+  const emailShare = `mailto:?subject=${encodeURIComponent(
+    title
+  )}&body=Check this out: ${encodeURIComponent(url)}`;
 
   //   Close Modal when clicking outside
   useEffect(() => {
@@ -77,6 +82,9 @@ const ShareModal = ({ url, image, title }) => {
             rel="noopener noreferrer"
           >
             <FaFacebook className="text-blue-600 hover:text-blue-700 text-xl" />
+          </a>
+          <a href={emailShare} target="_blank" rel="noopener noreferrer">
+            <FaEnvelope className="text-gray-600 hover:text-gray-800 text-xl" />
           </a>
         </div>
       )}
