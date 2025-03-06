@@ -21,9 +21,9 @@ const ShareModal = ({ url, image, title }) => {
     twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(
       url
     )}&text=${encodeURIComponent(title)}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+    facebook: `https://www.facebook.com/dialog/share?app_id=672094871929706&href=${encodeURIComponent(
       url
-    )}`,
+    )}&display=popup`,
   };
 
   const emailShare = `mailto:?subject=${encodeURIComponent(
