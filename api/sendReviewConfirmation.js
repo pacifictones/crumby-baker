@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       from: "The Crumby Baker <no-reply@thecrumbybaker.com>",
       to: email,
       subject: "Confirm Your Review",
-      html: `<p>Click <a href="https://crumby-baker.vercel.app/api/confirmReview?code=${confirmationCode}">here</a> to confirm your review.</p>`,
+      html: `<p>Click <a href="https://thecrumbybaker.com/api/confirmReview?code=${confirmationCode}">here</a> to confirm your review.</p>`,
     });
 
     return res.status(200).json({ message: "Confirmation email sent" });
