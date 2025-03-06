@@ -12,6 +12,7 @@ import RecipeDetail from "./components/RecipeDetail.jsx";
 import BlogDetail from "./components/BlogDetail.jsx";
 import PrintRecipe from "./pages/PrintRecipe.jsx";
 import NoLayout from "./components/NoLayout.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                   <Route path="/blog/:slug" element={<BlogDetail />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 </Routes>
               </Layout>
             }
