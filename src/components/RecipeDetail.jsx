@@ -195,7 +195,11 @@ function RecipeDetail() {
               </button>
             </div>
             <div>
-              <ShareModal />
+              <ShareModal
+                url={`https://thecrumbybaker.com/recipes/${slug}`}
+                image={urlFor(recipe.mainImage).url()}
+                title={recipe.title}
+              />
             </div>
           </div>
         </div>
