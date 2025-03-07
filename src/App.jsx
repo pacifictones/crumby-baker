@@ -13,6 +13,7 @@ import BlogDetail from "./components/BlogDetail.jsx";
 import PrintRecipe from "./pages/PrintRecipe.jsx";
 import NoLayout from "./components/NoLayout.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import DataDeletion from "./pages/DataDeletion.jsx";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/data-deletion" element={<DataDeletion />} />
                 </Routes>
               </Layout>
             }
