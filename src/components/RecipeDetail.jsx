@@ -46,8 +46,6 @@ function RecipeDetail() {
   const [reviews, setReviews] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
 
-  const ogImageUrl = recipe.mainImage ? urlFor(recipe.mainImage).url() : "";
-
   const fetchRecipe = async () => {
     try {
       const data = await client.fetch(
@@ -88,6 +86,7 @@ function RecipeDetail() {
   if (!recipe) return <div>Loading...</div>;
 
   const imageUrls = recipe.gallery.map((img) => urlFor(img).url());
+  const ogImageUrl = recipe.mainImage ? urlFor(recipe.mainImage).url() : "";
 
   // const reviews = recipe.reviews || [];
   const averageRating = reviews.length
@@ -134,7 +133,7 @@ function RecipeDetail() {
         {/* Hero Section */}
         <section
           className="relative bg-cover bg-center h-[40rem] flex items-center justify-start px-6 sm:px-12 lg:px-20 mb-12"
-          style={{ backgroundImage: `url(${urlFor(recipe.mainImage).url()})` }}
+          style={{ backgroundImage: `url(${ogImageUrl})` }}
         >
           {/* Dark Overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-20"></div>
