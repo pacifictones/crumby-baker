@@ -10,6 +10,7 @@ import { createClient } from "@sanity/client";
 import StarBreakdown from "./StarBreakdown";
 import CookModeToggle from "./CookModeToggle";
 import ShareModal from "./ShareModal";
+import { Helmet } from "react-helmet";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -44,6 +45,8 @@ function RecipeDetail() {
   // Store reviews
   const [reviews, setReviews] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
+
+  const ogImageUrl = recipe.mainImage ? urlFor(recipe.mainImage).url() : "";
 
   const fetchRecipe = async () => {
     try {
@@ -114,302 +117,316 @@ function RecipeDetail() {
   }
 
   return (
-    <div className="w-full">
-      {/* Hero Section */}
-      <section
-        className="relative bg-cover bg-center h-[40rem] flex items-center justify-start px-6 sm:px-12 lg:px-20 mb-12"
-        style={{ backgroundImage: `url(${urlFor(recipe.mainImage).url()})` }}
-      >
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-
-        {/* Title Section */}
-        <div className="relative z-10  text-white px-4">
-          <h1 className="font-heading text-4xl font-bold">{recipe.title}</h1>
-        </div>
-      </section>
-
-      {/* Info and Gallery section */}
-      <section className="max-w-screen-lg mx-auto font-body px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        {/* Left: Description and Info */}
-
-        <div>
-          <div className="felx items-center gap-2 mb-2">
-            <StarRating rating={Math.round(averageRating)} />
-            <p className="mt-2">
-              <a
-                href="#reviews"
-                className="font-heading text-brand-primary hover:text-brand-hover text-md"
-              >
-                {reviews.length} review{reviews.length !== 1 ? "s" : ""}
-              </a>
-            </p>
-          </div>
-          <p className="mb-8">{recipe.description}</p>
-          {/* Row 1: Prep, Cook, Total */}
-          <div className="font-heading grid grid-cols-3 gap-y-4 text-center mb-4">
-            <div>
-              <p>Prep</p>
-              <p>
-                <strong>{recipe.prepTime} mins</strong>
-              </p>
-            </div>
-            <div className="divide-x divide-gray-300">
-              <p>Cook</p>
-              <p>
-                <strong>{recipe.cookTime} mins</strong>{" "}
-              </p>
-            </div>
-            <div className="divide-x divide-gray-300 ">
-              <p>Total</p>
-              <p>
-                <strong>{recipe.totalTime} mins</strong>
-              </p>
-            </div>
-            <div className="col-span-3 border-b border-gray-300 my-2"></div>
-
-            <div>
-              <p>Servings</p>
-              <p>
-                <strong>{recipe.servings}</strong>
-              </p>
-            </div>
-
-            <div className="col-span-3 border-b border-gray-300 my-2"></div>
-            <div className="col-span-1 flex justify-center">
-              <button
-                onClick={() => window.open(`/print/${slug}`, "_blank")}
-                className="flex items-center space-x-2 hover:text-brand-primary"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="28"
-                  height="28"
-                  viewBox="0 -960 960 960"
-                  stroke="black"
-                  strokeWidth="0.01"
-                >
-                  <path d="M640-640v-120H320v120h-80v-200h480v200zm-480 80h640zm560 100q17 0 28.5-11.5T760-500t-11.5-28.5T720-540t-28.5 11.5T680-500t11.5 28.5T720-460m-80 260v-160H320v160zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80z" />
-                </svg>
-                <span>Print</span>
-              </button>
-            </div>
-            <div>
-              <ShareModal
-                url={`https://thecrumbybaker.com/recipes/${slug}`}
-                image={urlFor(recipe.mainImage).url()}
-                title={recipe.title}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Right: Swiper Main + Thumbnails */}
-        <div>
-          {/* Big image */}
-          <img
-            src={imageUrls[0]}
-            alt="Main dish"
-            className="w-full h-auto rounded shadow mb-4 cursor-pointer"
-            onClick={() => {
-              setLightboxIndex(0);
-              setLightboxOpen(true);
-            }}
-          />
-
-          {/* Thumbnail Swiper */}
-          <Swiper
-            key={imageUrls.length}
-            modules={[Navigation, Thumbs]}
-            navigation
-            onSwiper={setThumbsSwiper}
-            slidesPerView={2.5} // Show 3 thumbs at a time
-            slidesPerGroup={1}
-            spaceBetween={10}
-            watchSlidesProgress
-            className="cursor-pointer h-40"
-          >
-            {imageUrls.slice(1).map((url, idx) => (
-              <SwiperSlide key={idx}>
-                <div className="w-full aspect-square overflow-hidden">
-                  <img
-                    src={url}
-                    alt={`Thumbnail ${idx + 1}`}
-                    className="w-full h-full object-cover rounded shadow"
-                    onClick={() => {
-                      setLightboxIndex(idx + 1);
-                      setLightboxOpen(true);
-                    }}
-                  />
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      </section>
-
-      {/* Lightbox Component */}
-      {lightboxOpen && (
-        <Lightbox
-          open={lightboxOpen}
-          close={() => setLightboxOpen(false)}
-          slides={imageUrls.map((src) => ({ src }))}
-          index={lightboxIndex}
-          on={{
-            view: ({ index }) => setLightboxIndex(index),
-          }}
+    <>
+      {/* Helmet for dynamic og: tags based on the loaded recipe */}
+      <Helmet>
+        <title>{recipe.title}</title>
+        <meta property="og:title" content={recipe.title} />
+        <meta property="og:description" content={recipe.description} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta
+          property="og:url"
+          content={`https://thecrumbybaker.com/recipes/${slug}`}
         />
-      )}
+        <meta property="og:type" content="article" />
+      </Helmet>
+      <div className="w-full">
+        {/* Hero Section */}
+        <section
+          className="relative bg-cover bg-center h-[40rem] flex items-center justify-start px-6 sm:px-12 lg:px-20 mb-12"
+          style={{ backgroundImage: `url(${urlFor(recipe.mainImage).url()})` }}
+        >
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
 
-      {/* Ingredients and Instructions Section */}
+          {/* Title Section */}
+          <div className="relative z-10  text-white px-4">
+            <h1 className="font-heading text-4xl font-bold">{recipe.title}</h1>
+          </div>
+        </section>
 
-      <div className=" printable-recipe w-full bg-[#DEE7E7] py-8">
-        <div className="max-w-screen-lg mx-auto px-4">
-          <section className="grid grid-cols-1 lg:grid-cols-6 gap-8 ">
-            {/* Left: Ingredients */}
-            <div className="lg:col-span-2">
-              <div className="border-b border-gray-300 pb-2 mb-4">
-                <h2 className=" font-heading text-2xl font-bold mb-4">
-                  Ingredients
-                </h2>
-              </div>
+        {/* Info and Gallery section */}
+        <section className="max-w-screen-lg mx-auto font-body px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          {/* Left: Description and Info */}
 
-              <ul className="font-body list-disc list-inside space-y-1">
-                {recipe.ingredients.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Right: Instructions */}
-            <div className="lg:col-span-4 bg-white p-10 rounded">
-              <div className="flex w-full flex-col sm:flex-row sm:justify-between border-b border-gray-300 pb-2 mb-4 sm:mt-0 text-center sm:text-left">
-                <h2 className="font-heading text-2xl font-bold mb-2 sm:mb-0 w-full">
-                  Instructions
-                </h2>
-                {recipe.instructions.some((step) => step.image) && (
-                  <div className="w-full flex justify-center sm:justify-end mt-2 sm:mt-0">
-                    <button
-                      onClick={() => setShowImages(!showImages)}
-                      className="mb-4 btn-primary"
-                    >
-                      {showImages ? "Hide Photos" : "Show Photos"}
-                    </button>
-                  </div>
-                )}
-              </div>
-              <div className=" border-b border-gray-300 pb-2 mb-4">
-                <CookModeToggle />
-              </div>
-
-              <ol className="font-body list-decimal list-outside space-y-6">
-                {recipe.instructions.map((step, idx) => (
-                  <li key={idx}>
-                    <PortableText value={step.text} />
-                    {showImages && step.image && (
-                      <img
-                        src={urlFor(step.image).url()}
-                        alt={`Step ${idx + 1}`}
-                        className="rounded shadow mt-2"
-                      />
-                    )}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </section>
-        </div>
-      </div>
-
-      {/* ============ Reviews section at bottom ============ */}
-      <section id="reviews" className="max-w-screen-lg mx-auto px-4 py-8">
-        <h2 className="font-heading text-3xl font-bold mb-4">Reviews</h2>
-        {/* Reviews Header and Hero section */}
-        <div className="border-b border-gray-300 pb-6 mb-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-y-4">
-            {/* Left: Average Rating and Stars */}
-            <div className="font-heading flex flex-col items-center  py-4">
-              <p className="text-4xl font-bold">{averageRating.toFixed(1)}</p>
-              <StarRating rating={averageRating} />
-              <p className="text-gray-600">
-                {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+          <div>
+            <div className="felx items-center gap-2 mb-2">
+              <StarRating rating={Math.round(averageRating)} />
+              <p className="mt-2">
+                <a
+                  href="#reviews"
+                  className="font-heading text-brand-primary hover:text-brand-hover text-md"
+                >
+                  {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+                </a>
               </p>
             </div>
-            {/* Middle: StarBreakdown */}
-            <div className="flex flex-col justify-center px-6 sm:border-r sm:border-l border-gray-300 py-4">
-              <StarBreakdown reviews={reviews} maxStars={5} />
-            </div>
-            <div>
-              {/* Right: Write a review button*/}
-              <div className="flex items-center justify-center py-4">
+            <p className="mb-8">{recipe.description}</p>
+            {/* Row 1: Prep, Cook, Total */}
+            <div className="font-heading grid grid-cols-3 gap-y-4 text-center mb-4">
+              <div>
+                <p>Prep</p>
+                <p>
+                  <strong>{recipe.prepTime} mins</strong>
+                </p>
+              </div>
+              <div className="divide-x divide-gray-300">
+                <p>Cook</p>
+                <p>
+                  <strong>{recipe.cookTime} mins</strong>{" "}
+                </p>
+              </div>
+              <div className="divide-x divide-gray-300 ">
+                <p>Total</p>
+                <p>
+                  <strong>{recipe.totalTime} mins</strong>
+                </p>
+              </div>
+              <div className="col-span-3 border-b border-gray-300 my-2"></div>
+
+              <div>
+                <p>Servings</p>
+                <p>
+                  <strong>{recipe.servings}</strong>
+                </p>
+              </div>
+
+              <div className="col-span-3 border-b border-gray-300 my-2"></div>
+              <div className="col-span-1 flex justify-center">
                 <button
-                  onClick={() => setShowReviewModal(true)}
-                  className="btn-primary"
+                  onClick={() => window.open(`/print/${slug}`, "_blank")}
+                  className="flex items-center space-x-2 hover:text-brand-primary"
                 >
-                  Write a Review
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 -960 960 960"
+                    stroke="black"
+                    strokeWidth="0.01"
+                  >
+                    <path d="M640-640v-120H320v120h-80v-200h480v200zm-480 80h640zm560 100q17 0 28.5-11.5T760-500t-11.5-28.5T720-540t-28.5 11.5T680-500t11.5 28.5T720-460m-80 260v-160H320v160zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80z" />
+                  </svg>
+                  <span>Print</span>
                 </button>
               </div>
+              <div>
+                <ShareModal
+                  url={`https://thecrumbybaker.com/recipes/${slug}`}
+                  image={urlFor(recipe.mainImage).url()}
+                  title={recipe.title}
+                />
+              </div>
             </div>
+          </div>
+
+          {/* Right: Swiper Main + Thumbnails */}
+          <div>
+            {/* Big image */}
+            <img
+              src={imageUrls[0]}
+              alt="Main dish"
+              className="w-full h-auto rounded shadow mb-4 cursor-pointer"
+              onClick={() => {
+                setLightboxIndex(0);
+                setLightboxOpen(true);
+              }}
+            />
+
+            {/* Thumbnail Swiper */}
+            <Swiper
+              key={imageUrls.length}
+              modules={[Navigation, Thumbs]}
+              navigation
+              onSwiper={setThumbsSwiper}
+              slidesPerView={2.5} // Show 3 thumbs at a time
+              slidesPerGroup={1}
+              spaceBetween={10}
+              watchSlidesProgress
+              className="cursor-pointer h-40"
+            >
+              {imageUrls.slice(1).map((url, idx) => (
+                <SwiperSlide key={idx}>
+                  <div className="w-full aspect-square overflow-hidden">
+                    <img
+                      src={url}
+                      alt={`Thumbnail ${idx + 1}`}
+                      className="w-full h-full object-cover rounded shadow"
+                      onClick={() => {
+                        setLightboxIndex(idx + 1);
+                        setLightboxOpen(true);
+                      }}
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        </section>
+
+        {/* Lightbox Component */}
+        {lightboxOpen && (
+          <Lightbox
+            open={lightboxOpen}
+            close={() => setLightboxOpen(false)}
+            slides={imageUrls.map((src) => ({ src }))}
+            index={lightboxIndex}
+            on={{
+              view: ({ index }) => setLightboxIndex(index),
+            }}
+          />
+        )}
+
+        {/* Ingredients and Instructions Section */}
+
+        <div className=" printable-recipe w-full bg-[#DEE7E7] py-8">
+          <div className="max-w-screen-lg mx-auto px-4">
+            <section className="grid grid-cols-1 lg:grid-cols-6 gap-8 ">
+              {/* Left: Ingredients */}
+              <div className="lg:col-span-2">
+                <div className="border-b border-gray-300 pb-2 mb-4">
+                  <h2 className=" font-heading text-2xl font-bold mb-4">
+                    Ingredients
+                  </h2>
+                </div>
+
+                <ul className="font-body list-disc list-inside space-y-1">
+                  {recipe.ingredients.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Right: Instructions */}
+              <div className="lg:col-span-4 bg-white p-10 rounded">
+                <div className="flex w-full flex-col sm:flex-row sm:justify-between border-b border-gray-300 pb-2 mb-4 sm:mt-0 text-center sm:text-left">
+                  <h2 className="font-heading text-2xl font-bold mb-2 sm:mb-0 w-full">
+                    Instructions
+                  </h2>
+                  {recipe.instructions.some((step) => step.image) && (
+                    <div className="w-full flex justify-center sm:justify-end mt-2 sm:mt-0">
+                      <button
+                        onClick={() => setShowImages(!showImages)}
+                        className="mb-4 btn-primary"
+                      >
+                        {showImages ? "Hide Photos" : "Show Photos"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className=" border-b border-gray-300 pb-2 mb-4">
+                  <CookModeToggle />
+                </div>
+
+                <ol className="font-body list-decimal list-outside space-y-6">
+                  {recipe.instructions.map((step, idx) => (
+                    <li key={idx}>
+                      <PortableText value={step.text} />
+                      {showImages && step.image && (
+                        <img
+                          src={urlFor(step.image).url()}
+                          alt={`Step ${idx + 1}`}
+                          className="rounded shadow mt-2"
+                        />
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </section>
           </div>
         </div>
 
-        {/* If no reviews, show a message */}
-        {!reviews.length && (
-          <p className="font-heading text-gray-600">
-            No reviews yet. Be the first!
-          </p>
-        )}
-
-        {/* Show only "visibleCount" reviews */}
-        {displayedReviews.map((review) => (
-          <div key={review.id} className="border-b py-4 mb-4">
-            {/* StarRatingDisplay */}
-            <div className="flex items-center gap-2 mb-1">
-              <StarRatingDisplay rating={review.rating} />
-              <span className="font-heading text-md text-gray-600">
-                {review.authorName || "Anonymous"}
-              </span>
-            </div>
-            <p className="font-body text-gray-800">{review.reviewText}</p>
-          </div>
-        ))}
-
-        {/* Load More button if more reivews that visibleCount */}
-        {reviews.length > visibleCount && (
-          <button
-            onClick={() => setVisibleCount(visibleCount + 5)}
-            className="font-heading bg-[#ED6A5A] text-white px-3 py-1 rounded"
-          >
-            Load More
-          </button>
-        )}
-
-        {/* Review form modal */}
-        {showReviewModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white w-full max-w-md mx-auto p-6 rounded shadow-lg relative">
-              {/* Close button */}
-              <button
-                className="absolute top-2 right-2 text-gray-600"
-                onClick={() => setShowReviewModal(false)}
-              >
-                ✕
-              </button>
-
-              <h3 className="font-heading text-2xl font-semibold mb-4">
-                Leave a Review
-              </h3>
-              {/* ReviewForm */}
-              <ReviewForm
-                recipeId={recipe._id}
-                onReviewSubmitted={handleReviewSubmitted}
-              />
-              {console.log("Passing recipeID to ReviewForm:", recipe?._id)}
+        {/* ============ Reviews section at bottom ============ */}
+        <section id="reviews" className="max-w-screen-lg mx-auto px-4 py-8">
+          <h2 className="font-heading text-3xl font-bold mb-4">Reviews</h2>
+          {/* Reviews Header and Hero section */}
+          <div className="border-b border-gray-300 pb-6 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-y-4">
+              {/* Left: Average Rating and Stars */}
+              <div className="font-heading flex flex-col items-center  py-4">
+                <p className="text-4xl font-bold">{averageRating.toFixed(1)}</p>
+                <StarRating rating={averageRating} />
+                <p className="text-gray-600">
+                  {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+              {/* Middle: StarBreakdown */}
+              <div className="flex flex-col justify-center px-6 sm:border-r sm:border-l border-gray-300 py-4">
+                <StarBreakdown reviews={reviews} maxStars={5} />
+              </div>
+              <div>
+                {/* Right: Write a review button*/}
+                <div className="flex items-center justify-center py-4">
+                  <button
+                    onClick={() => setShowReviewModal(true)}
+                    className="btn-primary"
+                  >
+                    Write a Review
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        )}
-      </section>
-    </div>
+
+          {/* If no reviews, show a message */}
+          {!reviews.length && (
+            <p className="font-heading text-gray-600">
+              No reviews yet. Be the first!
+            </p>
+          )}
+
+          {/* Show only "visibleCount" reviews */}
+          {displayedReviews.map((review) => (
+            <div key={review.id} className="border-b py-4 mb-4">
+              {/* StarRatingDisplay */}
+              <div className="flex items-center gap-2 mb-1">
+                <StarRatingDisplay rating={review.rating} />
+                <span className="font-heading text-md text-gray-600">
+                  {review.authorName || "Anonymous"}
+                </span>
+              </div>
+              <p className="font-body text-gray-800">{review.reviewText}</p>
+            </div>
+          ))}
+
+          {/* Load More button if more reivews that visibleCount */}
+          {reviews.length > visibleCount && (
+            <button
+              onClick={() => setVisibleCount(visibleCount + 5)}
+              className="font-heading bg-[#ED6A5A] text-white px-3 py-1 rounded"
+            >
+              Load More
+            </button>
+          )}
+
+          {/* Review form modal */}
+          {showReviewModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white w-full max-w-md mx-auto p-6 rounded shadow-lg relative">
+                {/* Close button */}
+                <button
+                  className="absolute top-2 right-2 text-gray-600"
+                  onClick={() => setShowReviewModal(false)}
+                >
+                  ✕
+                </button>
+
+                <h3 className="font-heading text-2xl font-semibold mb-4">
+                  Leave a Review
+                </h3>
+                {/* ReviewForm */}
+                <ReviewForm
+                  recipeId={recipe._id}
+                  onReviewSubmitted={handleReviewSubmitted}
+                />
+                {console.log("Passing recipeID to ReviewForm:", recipe?._id)}
+              </div>
+            </div>
+          )}
+        </section>
+      </div>
+    </>
   );
 }
 
