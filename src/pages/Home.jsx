@@ -4,6 +4,7 @@ import { set } from "react-hook-form";
 import { Link } from "react-router-dom";
 import ResponsiveCarouselGrid from "../components/ResponsiveCarouselGrid";
 import SeeMoreCard from "../components/SeeMoreCard";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
@@ -44,6 +45,9 @@ const Home = () => {
 
   return (
     <>
+      <Helmet>
+        <title>The Crumby Baker</title>
+      </Helmet>
       {/* <header className="w-full py-10 text-center">
         <h1 className="text-4xl font-semibold mb-4">
           Welcome to the Crumby Baker

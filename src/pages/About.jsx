@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import client, { urlFor } from "../sanityClient";
 import { PortableText } from "@portabletext/react";
+import { Helmet } from "react-helmet";
 
 const About = () => {
   const [aboutContent, setAboutConent] = useState(null);
@@ -35,25 +36,30 @@ const About = () => {
   };
 
   return (
-    <div className="max-w-screen-lg mx-auto p-4">
-      <h1 className="font-heading text-3xl font-bold text-center mb-4">
-        {aboutContent.title}
-      </h1>
-      {aboutContent.image && (
-        <img
-          className="mx-auto rounded-lg mb-4"
-          src={urlFor(aboutContent.image).url()}
-          alt="About"
-        />
-      )}
+    <>
+      <Helmet>
+        <title>About</title>
+      </Helmet>
+      <div className="max-w-screen-lg mx-auto p-4">
+        <h1 className="font-heading text-3xl font-bold text-center mb-4">
+          {aboutContent.title}
+        </h1>
+        {aboutContent.image && (
+          <img
+            className="mx-auto rounded-lg mb-4"
+            src={urlFor(aboutContent.image).url()}
+            alt="About"
+          />
+        )}
 
-      <div className="font-body prose max-w-none">
-        <PortableText value={aboutContent.content} components={components} />
-        {aboutContent.content.map((block, index) => (
-          <p key={index}>{block.children[0]?.text}</p>
-        ))}
+        <div className="font-body prose max-w-none">
+          <PortableText value={aboutContent.content} components={components} />
+          {aboutContent.content.map((block, index) => (
+            <p key={index}>{block.children[0]?.text}</p>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

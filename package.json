@@ -5,10 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npx react-snap",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest"
+  },
+  "reactSnap": {
+    "source": "dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -26,7 +29,8 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.53.0",
     "react-icons": "^5.5.0",
-    "react-router-dom": "^6.26.1",
+    "react-router-dom": "^7.3.0",
+    "react-snap": "^1.23.0",
     "resend": "^4.1.2",
     "swiper": "^11.2.2",
     "vite": "^6.2.0",

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import client from "../sanityClient";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]); // All recipes fetched from Sanity
@@ -62,102 +63,107 @@ const Recipes = () => {
   const handleSortChange = (e) => setSortOption(e.target.value);
 
   return (
-    <div className="max-w-screen-lg mx-auto px-4">
-      <header className="text-center py-10">
-        <h1 className="font-heading text-4xl font-bold mb-4 text-gray-800">
-          Crumby Baker Recipes
-        </h1>
+    <>
+      <Helmet>
+        <title>Recipes</title>
+      </Helmet>
+      <div className="max-w-screen-lg mx-auto px-4">
+        <header className="text-center py-10">
+          <h1 className="font-heading text-4xl font-bold mb-4 text-gray-800">
+            Crumby Baker Recipes
+          </h1>
 
-        {/* <p className="text-lg text-gray-700">
+          {/* <p className="text-lg text-gray-700">
           I hope you find something you like!
         </p> */}
-      </header>
+        </header>
 
-      {/* filter and sort controls */}
-      <div className="font-heading filter-controls flex flex-wrap justify-center gap-4 my-6">
-        {/* category filter */}
-        <div className="flex items-center gap-2">
-          <label
-            htmlFor="categoryFilter"
-            className="font-semibold whitespace-nowrap"
-          >
-            Filter by Category:{" "}
-          </label>
-          <select
-            id="categoryFilter"
-            value={filterCategory}
-            onChange={handleCategoryChange}
-            className="ml-2 border rounded px-2 py-1"
-          >
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Sort Option */}
-        <div className="flex items-center gap-2">
-          <label
-            htmlFor="sortOption"
-            className="font-semibold whitespace-nowrap"
-          >
-            Sort by:{" "}
-          </label>
-          <select
-            id="sortOption"
-            value={sortOption}
-            onChange={handleSortChange}
-            className="ml-2 border rounded px-2 py-1"
-          >
-            <option value="Newest">Newest</option>
-            <option value="Oldest">Oldest</option>
-            <option value="Alphabetical">A-Z</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Loading Indicator */}
-
-      {loading ? (
-        <div className="flex justify-center items-center py-10">
-          <div
-            className="animate-spin rounded-full h-8 w-8
-          border-t-2 border-b-2 border-gray-500"
-          ></div>
-        </div>
-      ) : filteredRecipes.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
-          {/* Recipe Grid */}
-          {filteredRecipes.map((recipe) => (
-            <Link
-              to={`/recipes/${recipe.slug.current}`}
-              className="block rounded shadow hover:text-brand-primary"
-              key={recipe.slug.current}
+        {/* filter and sort controls */}
+        <div className="font-heading filter-controls flex flex-wrap justify-center gap-4 my-6">
+          {/* category filter */}
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="categoryFilter"
+              className="font-semibold whitespace-nowrap"
             >
-              <div className="w-full aspect-square overflow-hidden">
-                <img
-                  src={recipe.image}
-                  alt={recipe.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-heading text-xl font-bold mb-2">
-                  {recipe.title}
-                </h3>
-                <p className="font-body  text-gray-600 text-sm">
-                  {recipe.description}
-                </p>
-              </div>
-            </Link>
-          ))}
+              Filter by Category:{" "}
+            </label>
+            <select
+              id="categoryFilter"
+              value={filterCategory}
+              onChange={handleCategoryChange}
+              className="ml-2 border rounded px-2 py-1"
+            >
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sort Option */}
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="sortOption"
+              className="font-semibold whitespace-nowrap"
+            >
+              Sort by:{" "}
+            </label>
+            <select
+              id="sortOption"
+              value={sortOption}
+              onChange={handleSortChange}
+              className="ml-2 border rounded px-2 py-1"
+            >
+              <option value="Newest">Newest</option>
+              <option value="Oldest">Oldest</option>
+              <option value="Alphabetical">A-Z</option>
+            </select>
+          </div>
         </div>
-      ) : (
-        <p className="text-center text-gray-500">No recipes found.</p>
-      )}
-    </div>
+
+        {/* Loading Indicator */}
+
+        {loading ? (
+          <div className="flex justify-center items-center py-10">
+            <div
+              className="animate-spin rounded-full h-8 w-8
+          border-t-2 border-b-2 border-gray-500"
+            ></div>
+          </div>
+        ) : filteredRecipes.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
+            {/* Recipe Grid */}
+            {filteredRecipes.map((recipe) => (
+              <Link
+                to={`/recipes/${recipe.slug.current}`}
+                className="block rounded shadow hover:text-brand-primary"
+                key={recipe.slug.current}
+              >
+                <div className="w-full aspect-square overflow-hidden">
+                  <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="font-heading text-xl font-bold mb-2">
+                    {recipe.title}
+                  </h3>
+                  <p className="font-body  text-gray-600 text-sm">
+                    {recipe.description}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">No recipes found.</p>
+        )}
+      </div>
+    </>
   );
 };
 
