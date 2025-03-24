@@ -8,3 +8,9 @@
 html body {
   display: block !important;
 }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: auto !important;
+  margin: 0;
+}

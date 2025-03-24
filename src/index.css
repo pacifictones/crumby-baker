@@ -34,3 +34,9 @@
 .btn-primary:disabled {
   @apply opacity-50 cursor-not-allowed;
 }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: auto !important;
+  margin: 0;
+}

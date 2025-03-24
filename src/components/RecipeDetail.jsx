@@ -29,6 +29,9 @@ function RecipeDetail() {
   const { slug } = useParams(); // Get the slug from the URL
   const [recipe, setRecipe] = useState(null); // State to store recipe data
 
+  // State for how many servigns user wants now
+  const [currentServings, setCurrentServings] = useState(null);
+
   //delete soon
   const [showImages, setShowImages] = useState(true);
 
@@ -60,9 +63,24 @@ function RecipeDetail() {
         totalTime,
         servings,
         ingredients,
+        ingredientSections[]{
+        sectionTitle,
+        items[]{
+        quantity,
+        unit,
+        item,notes
+        }
+        },
         instructions []{
         text,
         image,
+        },
+        instructionSections[]{
+        sectionTitle,
+        steps[]{
+        text,
+        image
+        }
         },
         "reviews": *[
         _type == "review" && recipe._ref == ^._id &&
@@ -74,6 +92,7 @@ function RecipeDetail() {
       console.log("Fetched recipe:", data);
       setRecipe(data);
       setReviews(data?.reviews || []);
+      setCurrentServings(data.servings);
     } catch (error) {
       console.error("Error fetching recipe:", error);
     }
@@ -113,6 +132,18 @@ function RecipeDetail() {
         //No setRating, so read-only
       />
     );
+  }
+
+  function scaleQuantity(baseQty, baseServings, newServings) {
+    if (
+      typeof baseQty !== "number" ||
+      typeof baseServings !== "number" ||
+      baseServings === 0 ||
+      typeof newServings !== "number"
+    ) {
+      return baseQty;
+    }
+    return baseQty * (newServings / baseServings);
   }
 
   return (
@@ -186,7 +217,12 @@ function RecipeDetail() {
               <div>
                 <p>Servings</p>
                 <p>
-                  <strong>{recipe.servings}</strong>
+                  <input
+                    type="number"
+                    className="font-bold text-center border border-gray-300 rounded appearance-auto outline-none focus:border-brand-primary w-12"
+                    value={currentServings ?? ""}
+                    onChange={(e) => setCurrentServings(Number(e.target.value))}
+                  />
                 </p>
               </div>
 
@@ -289,11 +325,39 @@ function RecipeDetail() {
                   </h2>
                 </div>
 
-                <ul className="font-body list-disc list-inside space-y-1">
-                  {recipe.ingredients.map((item, idx) => (
-                    <li key={idx}>{item}</li>
-                  ))}
-                </ul>
+                {recipe.ingredientSections?.map((section, secIdx) => (
+                  <div key={secIdx} className="mb-6">
+                    {section.sectionTitle && (
+                      <h3 className="font-heading text-xl mb-2">
+                        {section.sectionTitle}
+                      </h3>
+                    )}
+                    {/*  The ingredients within section */}
+                    <ul className="font-body list-disc list-outside space-y-1">
+                      {section.items?.map((line, idx) => {
+                        // line is an IngredientLine: {quanitity, unit, item, notes}
+                        const scaledQty = scaleQuantity(
+                          line.quantity,
+                          recipe.servings,
+                          currentServings
+                        );
+
+                        return (
+                          <li key={idx}>
+                            {/* Displayed scaled quantity if numeric */}
+                            {typeof scaledQty === "number" &&
+                              !isNaN(scaledQty) && (
+                                <span>{scaledQty.toFixed(2)}</span>
+                              )}
+                            {/* Then unit, item */}
+                            {line.unit && ` ${line.unit} `}
+                            {line.item}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ))}
               </div>
 
               {/* Right: Instructions */}
@@ -302,7 +366,10 @@ function RecipeDetail() {
                   <h2 className="font-heading text-2xl font-bold mb-2 sm:mb-0 w-full">
                     Instructions
                   </h2>
-                  {recipe.instructions.some((step) => step.image) && (
+                  {/* Only show "Hide/Show Photos" if at least one step has an image */}
+                  {recipe.instructionSections?.some((instSec) =>
+                    instSec.steps?.some((step) => step.image)
+                  ) && (
                     <div className="w-full flex justify-center sm:justify-end mt-2 sm:mt-0">
                       <button
                         onClick={() => setShowImages(!showImages)}
@@ -316,21 +383,30 @@ function RecipeDetail() {
                 <div className=" border-b border-gray-300 pb-2 mb-4">
                   <CookModeToggle />
                 </div>
-
-                <ol className="font-body list-decimal list-outside space-y-6">
-                  {recipe.instructions.map((step, idx) => (
-                    <li key={idx}>
-                      <PortableText value={step.text} />
-                      {showImages && step.image && (
-                        <img
-                          src={urlFor(step.image).url()}
-                          alt={`Step ${idx + 1}`}
-                          className="rounded shadow mt-2"
-                        />
-                      )}
-                    </li>
-                  ))}
-                </ol>
+                {/* Instructions Sections */}
+                {recipe.instructionSections?.map((instSec, secIdx) => (
+                  <div key={secIdx} className="mb-6">
+                    {instSec.sectionTitle && (
+                      <h3 className="font-heading text-xl font-bold mb-2">
+                        {instSec.sectionTitle}
+                      </h3>
+                    )}
+                    <ol className="font-body list-decimal list-outside space-y-6">
+                      {instSec.steps?.map((step, idx) => (
+                        <li key={idx}>
+                          <PortableText value={step.text} />
+                          {showImages && step.image && (
+                            <img
+                              src={urlFor(step.image).url()}
+                              alt={`Step ${idx + 1}`}
+                              className="rounded shadow mt-2"
+                            />
+                          )}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                ))}
               </div>
             </section>
           </div>

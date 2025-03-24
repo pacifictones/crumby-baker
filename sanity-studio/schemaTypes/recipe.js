@@ -1,4 +1,5 @@
 import step from './step'
+import ingredientLine from './ingredientLine'
 
 export default {
   name: 'recipe',
@@ -21,6 +22,59 @@ export default {
       title: 'Instructions',
       type: 'array',
       of: [{type: 'step'}], // Reference custom step object
+    },
+
+    {
+      name: 'ingredientSections',
+      title: 'Ingredient Sections',
+      type: 'array',
+      of: [
+        {
+          name: 'ingredientSection',
+          title: 'Ingredient Section',
+          type: 'object',
+          fields: [
+            {
+              name: 'sectionTitle',
+              title: 'Section Title',
+              type: 'string',
+              description: "e.g., 'Crust', 'Filling', 'Topping'",
+            },
+            // Array of "ingredientLine" objects
+            {
+              name: 'items',
+              title: 'Ingredients',
+              type: 'array',
+              of: [{type: 'ingredientLine'}],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'instructionSections',
+      title: 'Instruction Sections',
+      type: 'array',
+      of: [
+        {
+          name: 'instructionSection',
+          title: 'Instruction Section',
+          type: 'object',
+          fields: [
+            {
+              name: 'sectionTitle',
+              title: 'Section Title',
+              type: 'string',
+            },
+            {
+              name: 'steps',
+              title: 'Steps',
+              type: 'array',
+              of: [{type: 'step'}],
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'mainImage',
@@ -73,7 +127,7 @@ export default {
     {
       name: 'servings',
       title: 'Servings/Yield',
-      type: 'string',
+      type: 'number',
     },
     {
       name: 'slug',
