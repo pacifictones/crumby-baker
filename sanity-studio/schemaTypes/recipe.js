@@ -83,12 +83,33 @@ export default {
       options: {
         hotspot: true,
       },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+          description: 'A short description of the image for screen readers',
+        },
+      ],
     },
     {
       name: 'gallery',
       title: 'Gallery',
       type: 'array',
-      of: [{type: 'image', options: {hotspot: true}}],
+      of: [
+        {
+          type: 'image',
+          options: {hotspot: true},
+          fields: [
+            {
+              name: 'alt',
+              title: 'Alt text',
+              type: 'string',
+              description: 'A short description of the image for sceen readers',
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'category',

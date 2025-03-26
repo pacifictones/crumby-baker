@@ -105,7 +105,17 @@ function RecipeDetail() {
 
   if (!recipe) return <div>Loading...</div>;
 
-  const imageUrls = recipe.gallery.map((img) => urlFor(img).url());
+  // const imageUrls = recipe.gallery.map((img) => urlFor(img).url());
+  const galleryImages =
+    recipe.gallery?.map((img) => ({
+      url: urlFor(img).url(),
+      alt: img.alt ?? "",
+    })) || [];
+
+  const lightboxSlides = galleryImages.map((imgObj) => ({
+    src: imgObj.url,
+  }));
+
   const ogImageUrl = recipe.mainImage ? urlFor(recipe.mainImage).url() : "";
 
   // const reviews = recipe.reviews || [];
@@ -151,7 +161,8 @@ function RecipeDetail() {
     <>
       {/* Helmet for dynamic og: tags based on the loaded recipe */}
       <Helmet>
-        <title>{recipe.title}</title>
+        <title>{recipe.title} | The Crumby Baker</title>
+        <meta name="description" content={recipe.description} />
         <meta property="og:title" content={recipe.title} />
         <meta property="og:description" content={recipe.description} />
         <meta property="og:image" content={ogImageUrl} />
@@ -260,19 +271,21 @@ function RecipeDetail() {
           {/* Right: Swiper Main + Thumbnails */}
           <div>
             {/* Big image */}
-            <img
-              src={imageUrls[0]}
-              alt="Main dish"
-              className="w-full h-auto rounded shadow mb-4 cursor-pointer"
-              onClick={() => {
-                setLightboxIndex(0);
-                setLightboxOpen(true);
-              }}
-            />
+            {galleryImages.length > 0 && (
+              <img
+                src={galleryImages[0].url}
+                alt={galleryImages[0].alt || "Main dish"}
+                className="w-full h-auto rounded shadow mb-4 cursor-pointer"
+                onClick={() => {
+                  setLightboxIndex(0);
+                  setLightboxOpen(true);
+                }}
+              />
+            )}
 
             {/* Thumbnail Swiper */}
             <Swiper
-              key={imageUrls.length}
+              key={galleryImages.length}
               modules={[Navigation, Thumbs]}
               navigation
               onSwiper={setThumbsSwiper}
@@ -282,12 +295,12 @@ function RecipeDetail() {
               watchSlidesProgress
               className="cursor-pointer h-40"
             >
-              {imageUrls.slice(1).map((url, idx) => (
+              {galleryImages.slice(1).map((imgObj, idx) => (
                 <SwiperSlide key={idx}>
                   <div className="w-full aspect-square overflow-hidden">
                     <img
-                      src={url}
-                      alt={`Thumbnail ${idx + 1}`}
+                      src={imgObj.url}
+                      alt={imgObj.alt || `Thumbnail ${idx + 1}`}
                       className="w-full h-full object-cover rounded shadow"
                       onClick={() => {
                         setLightboxIndex(idx + 1);
@@ -306,7 +319,7 @@ function RecipeDetail() {
           <Lightbox
             open={lightboxOpen}
             close={() => setLightboxOpen(false)}
-            slides={imageUrls.map((src) => ({ src }))}
+            slides={lightboxSlides}
             index={lightboxIndex}
             on={{
               view: ({ index }) => setLightboxIndex(index),
