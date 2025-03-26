@@ -11,6 +11,7 @@ import StarBreakdown from "./StarBreakdown";
 import CookModeToggle from "./CookModeToggle";
 import ShareModal from "./ShareModal";
 import { Helmet } from "react-helmet";
+import RecipeSchema from "./RecipeSchema";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -160,6 +161,7 @@ function RecipeDetail() {
         />
         <meta property="og:type" content="article" />
       </Helmet>
+      <RecipeSchema recipe={recipe} reviews={reviews} />
       <div className="w-full">
         {/* Hero Section */}
         <section
