@@ -12,7 +12,23 @@ export default {
       name: 'content',
       title: 'Content',
       type: 'array',
-      of: [{type: 'block'}], //Allows rich text content
+      of: [
+        {type: 'block'},
+        {
+          name: 'image',
+          type: 'image',
+          title: 'Image',
+          options: {hotspot: true},
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Alt Text',
+              description: 'Describe the image for screen readers',
+            },
+          ],
+        },
+      ], //Allows rich text content
     },
     {
       name: 'mainImage',
