@@ -105,18 +105,20 @@ function RecipeDetail() {
 
   if (!recipe) return <div>Loading...</div>;
 
-  // const imageUrls = recipe.gallery.map((img) => urlFor(img).url());
   const galleryImages =
     recipe.gallery?.map((img) => ({
-      url: urlFor(img).url(),
+      raw: img,
+      thumb: urlFor(img).width(400).quality(80).url(),
       alt: img.alt ?? "",
     })) || [];
 
   const lightboxSlides = galleryImages.map((imgObj) => ({
-    src: imgObj.url,
+    src: urlFor(imgObj.raw).width(1000).quality(80).url(),
   }));
 
-  const ogImageUrl = recipe.mainImage ? urlFor(recipe.mainImage).url() : "";
+  const ogImageUrl = recipe.mainImage
+    ? urlFor(recipe.mainImage).width(1600).quality(80).url()
+    : "";
 
   // const reviews = recipe.reviews || [];
   const averageRating = reviews.length
@@ -273,7 +275,7 @@ function RecipeDetail() {
             {/* Big image */}
             {galleryImages.length > 0 && (
               <img
-                src={galleryImages[0].url}
+                src={galleryImages[0].thumb}
                 alt={galleryImages[0].alt || "Main dish"}
                 className="w-full h-auto rounded shadow mb-4 cursor-pointer"
                 onClick={() => {
@@ -299,7 +301,7 @@ function RecipeDetail() {
                 <SwiperSlide key={idx}>
                   <div className="w-full aspect-square overflow-hidden">
                     <img
-                      src={imgObj.url}
+                      src={imgObj.thumb}
                       alt={imgObj.alt || `Thumbnail ${idx + 1}`}
                       className="w-full h-full object-cover rounded shadow"
                       onClick={() => {
@@ -412,8 +414,11 @@ function RecipeDetail() {
                           <PortableText value={step.text} />
                           {showImages && step.image && (
                             <img
-                              src={urlFor(step.image).url()}
-                              alt={`Step ${idx + 1}`}
+                              src={urlFor(step.image)
+                                .width(800)
+                                .quality(80)
+                                .url()}
+                              alt={step.image.alt || `Step ${idx + 1}`}
                               className="rounded shadow mt-2"
                             />
                           )}

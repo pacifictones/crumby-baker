@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import client from "../sanityClient";
+import client, { urlFor } from "../sanityClient";
 import { set } from "react-hook-form";
 import { Link } from "react-router-dom";
 import ResponsiveCarouselGrid from "../components/ResponsiveCarouselGrid";
@@ -84,8 +84,8 @@ const Home = () => {
                 >
                   <div className="w-full aspect-square overflow-hidden">
                     <img
-                      src={recipe.image}
-                      alt={recipe.title}
+                      src={urlFor(recipe.image).width(400).quality(80).url()}
+                      alt={recipe.image.alt || recipe.title}
                       className="w-full h-full object-cover"
                     />
                   </div>
