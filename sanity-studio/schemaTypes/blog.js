@@ -9,6 +9,16 @@ export default {
       type: 'string',
     },
     {
+      name: 'author',
+      title: 'Author',
+      type: 'string',
+    },
+    {
+      name: 'publishedAt',
+      title: 'Published At',
+      type: 'datetime',
+    },
+    {
       name: 'content',
       title: 'Content',
       type: 'array',

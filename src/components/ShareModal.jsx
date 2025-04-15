@@ -22,7 +22,7 @@ const ShareModal = ({ url, image, title }) => {
       url
     )}&text=${encodeURIComponent(title)}`,
     facebook: `https://www.facebook.com/dialog/share?app_id=672094871929706&href=${encodeURIComponent(
-      url
+      url || window.location.href
     )}&display=popup`,
   };
 
@@ -45,7 +45,7 @@ const ShareModal = ({ url, image, title }) => {
     <div className="relative inline-block" ref={modalRef}>
       {/* Share Button */}
       <button
-        className="flex items-center gap-1 hover:text-brand-primary"
+        className="flex items-center gap-1 hover:text-brand-primary font-heading"
         onClick={() => setIsVisible(!isVisible)}
       >
         <svg
