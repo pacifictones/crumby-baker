@@ -10,27 +10,30 @@ import CommentForm from "./CommentForm";
 function BlogDetail() {
   const { slug } = useParams(); // Get the slug from the URL
   const [blog, setBlog] = useState(null); // State to store blog data
+  const [replyTo, setReplyTo] = useState(null);
 
-  useEffect(() => {
+  const refreshComments = () => {
     client
       .fetch(
-        `*[_type == "blog" && slug.current == $slug][0]{
-        _id,
-        title,
-        mainImage,
-        content,
-        author,
-        excerpt,
-        publishedAt,
-        "comments": *[
-       _type=="comment" &&
-      blog._ref == ^._id &&
-      confirmed == true     ] | order(_createdAt asc){
-      _id,
-     authorName,
-      text,
-       
-     }
+        `*[_type=="blog" && slug.current==$slug][0]{
+          _id,
+          title,
+          mainImage,
+          content,
+          author,
+          excerpt,
+          publishedAt,
+          "comments": *[
+            _type=="comment" &&
+            blog._ref == ^._id &&
+            confirmed == true
+          ] | order(_createdAt asc){
+            _id,
+            authorName,
+            text,
+            _createdAt,
+            parent->{_id}
+          }
         }`,
         { slug }
       )
@@ -39,6 +42,11 @@ function BlogDetail() {
         setBlog(data);
       })
       .catch(console.error);
+  };
+
+  // 2) On mount or slug change, just call the helper
+  useEffect(() => {
+    refreshComments();
   }, [slug]);
 
   if (!blog) return <div>Loading...</div>;
@@ -132,46 +140,66 @@ function BlogDetail() {
               },
             }}
           />
-          {/* ------------------ Comments Section ------------------ */}
-          <div className="max-w-screen-lg mx-auto mt-16 mb-24">
-            <h2 className="font-heading text-2xl font-bold mb-6">Comments</h2>
+        </div>
 
-            {/* Existing comments */}
-            {blog.comments && blog.comments.length > 0 ? (
-              blog.comments.map((c) => (
-                <div key={c._id} className="mb-6 border-b pb-4">
-                  <p className="font-heading font-semibold mb-1">
-                    {c.authorName || "Anonymous"}
-                  </p>
-                  <p className="font-body">{c.text}</p>
-                </div>
-              ))
-            ) : (
-              <p className="font-body text-gray-600 mb-8">
-                No comments yet. Be the first!
-              </p>
-            )}
+        {/* ------------------ Comments Section ------------------ */}
+        <div className="max-w-screen-lg mx-auto mt-16 mb-24">
+          <h2 className="font-heading text-2xl font-bold mb-6">Comments</h2>
 
-            {/* Comment form */}
+          {/* Existing comments */}
+          {blog.comments && blog.comments.length > 0 ? (
+            blog.comments.map((c) => (
+              <article
+                key={c._id}
+                className="mb-6 rounded border-b border-gray-200 px-12 py-3
+                odd:bg-[#DEE7E7] even:bg-white
+                "
+              >
+                <h3 className="font-heading text-brand-primary font-semibold ">
+                  {c.authorName || "Anonymous"}
+                </h3>
+
+                {/* Date and Time */}
+                <time className="font-body text-sm text-gray-500 ">
+                  {new Date(c._createdAt).toLocaleString()}
+                </time>
+                <p className="font-body leading-relaxed whitespace-pre-line mt-4">
+                  {c.text}
+                </p>
+                <button
+                  onClick={() => setReplyTo(c)}
+                  className="mt-3 inline-block rounded border px-2 py-1 font-heading text-white text-sm bg-brand-primary hover:bg-brand-hover"
+                >
+                  Reply
+                </button>
+                {replyTo?._id === c._id && (
+                  <div className="mt-4">
+                    <CommentForm
+                      blogId={blog._id}
+                      parentId={c._id}
+                      onSubmitted={() => {
+                        setReplyTo(null);
+                        refreshComments(); // your existing refresh call
+                      }}
+                    />
+                  </div>
+                )}
+              </article>
+            ))
+          ) : (
+            <p className="font-body text-gray-600 mb-8">
+              No comments yet. Be the first!
+            </p>
+          )}
+          {replyTo === null && (
             <CommentForm
               blogId={blog._id}
+              parentId={null}
               onSubmitted={() => {
-                // simple refresh: re‑fetch the blog to get the new confirmed comment
-                client
-                  .fetch(
-                    `*[_type == "blog" && _id == $id][0]{
-             "comments": *[_type=="comment" && blog._ref == ^._id && confirmed == true] | order(_createdAt asc){
-               _id, authorName, text
-             }
-           }`,
-                    { id: blog._id }
-                  )
-                  .then((data) =>
-                    setBlog((prev) => ({ ...prev, comments: data.comments }))
-                  );
+                refreshComments(); // reload with the new top‑level comment
               }}
             />
-          </div>
+          )}
         </div>
       </div>
     </>
