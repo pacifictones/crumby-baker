@@ -1,41 +1,58 @@
-export default async (req, res) => {
-  const { token } = req.body;
+import { Resend } from "resend";
 
-  if (!token) {
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export default async function handler(req, res) {
+  if (req.method !== "POST")
+    return res
+      .status(405)
+      .json({ success: false, message: "Method not allowed" });
+
+  const { token, name, email, message } = req.body;
+  if (!token)
     return res
       .status(400)
       .json({ success: false, message: "Token is required" });
+
+  /* ── 1. Verify reCAPTCHA ─────────────────────────────────── */
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  const verifyRes = await fetch(
+    "https://www.google.com/recaptcha/api/siteverify",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${secretKey}&response=${token}`,
+    }
+  );
+  const verifyData = await verifyRes.json();
+  if (!verifyData.success || (verifyData.score && verifyData.score < 0.5)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "reCAPTCHA failed" });
   }
 
-  //Access the secret key from environment variables
-  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  /* ── 2. Send e‑mail via Resend ───────────────────────────── */
+  const toAddress = process.env.CONTACT_RECIPIENT || "me@thecrumbybaker.com";
 
-  //Verify the reCAPTCHA token with Google's API
   try {
-    const response = await fetch(
-      `https://www.google.com/recaptcha/api/siteverify`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `secret=${secretKey}&response=${token}`,
-      }
-    );
+    await resend.emails.send({
+      from: "The Crumby Baker <no-reply@thecrumbybaker.com>",
+      to: [toAddress],
+      subject: "New message from contact form",
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message.replace(/\n/g, "<br/>")}</p>
+      `,
+    });
 
-    const data = await response.json();
-
-    if (data.success) {
-      return res.status(200).json({ success: true });
-    } else {
-      return res
-        .status(400)
-        .json({ success: false, message: "CAPTCHA verification failed" });
-    }
-  } catch (error) {
-    console.error("Error verifying CAPTCHA:", error);
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error("Resend error:", err);
     return res
       .status(500)
-      .json({ success: false, message: "Internal server error" });
+      .json({ success: false, message: "Email send error" });
   }
-};
+}

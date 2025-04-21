@@ -25,6 +25,7 @@ const ContactForm = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const onSubmit = async (data) => {
+    // data has name, email, message
     if (!executeRecaptcha) {
       console.error("Execute recaptcha not yet available");
       return;
@@ -33,34 +34,29 @@ const ContactForm = () => {
     // Execute reCAPTCHA v3 to get the token
     const token = await executeRecaptcha("contact_form"); // 'contact_form' is the action name
 
-    try {
-      const response = await fetch("/api/verifyCaptcha", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }), // Send the token to your serverless function
-      });
+    const response = await fetch("/api/verifyCaptcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token,
+        name: data.name,
+        email: data.email,
+        message: data.message,
+      }), // Send the token to your serverless function
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Verification failed:", errorData.message);
-        alert("CAPTCHA verification failed. Please try again.");
-        return;
-      }
+    const result = await response.json();
 
-      const result = await response.json();
-
-      if (result.success) {
-        console.log("CAPTCHA passed, handle form submission");
-        // Handle successful form submission
-      } else {
-        alert("CAPTCHA verification failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error during verification:", error);
-      alert("An error occurred. Please try again later.");
+    if (!response.ok || !result.success) {
+      console.error("Verification or email sending failed:", result.message);
+      alert("CAPTCHA verification failed or email not sent. Please try again.");
+      return;
     }
+
+    console.log("CAPTCHA passed, handle form submission");
+    alert("Your message has been sent. Thank you!");
   };
 
   return (

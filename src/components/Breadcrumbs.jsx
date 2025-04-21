@@ -11,8 +11,8 @@ const Breadcrumbs = () => {
   }
 
   return (
-    <nav className="text-sm text-gray-600 mb-4">
-      <div className="font-heading max-w-screen-lg mx-auto px-4">
+    <nav className="text-md text-gray-600 mb-4">
+      <div className="font-heading max-w-screen-xl mx-auto ">
         <ul className="flex space-x-2">
           {/* Home Link */}
           <li>

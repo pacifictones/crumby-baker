@@ -4,6 +4,7 @@ import client, { urlFor } from "../sanityClient";
 import { PortableText } from "@portabletext/react";
 import { Helmet } from "react-helmet";
 import ShareModal from "./ShareModal";
+import Breadcrumbs from "./Breadcrumbs";
 
 function BlogDetail() {
   const { slug } = useParams(); // Get the slug from the URL
@@ -17,6 +18,7 @@ function BlogDetail() {
         mainImage,
         content,
         author,
+        excerpt,
         publishedAt
         }`,
         { slug }
@@ -40,15 +42,16 @@ function BlogDetail() {
       </Helmet>
       <div className="max-w-screen-xl mx-auto px-4 py8">
         {/* Top Section: Title, Info and Image */}
-        <section className="max-w-screen-xl mx-auto font-body px-4 grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12 items-stretch">
+        <section className="max-w-screen-lg mx-auto font-body  grid grid-cols-1 lg:grid-cols-2 gap-10 mb-24 items-stretch">
           {/* Left Column: Title, exerpt, author, date, share icons */}
-          <div className="p-4 flex flex-col justify-center">
+          <div className=" flex flex-col justify-center">
+            <Breadcrumbs />
             {/* Title */}
-            <h1 className="font-heading text-5xl font-bold mt-6 mb-2">
+            <h1 className="font-heading text-5xl font-bold mt-6 mb-4">
               {blog.title}
             </h1>
             {/* Optional excerpt/subtitle */}
-            <p className="font-heading text-xl text-gray-700 mb-8">
+            <p className="font-heading text-2xl text-gray-700 mb-8">
               {blog.excerpt || "Hello"}
             </p>
 
@@ -87,7 +90,7 @@ function BlogDetail() {
               <img
                 src={urlFor(blog.mainImage).width(700).url()}
                 alt={blog.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded shadow-sm"
               />
             )}
           </div>

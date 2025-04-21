@@ -24,7 +24,7 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full  bg-white">
-      <div className="max-w-screen-lg mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Title */}
         <Link
           className="font-chelseaMarket text-lg sm:text-2xl font-bold hover:text-black whitespace-nowrap"
