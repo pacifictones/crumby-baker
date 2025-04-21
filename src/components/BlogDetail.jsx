@@ -41,6 +41,12 @@ function BlogDetail() {
   const [blog, setBlog] = useState(null); // State to store blog data
   const [replyTo, setReplyTo] = useState(null);
 
+  const COMMENTS_PER_PAGE = 8;
+  const [page, setPage] = useState(1); // current page
+  const totalPages = Math.ceil(
+    (blog?.comments?.length || 0) / COMMENTS_PER_PAGE
+  );
+
   const refreshComments = () => {
     client
       .fetch(
@@ -61,7 +67,7 @@ function BlogDetail() {
             authorName,
             text,
             _createdAt,
-            parent->{_id}
+            parent->{_id, authorName}
           }
         }`,
         { slug }
@@ -79,6 +85,12 @@ function BlogDetail() {
   useEffect(() => {
     refreshComments();
   }, [slug]);
+
+  useEffect(() => {
+    // scroll the comments section into view when page changes
+    const el = document.getElementById("comments-section");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [page]);
 
   if (!blog) return <div>Loading...</div>;
 
@@ -174,64 +186,131 @@ function BlogDetail() {
         </div>
 
         {/* ------------------ Comments Section ------------------ */}
-        <div className="max-w-screen-lg mx-auto mt-16 mb-24">
+        <div
+          id="comments-section"
+          className="max-w-screen-lg mx-auto mt-16 mb-24"
+        >
           <h2 className="font-heading text-2xl font-bold mb-6">Comments</h2>
 
           {/* Existing comments */}
           {blog.comments && blog.comments.length > 0 ? (
-            blog.comments.map((c) => (
-              <article
-                key={c._id}
-                className={`mb-6 rounded border-b border-gray-200 px-12 py-3
+            blog.comments
+              .slice((page - 1) * COMMENTS_PER_PAGE, page * COMMENTS_PER_PAGE)
+              .map((c) => (
+                <article
+                  key={c._id}
+                  className={`mb-6 rounded border-b border-gray-200 px-12 py-3
                 odd:bg-[#DEE7E7] even:bg-white ${
                   c.parent ? "ml-20 border-l-4 border-brand-primary" : ""
                 }
                 `}
-              >
-                <h3 className="font-heading text-brand-primary font-semibold ">
-                  {c.authorName || "Anonymous"}
-                </h3>
-
-                {/* Date and Time */}
-                <time className="font-body text-sm text-gray-500 ">
-                  {new Date(c._createdAt).toLocaleString()}
-                </time>
-                <p className="font-body leading-relaxed whitespace-pre-line mt-4">
-                  {c.text}
-                </p>
-                <button
-                  onClick={() => setReplyTo(c)}
-                  className="mt-3 inline-block rounded border px-2 py-1 font-heading text-white text-sm bg-brand-primary hover:bg-brand-hover"
                 >
-                  Reply
-                </button>
-                {replyTo?._id === c._id && (
-                  <div className="mt-4">
-                    <CommentForm
-                      blogId={blog._id}
-                      parentId={c._id}
-                      onSubmitted={() => {
-                        setReplyTo(null);
-                        refreshComments(); // your existing refresh call
-                      }}
-                    />
-                  </div>
-                )}
-              </article>
-            ))
+                  <h3 className="font-heading text-brand-primary font-semibold ">
+                    {c.authorName || "Anonymous"}
+                  </h3>
+
+                  {/* Date and Time */}
+                  <time className="font-body text-sm text-gray-500 ">
+                    {new Date(c._createdAt).toLocaleString()}
+                  </time>
+                  <p className="font-body leading-relaxed whitespace-pre-line mt-4">
+                    {c.parent && (
+                      <span className="font-heading text-brand-primary mr-2">
+                        @{c.parent.authorName || "Anonymous"}
+                      </span>
+                    )}
+                    {c.text}
+                  </p>
+                  {!c.parent && (
+                    <button
+                      onClick={() => setReplyTo(c)}
+                      className="mt-3 inline-block   px-2 py-1 font-heading text-white text-sm bg-brand-primary hover:bg-brand-hover"
+                    >
+                      Reply
+                    </button>
+                  )}
+
+                  {replyTo?._id === c._id && (
+                    <div className="mt-4">
+                      <CommentForm
+                        blogId={blog._id}
+                        parentId={c._id}
+                        onSubmitted={() => {
+                          setReplyTo(null);
+                          refreshComments(); // your existing refresh call
+                        }}
+                      />
+                    </div>
+                  )}
+                </article>
+              ))
           ) : (
             <p className="font-body text-gray-600 mb-8">
               No comments yet. Be the first!
             </p>
           )}
+
+          {/* ---------- Pagination controls ---------- */}
+          {totalPages > 1 && (
+            <nav className="mt-8 flex items-center justify-center gap-4 ">
+              {/* Previous arrow */}
+              {page > 1 && (
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className={`px-2 py-1 font-heading ${
+                    page === 1
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-brand-primary"
+                  }`}
+                >
+                  &lt;
+                </button>
+              )}
+
+              {/* Page numbers */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (num) => (
+                  <button
+                    key={num}
+                    onClick={() => setPage(num)}
+                    className={`px-2 py-1 font-heading text-xl ${
+                      num === page
+                        ? "text-brand-primary font-bold "
+                        : "text-gray-600 hover:text-brand-hover"
+                    }`}
+                  >
+                    {num}
+                  </button>
+                )
+              )}
+
+              {/* Next arrow */}
+              {page < totalPages && (
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className={`px-2 py-1 font-heading ${
+                    page === totalPages
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-brand-primary"
+                  }`}
+                >
+                  &gt;
+                </button>
+              )}
+            </nav>
+          )}
           {replyTo === null && (
-            <CommentForm
-              blogId={blog._id}
-              parentId={null}
-              onSubmitted={() => {
-                refreshComments(); // reload with the new top‑level comment
-              }}
-            />
+            <div className="mt-10">
+              <CommentForm
+                blogId={blog._id}
+                parentId={null}
+                onSubmitted={() => {
+                  refreshComments(); // reload with the new top‑level comment
+                }}
+              />
+            </div>
           )}
         </div>
       </div>
