@@ -22,15 +22,14 @@ function BlogDetail() {
         excerpt,
         publishedAt,
         "comments": *[
-+       _type=="comment" &&
-+       blog._ref == ^._id &&
-+       confirmed == true
-+     ] | order(_createdAt asc){
-+       _id,
-+       authorName,
-+       text,
-+       // add parent{_id} later for threading
-+     }
+       _type=="comment" &&
+      blog._ref == ^._id &&
+      confirmed == true     ] | order(_createdAt asc){
+      _id,
+     authorName,
+      text,
+       
+     }
         }`,
         { slug }
       )
