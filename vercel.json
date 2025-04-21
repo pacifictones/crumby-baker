@@ -36,6 +36,11 @@
       "dest": "api/confirmReview.js"
     },
     {
+      "src": "/api/verifyCaptcha",
+      "dest": "api/verifyCaptcha.js"
+    },
+
+    {
       "handle": "filesystem"
     },
     {
