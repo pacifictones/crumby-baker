@@ -15,6 +15,7 @@ function BlogDetail() {
     client
       .fetch(
         `*[_type == "blog" && slug.current == $slug][0]{
+        _id,
         title,
         mainImage,
         content,
