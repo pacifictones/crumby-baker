@@ -3,6 +3,12 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
+  if (req.method === "OPTIONS") {
+    // Respond with 200 so the browser’s CORS pre‑flight succeeds.
+    // You can also add CORS headers here if you ever serve from a different origin.
+    return res.status(200).end();
+  }
+
   if (req.method !== "POST")
     return res
       .status(405)
