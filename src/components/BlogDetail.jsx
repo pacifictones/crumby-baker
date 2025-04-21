@@ -5,6 +5,7 @@ import { PortableText } from "@portabletext/react";
 import { Helmet } from "react-helmet";
 import ShareModal from "./ShareModal";
 import Breadcrumbs from "./Breadcrumbs";
+import CommentForm from "./CommentForm";
 
 function BlogDetail() {
   const { slug } = useParams(); // Get the slug from the URL
@@ -19,7 +20,17 @@ function BlogDetail() {
         content,
         author,
         excerpt,
-        publishedAt
+        publishedAt,
+        "comments": *[
++       _type=="comment" &&
++       blog._ref == ^._id &&
++       confirmed == true
++     ] | order(_createdAt asc){
++       _id,
++       authorName,
++       text,
++       // add parent{_id} later for threading
++     }
         }`,
         { slug }
       )
@@ -121,6 +132,46 @@ function BlogDetail() {
               },
             }}
           />
+          {/* ------------------ Comments Section ------------------ */}
+          <div className="max-w-screen-lg mx-auto mt-16 mb-24">
+            <h2 className="font-heading text-2xl font-bold mb-6">Comments</h2>
+
+            {/* Existing comments */}
+            {blog.comments && blog.comments.length > 0 ? (
+              blog.comments.map((c) => (
+                <div key={c._id} className="mb-6 border-b pb-4">
+                  <p className="font-heading font-semibold mb-1">
+                    {c.authorName || "Anonymous"}
+                  </p>
+                  <p className="font-body">{c.text}</p>
+                </div>
+              ))
+            ) : (
+              <p className="font-body text-gray-600 mb-8">
+                No comments yet. Be the first!
+              </p>
+            )}
+
+            {/* Comment form */}
+            <CommentForm
+              blogId={blog._id}
+              onSubmitted={() => {
+                // simple refresh: re‑fetch the blog to get the new confirmed comment
+                client
+                  .fetch(
+                    `*[_type == "blog" && _id == $id][0]{
+             "comments": *[_type=="comment" && blog._ref == ^._id && confirmed == true] | order(_createdAt asc){
+               _id, authorName, text
+             }
+           }`,
+                    { id: blog._id }
+                  )
+                  .then((data) =>
+                    setBlog((prev) => ({ ...prev, comments: data.comments }))
+                  );
+              }}
+            />
+          </div>
         </div>
       </div>
     </>
