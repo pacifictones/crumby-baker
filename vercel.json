@@ -5,40 +5,10 @@
       "src": "package.json",
       "use": "@vercel/static-build"
     },
-    {
-      "src": "api/submitReview.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/sendReviewConfirmation.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/confirmReview.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/verifyCaptcha.js",
-      "use": "@vercel/node"
-    }
+    { "src": "api/**/*.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "/api/submitReview",
-      "dest": "api/submitReview.js"
-    },
-    {
-      "src": "/api/sendReviewConfirmation",
-      "dest": "api/sendReviewConfirmation.js"
-    },
-    {
-      "src": "/api/confirmReview",
-      "dest": "api/confirmReview.js"
-    },
-    {
-      "src": "/api/verifyCaptcha",
-      "dest": "api/verifyCaptcha.js"
-    },
+    { "src": "/api/(.*)", "dest": "api/$1.js" },
 
     {
       "handle": "filesystem"
