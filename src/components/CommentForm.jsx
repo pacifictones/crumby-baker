@@ -25,6 +25,7 @@ export default function CommentForm({ blogId, parentId, onSubmitted }) {
       setEmail("");
       setText("");
       onSubmitted && onSubmitted(); // refresh list
+      alert("Thanks! Check your email to confirm your comment.");
     }
   };
 

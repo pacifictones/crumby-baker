@@ -7,6 +7,35 @@ import ShareModal from "./ShareModal";
 import Breadcrumbs from "./Breadcrumbs";
 import CommentForm from "./CommentForm";
 
+function interleaveReplies(comments) {
+  // group replies by parent ID
+  const repliesByParent = {};
+  comments.forEach((c) => {
+    const pid = c.parent?._id;
+    if (pid) {
+      repliesByParent[pid] = repliesByParent[pid] || [];
+      repliesByParent[pid].push(c);
+    }
+  });
+
+  // now build a new array where each top‑level comment
+  // is immediately followed by its replies
+  const result = [];
+  comments.forEach((c) => {
+    if (!c.parent) {
+      result.push(c);
+      const kids = repliesByParent[c._id];
+      if (kids) {
+        // optional: sort replies by date if you like
+        kids.sort((a, b) => new Date(a._createdAt) - new Date(b._createdAt));
+        result.push(...kids);
+      }
+    }
+  });
+
+  return result;
+}
+
 function BlogDetail() {
   const { slug } = useParams(); // Get the slug from the URL
   const [blog, setBlog] = useState(null); // State to store blog data
@@ -38,9 +67,11 @@ function BlogDetail() {
         { slug }
       )
       .then((data) => {
-        console.log("Fetched blog detail:", data);
-        setBlog(data);
+        console.log("Raw comments:", data.comments);
+        const ordered = interleaveReplies(data.comments);
+        setBlog({ ...data, comments: ordered });
       })
+
       .catch(console.error);
   };
 
@@ -151,9 +182,11 @@ function BlogDetail() {
             blog.comments.map((c) => (
               <article
                 key={c._id}
-                className="mb-6 rounded border-b border-gray-200 px-12 py-3
-                odd:bg-[#DEE7E7] even:bg-white
-                "
+                className={`mb-6 rounded border-b border-gray-200 px-12 py-3
+                odd:bg-[#DEE7E7] even:bg-white ${
+                  c.parent ? "ml-20 border-l-4 border-brand-primary" : ""
+                }
+                `}
               >
                 <h3 className="font-heading text-brand-primary font-semibold ">
                   {c.authorName || "Anonymous"}
