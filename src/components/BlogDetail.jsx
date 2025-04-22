@@ -41,7 +41,7 @@ function BlogDetail() {
   const [blog, setBlog] = useState(null); // State to store blog data
   const [replyTo, setReplyTo] = useState(null);
 
-  const COMMENTS_PER_PAGE = 8;
+  const COMMENTS_PER_PAGE = 6;
   const [page, setPage] = useState(1); // current page
   const totalPages = Math.ceil(
     (blog?.comments?.length || 0) / COMMENTS_PER_PAGE
@@ -137,10 +137,24 @@ function BlogDetail() {
             </div>
 
             {/* Social share or 'comments' placeholder */}
+
             <div className="mt-4 flex items-center gap-16">
-              <p className="font-heading text-gray-500 text-md">
-                Comments: Be the first!
-              </p>
+              {/* comment‑count link */}
+              <button
+                onClick={() => {
+                  const el = document.getElementById("comments-section");
+                  if (el)
+                    el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="font-heading text-md text-brand-primary hover:underline"
+              >
+                {blog.comments?.length
+                  ? `${blog.comments.length} Comment${
+                      blog.comments.length !== 1 ? "s" : ""
+                    }`
+                  : "Be the first to comment"}
+              </button>
+
               {/*  Share component */}
               <ShareModal />
             </div>
@@ -190,7 +204,9 @@ function BlogDetail() {
           id="comments-section"
           className="max-w-screen-lg mx-auto mt-16 mb-24"
         >
-          <h2 className="font-heading text-2xl font-bold mb-6">Comments</h2>
+          <h2 className="font-heading text-2xl font-bold border-b mb-6 text-center py-4 mx-16">
+            Comments
+          </h2>
 
           {/* Existing comments */}
           {blog.comments && blog.comments.length > 0 ? (
@@ -258,7 +274,7 @@ function BlogDetail() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className={`px-2 py-1 font-heading ${
+                  className={`px-2 py-1 font-heading text-lg ${
                     page === 1
                       ? "text-gray-400 cursor-not-allowed"
                       : "text-brand-primary"
@@ -290,7 +306,7 @@ function BlogDetail() {
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className={`px-2 py-1 font-heading ${
+                  className={`px-2 py-1 font-heading text-lg ${
                     page === totalPages
                       ? "text-gray-400 cursor-not-allowed"
                       : "text-brand-primary"

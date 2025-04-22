@@ -1,6 +1,18 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
+// Convert "cherry-pie" → "Cherry Pie", "duhoh" → "Duhoh", "applePie" → "Apple Pie"
+function humanizeSlug(str = "") {
+  return str
+    .replace(/[-_]+/g, " ") // hyphens / underscores → space
+    .replace(/([a-z])([A-Z])/g, "$1 $2") // camelCase → space before caps
+    .replace(/\s+/g, " ") // collapse multiple spaces
+    .trim()
+    .split(" ")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
+
 const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
@@ -28,15 +40,13 @@ const Breadcrumbs = () => {
               <li key={to} className="flex items-center">
                 <span className="mx-2">{">"}</span>
                 {isLast ? (
-                  <span className="text-gray-500">
-                    {value.replace(/-/g, "")}
-                  </span>
+                  <span className="text-gray-500">{humanizeSlug(value)}</span>
                 ) : (
                   <Link
                     to={to}
                     className="text-[#ED6A5A] hover:text-brand-hover"
                   >
-                    {value.replace(/-/g, "")}
+                    {humanizeSlug(value)}
                   </Link>
                 )}
               </li>
