@@ -15,7 +15,7 @@ const Home = () => {
       try {
         // Fetch latest recipes
         const recipeData = await client.fetch(
-          `*[_type == "recipe"] | order(_createdAt desc)[0...3] {
+          `*[_type == "recipe"] | order(_createdAt desc)[0...4] {
           _id,
           title,
           slug,
@@ -27,7 +27,7 @@ const Home = () => {
 
         // Fetch latest blogs
         const blogData = await client.fetch(
-          `*[_type == "blog"] | order(_createdAt desc)[0...3] {
+          `*[_type == "blog"] | order(_createdAt desc)[0...4] {
           _id,
           title, 
           slug,
@@ -44,7 +44,7 @@ const Home = () => {
   }, []);
 
   return (
-    <>
+    <div>
       <Helmet>
         <title>The Crumby Baker</title>
       </Helmet>
@@ -57,14 +57,16 @@ const Home = () => {
         </p>
       </header> */}
       {/* Latest Recipe Section */}
-      <section className=" py-10 bg-white">
-        <div className="max-w-screen-lg mx-auto px-2 sm:px-4">
-          <Link
-            className="font-heading text-2xl font-semibold hover:text-brand-primary"
-            to="/recipes"
-          >
-            Latest Recipes
-          </Link>
+      <section className=" py-10 bg-white px-4 ">
+        <div className="mx-auto max-w-screen-xl text-center">
+          <div className="mb-6">
+            <Link
+              className="font-heading rounded-xl hover:translate-y-1 hover:shadow-lg transition-transform duration-200 text-2xl font-semibold hover:text-brand-primary"
+              to="/recipes"
+            >
+              Latest Recipes
+            </Link>
+          </div>
 
           <ResponsiveCarouselGrid
             items={[...recipes, { isSeeMore: true }]} // Append "See More Card"
@@ -80,7 +82,7 @@ const Home = () => {
               ) : (
                 <Link
                   to={`/recipes/${recipe.slug.current}`}
-                  className="rounded shadow w-72 flex flex-col hover:text-brand-primary"
+                  className="rounded shadow w-full flex flex-col hover:text-brand-primary"
                 >
                   <div className="w-full aspect-square overflow-hidden">
                     <img
@@ -90,11 +92,11 @@ const Home = () => {
                     />
                   </div>
                   {/* Text Section */}
-                  <div className="p-4 flex-1 flex flex-col justify-between">
+                  <div className=" p-4 flex-1 flex flex-col justify-between bg-[#f9f9f7] min-h-[160px] ">
                     <h3 className="font-heading mt-2 text-lg font-bold mb-2 text-center">
                       {recipe.title}
                     </h3>
-                    <p className="font-body text-gray-600 text-md line-clamp-3">
+                    <p className="font-body text-gray-600 text-md line-clamp-3 min-h-[72px]">
                       {recipe.description}
                     </p>
                   </div>
@@ -106,14 +108,16 @@ const Home = () => {
       </section>
 
       {/* Blog Section */}
-      <section className="py-10 bg-[#DEE7E7] ">
-        <div className="  border-gray-500 max-w-screen-lg mx-auto px-2 sm:px-4 p-4">
-          <Link
-            className="font-heading text-2xl font-semibold hover:text-brand-primary"
-            to="/blog"
-          >
-            Latest Blogs
-          </Link>
+      <section className="py-10 bg-[#DEE7E7] px-4">
+        <div className="  border-gray-500 max-w-screen-xl mx-auto text-center">
+          <div className="mb-6">
+            <Link
+              className="font-heading text-2xl font-semibold hover:text-brand-primary"
+              to="/blog"
+            >
+              Latest Blogs
+            </Link>
+          </div>
 
           <ResponsiveCarouselGrid
             items={[...blogs, { isSeeMore: true }]} // Append See More Card
@@ -129,7 +133,7 @@ const Home = () => {
               ) : (
                 <Link
                   to={`/blog/${blog.slug.current}`}
-                  className="rounded shadow hover:text-brand-primary w-72 flex flex-col"
+                  className="rounded shadow hover:text-brand-primary w-full flex flex-col"
                 >
                   <div className="w-full aspect-square overflow-hidden ">
                     <img
@@ -139,11 +143,11 @@ const Home = () => {
                     />
                   </div>
                   {/* Text Section */}
-                  <div className="p-4 flex-1 flex flex-col justify-between bg-white">
+                  <div className="p-4 flex-1 flex flex-col justify-between bg-[#f9f9f7] min-h-[150px]">
                     <h3 className="font-heading mt-2 text-lg font-bold mb-2 text-center">
                       {blog.title}
                     </h3>
-                    <p className="font-body text-gray-600 text-md line-clamp-3">
+                    <p className="font-body text-gray-600 text-md line-clamp-3 min-h-[72px]">
                       {blog.excerpt}
                     </p>
                   </div>
@@ -156,13 +160,16 @@ const Home = () => {
 
       {/* About Me */}
       <section className="py-10 bg-white">
-        <div className="max-w-screen-lg mx-auto px-4 ">
-          <Link
-            className="font-heading text-2xl font-semibold hover:text-brand-primary mb-4 inline-block"
-            to="/about"
-          >
-            About me
-          </Link>
+        <div className="max-w-screen-lg mx-auto px-4 text-center ">
+          <div className="mb-6">
+            <Link
+              className="font-heading text-2xl font-semibold hover:text-brand-primary mb-4 inline-block"
+              to="/about"
+            >
+              About me
+            </Link>
+          </div>
+
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10">
             <img
               src="/photos/Heather-Waterfall.jpg"
@@ -170,7 +177,7 @@ const Home = () => {
               className=" h-60 
              w-auto md:h-64 rounded-md shadow-lg"
             />
-            <div className="font-body text-md  leading-relaxed text-gray-700">
+            <div className="font-body text-md  leading-relaxed text-gray-700 text-left">
               <p className="mb-4">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde,
                 aperiam eaque veritatis cumque molestias recusandae temporibus
@@ -187,7 +194,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 
