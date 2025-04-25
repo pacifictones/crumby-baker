@@ -19,7 +19,7 @@ function ResponsiveCarouselGrid({ items, renderItem, className = "" }) {
       {items.map((item, index) => (
         <div
           key={item.id || index}
-          className="flex-shrink-0 w-72 snap-start sm:w-full  "
+          className="flex-shrink-0 w-full snap-start sm:w-full  "
         >
           {renderItem(item)}
         </div>

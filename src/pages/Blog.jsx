@@ -64,7 +64,7 @@ const Blog = () => {
       <Helmet>
         <title>Blog</title>
       </Helmet>
-      <div className="max-w-screen-lg mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto px-4">
         <header className="text-center py-10">
           <h1 className="font-heading text-4xl font-bold mb-4 text-gray-800">
             Crumby Baker Blogs
@@ -124,7 +124,17 @@ const Blog = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
           </div>
         ) : filteredBlogs.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
+          <div
+            className=" // Mobile:
+            flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide 
+        // sm and md:
+            sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible   
+        // lg and up: 
+            lg:grid-cols-4  lg:gap-8 lg:justify-center
+            
+        // all
+            py-4 px-2 mx-auto   "
+          >
             {/* Blog Grid */}
             {filteredBlogs.map((blog) => (
               <Link
@@ -139,7 +149,7 @@ const Blog = () => {
                     className=" w-full  h-full object-cover"
                   />
                 </div>
-                <div className="p-4">
+                <div className="p-4 bg-[#f9f9f7]">
                   <h3 className="font-heading text-xl font-bold mb-2">
                     {blog.title}
                   </h3>

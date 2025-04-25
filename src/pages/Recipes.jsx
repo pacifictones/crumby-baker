@@ -67,7 +67,7 @@ const Recipes = () => {
       <Helmet>
         <title>Recipes</title>
       </Helmet>
-      <div className="max-w-screen-lg mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto px-4">
         <header className="text-center py-10">
           <h1 className="font-heading text-4xl font-bold mb-4 text-gray-800">
             Crumby Baker Recipes
@@ -133,7 +133,17 @@ const Recipes = () => {
             ></div>
           </div>
         ) : filteredRecipes.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
+          <div
+            className=" // Mobile:
+            flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide 
+        // sm and md:
+            sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible   
+        // lg and up: 
+            lg:grid-cols-4  lg:gap-8 lg:justify-center
+            
+        // all
+            py-4 px-2 mx-auto   "
+          >
             {/* Recipe Grid */}
             {filteredRecipes.map((recipe) => (
               <Link

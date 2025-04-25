@@ -1,66 +1,64 @@
+// src/pages/About.jsx
 import React, { useEffect, useState } from "react";
 import client, { urlFor } from "../sanityClient";
 import { PortableText } from "@portabletext/react";
 import { Helmet } from "react-helmet";
 
-const About = () => {
-  const [aboutContent, setAboutConent] = useState(null);
+export default function About() {
+  const [aboutContent, setAboutContent] = useState(null);
 
   useEffect(() => {
     client
       .fetch(
         `*[_type == "about"][0]{
-    title,
-    content,
-    image
-    }`
+          title,
+          content,
+          image
+        }`
       )
-      .then((data) => {
-        console.log(data);
-        setAboutConent(data);
-      })
+      .then((data) => setAboutContent(data))
       .catch(console.error);
   }, []);
 
-  if (!aboutContent) return <div className="font-heading">Loading...</div>;
-
-  // Custom components for PortableText
-  const components = {
-    block: {
-      normal: ({ children }) => {
-        //skip empty or whitespace-only blocks
-        if (!children || children.join("").trim() === "") return null;
-        return <p className="mb-4 indent-6">{children}</p>; // Add spacing between paragraph
-      },
-    },
-  };
+  if (!aboutContent) {
+    return <p className="p-8 text-center font-body">Loading…</p>;
+  }
 
   return (
     <>
       <Helmet>
-        <title>About</title>
+        <title>About | The Crumby Baker</title>
       </Helmet>
+
       <div className="max-w-screen-lg mx-auto p-4">
-        <h1 className="font-heading text-3xl font-bold text-center mb-4">
+        {/* Page title */}
+        <h1 className="font-heading text-3xl text-center mb-8">
           {aboutContent.title}
         </h1>
-        {aboutContent.image && (
-          <img
-            className="mx-auto rounded-lg mb-4"
-            src={urlFor(aboutContent.image).url()}
-            alt="About"
-          />
-        )}
 
-        <div className="font-body prose max-w-none">
-          <PortableText value={aboutContent.content} components={components} />
-          {aboutContent.content.map((block, index) => (
-            <p key={index}>{block.children[0]?.text}</p>
-          ))}
+        {/* prose container (requires @tailwindcss/typography) */}
+        <div className="prose prose-lg font-body">
+          {/* Desktop: float left, one-third width; Mobile: full width */}
+          {aboutContent.image && (
+            <img
+              src={urlFor(aboutContent.image).width(800).url()}
+              alt={aboutContent.title}
+              className="
+                w-full                 /* full-width on mobile */
+                md:w-1/3               /* one-third on md+ */
+                rounded-lg
+                object-cover
+                mb-6                   /* gap below on mobile */
+                md:float-left md:mr-6  /* float + right margin on md+ */
+                md:mb-               /* tighter gap on desktop */
+              "
+            />
+          )}
+
+          {/* All your PortableText content will wrap around the floated image */}
+          <PortableText value={aboutContent.content} />
         </div>
       </div>
     </>
   );
-};
-
-export default About;
+}
