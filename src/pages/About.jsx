@@ -32,7 +32,7 @@ export default function About() {
 
       <div className="max-w-screen-lg mx-auto p-4">
         {/* Page title */}
-        <h1 className="font-heading text-3xl text-center mb-8">
+        <h1 className="font-heading text-3xl text-center mb-14 mt-10">
           {aboutContent.title}
         </h1>
 
