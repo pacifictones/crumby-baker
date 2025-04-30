@@ -150,11 +150,17 @@ const Search = ({ type }) => {
                       className="block"
                     >
                       <div className="w-full aspect-square overflow-hidden rounded">
-                        <img
-                          src={urlFor(item.mainImage).width(300).url()}
-                          alt="{item.title}"
-                          className="w-full h-full object-cover rounded"
-                        />
+                        {item.mainImage ? (
+                          <img
+                            src={urlFor(item.mainImage).width(300).url()}
+                            alt={item.title}
+                            className="w-full h-full object-cover rounded"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-100 text-sm">
+                            No image
+                          </div>
+                        )}
                       </div>
 
                       <h3 className="mt-2 text-lg font-bold line-clamp-1 text-center">
