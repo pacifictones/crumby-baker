@@ -48,11 +48,19 @@ export default {
         hotspot: true,
       },
     },
+
     {
       name: 'gallery',
       title: 'Gallery',
       type: 'array',
       of: [{type: 'image', options: {hotspot: true}}],
+    },
+    {
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'category'}]}],
+      validation: (r) => r.min(1).error('Choose at least one category'),
     },
     {
       name: 'excerpt',

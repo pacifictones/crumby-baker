@@ -1,199 +1,194 @@
-import React, { useEffect, useState } from "react";
-import client from "../sanityClient";
+// src/pages/Blog.jsx
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import client from "../sanityClient";
 
-const Blog = () => {
-  const [blogs, setBlogs] = useState([]); // All blogs fetched from Sanity
-  const [filteredBlogs, setFilteredBlogs] = useState([]);
-  const [sortOption, setSortOption] = useState("Newest");
-  const [loading, setLoading] = useState(true);
-  const PER_PAGE = 1;
-  const [visibleCount, setVisibleCount] = useState(PER_PAGE);
+export default function Blog() {
+  const PER_PAGE = 8;
 
-  const visibleBlogs = filteredBlogs.slice(0, visibleCount);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoad] = useState(true);
 
-  // Fetch blogs form Sanity
+  /* ▼▼ NEW ▼▼ */
+  const [cats, setCats] = useState([]); // {id,title}
+  const [catId, setCatId] = useState("all"); // dropdown value
+  /* ▲▲ NEW ▲▲ */
+
+  const [sortOpt, setSort] = useState("Newest");
+  const [visible, setVis] = useState(PER_PAGE);
+
+  /* ─ fetch categories & posts once ─ */
   useEffect(() => {
-    client
-      .fetch(
-        '*[_type == "blog"]{title, "image": mainImage.asset->url, slug, excerpt, content, _createdAt}'
-      )
-      .then((data) => {
-        setBlogs(data);
-        setFilteredBlogs(data);
-        setLoading(false); // Stop loading once data is fetched
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false); // Stop loading even if there's an error
-      });
+    (async () => {
+      setLoad(true);
+
+      // 1) categories
+      const catData = await client.fetch(
+        `*[_type=="category"] | order(title asc){
+          _id, title
+        }`
+      );
+      setCats(catData);
+
+      // 2) blog posts with populated category refs
+      const postData = await client.fetch(
+        `*[_type=="blog"]{
+          title,
+          excerpt,
+          "image": mainImage.asset->url,
+          slug,
+          _createdAt,
+          "categories": categories[]->{_id,title}
+        }`
+      );
+
+      setPosts(sortPosts(postData, "Newest"));
+      setLoad(false);
+    })();
   }, []);
 
-  //Update filteredBlogs when sortOption changes
+  /* re-sort when dropdown changes */
   useEffect(() => {
-    let updatedBlogs = [...blogs];
+    if (posts.length) setPosts(sortPosts(posts, sortOpt));
+    setVis(PER_PAGE); // reset pagination
+  }, [sortOpt]);
 
-    // //Filter by category
+  /* helper */
+  const sortPosts = (arr, opt) => {
+    const s = [...arr];
+    if (opt === "Newest")
+      s.sort((a, b) => new Date(b._createdAt) - new Date(a._createdAt));
+    else s.sort((a, b) => new Date(a._createdAt) - new Date(b._createdAt));
+    return s;
+  };
 
-    // if (filterCategory != "All") {
-    //   updatedRecipes = updatedRecipes.filter(
-    //     (recipe) => recipe.category === filterCategory
-    //   );
-    // }
+  /* ▼▼ NEW : filter by chosen category before slicing for pagination ▼▼ */
+  const filtered =
+    catId === "all"
+      ? posts
+      : posts.filter((p) => p.categories?.some((c) => c._id === catId));
 
-    //Sort recipes
-    if (sortOption === "Newest") {
-      updatedBlogs.sort(
-        (a, b) => new Date(b._createdAt) - new Date(a._createdAt)
-      );
-    } else if (sortOption === "Oldest") {
-      updatedBlogs.sort(
-        (a, b) => new Date(a.created_At) - new Date(b._createdAt)
-      );
-    } // else if (sortOption === "Alphabetical") {
-    //   updatedBlogs.sort((a, b) => a.title.localeCompare(b.title));
-    // }
-
-    setFilteredBlogs(updatedBlogs);
-    setVisibleCount(PER_PAGE);
-  }, [sortOption, blogs]);
-
-  // Handlers for filter and sort changes
-
-  // const handleCategoryChange = (e) => setFilteredCategory(e.target.value);
-  const handleSortChange = (e) => setSortOption(e.target.value);
+  const shown = filtered.slice(0, visible);
+  /* ▲▲ NEW ▲▲ */
 
   return (
     <>
       <Helmet>
         <title>Blog</title>
       </Helmet>
+
       <div className="max-w-screen-xl mx-auto px-4">
         <header className="text-center py-10">
-          <h1 className="font-heading text-4xl font-bold mb-4 text-gray-800">
+          <h1 className="font-heading text-4xl font-bold">
             Crumby Baker Blogs
           </h1>
-          {/* <p className="text-lg text-gray-700">The latest stories and tips!</p> */}
         </header>
 
-        {/* filter and sort controls */}
-        <div className="font-heading filter-controls flex flex-wrap justify-center gap-4 my-6">
-          {/* category filter */}
-          {/* <div className="flex items-center gap-2"> */}
-          {/* <label
-            htmlFor="categoryFilter"
-            className="font-semibold whitespace-nowrap"
-          >
-            Filter by Category:{" "}
-          </label>
-          <select
-            id="categoryFilter"
-            value={filterCategory}
-            onChange={handleCategoryChange}
-            className="ml-2 border rounded px-2 py-1"
-          >
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div> */}
-
-          {/* Sort Option */}
+        {/* ── filters row ── */}
+        <div className="font-heading flex flex-wrap justify-center gap-6 my-6">
+          {/* ▼▼ NEW Category dropdown ▼▼ */}
           <div className="flex items-center gap-2">
-            <label
-              htmlFor="sortOption"
-              className="font-semibold whitespace-nowrap"
-            >
-              Sort by:{" "}
+            <label htmlFor="catSel" className="font-semibold">
+              Category:
             </label>
             <select
-              id="sortOption"
-              value={sortOption}
-              onChange={handleSortChange}
-              className="ml-2 border rounded px-2 py-1"
+              id="catSel"
+              value={catId}
+              onChange={(e) => {
+                setCatId(e.target.value);
+                setVis(PER_PAGE);
+              }}
+              className="border rounded px-2 py-1"
+            >
+              <option value="all">All</option>
+              {cats.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* ▲▲ NEW ▲▲ */}
+
+          {/* sort dropdown */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="sortSel" className="font-semibold">
+              Sort&nbsp;by:
+            </label>
+            <select
+              id="sortSel"
+              value={sortOpt}
+              onChange={(e) => setSort(e.target.value)}
+              className="border rounded px-2 py-1"
             >
               <option value="Newest">Newest</option>
               <option value="Oldest">Oldest</option>
-              {/* <option value="Alphabetical">A-Z</option> */}
             </select>
           </div>
         </div>
 
-        {/* Loading Indicator */}
-
-        {loading ? (
-          <div className="flex justify-center items-center py-10">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
+        {/* ── loading ── */}
+        {loading && (
+          <div className="flex justify-center py-10">
+            <div className="animate-spin h-8 w-8 rounded-full border-t-2 border-b-2 border-gray-500" />
           </div>
-        ) : filteredBlogs.length > 0 ? (
-          <>
-            <div
-              className=" // Mobile:
-            flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide 
-        // sm and md:
-            sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible   
-        // lg and up: 
-            lg:grid-cols-4  lg:gap-8 lg:justify-center
-            
-        // all
-            py-4 px-2 mx-auto   "
-            >
-              {/* Blog Grid */}
-              {visibleBlogs.map((blog) => (
-                <Link
-                  to={`/blog/${blog.slug.current}`}
-                  className="flex flex-col blog-thumbnail rounded shadow hover:text-brand-primary"
-                  key={blog.slug.current}
-                >
-                  <div className="w-full aspect-square overflow-hidden">
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className=" w-full  h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1 p-4 bg-[#f9f9f7]">
-                    <h3 className="font-heading text-xl font-bold mb-2">
-                      {blog.title}
-                    </h3>
-                    <p className="font-body text-gray-600 text-sm">
-                      {blog.excerpt}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            {/*   SHOW-MORE BUTTON   */}
-            {visibleCount < filteredBlogs.length && (
-              <div className="text-center mt-6">
-                <button
-                  onClick={() => setVisibleCount((c) => c + PER_PAGE)}
-                  className="font-heading bg-brand-primary text-white px-6 py-2 rounded hover:bg-brand-hover"
-                >
-                  Show more
-                </button>
-              </div>
-            )}
-          </>
-        ) : (
-          <p className="text-center text-gray-500">No blogs found.</p>
         )}
 
-        {/* <List
-        data={filteredBlogs}
-        renderItem={(blog) => (
-          <div
-            key={blog.slug.current}
-            className="blog-thumbnail rounded-lg shadow-md overflow-hidden "
-          ></div>
-        )}
-      /> */}
+        {/* ── cards ── */}
+        {!loading &&
+          (filtered.length > 0 ? (
+            <>
+              <div
+                className="
+                flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide
+                sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible
+                lg:grid-cols-4 lg:gap-8 lg:justify-center
+                py-4 px-2
+              "
+              >
+                {shown.map((b) => (
+                  <Link
+                    key={b.slug.current}
+                    to={`/blog/${b.slug.current}`}
+                    className="flex flex-col rounded shadow hover:text-brand-primary w-72 sm:w-auto"
+                  >
+                    <div className="w-full aspect-square overflow-hidden">
+                      <img
+                        src={b.image}
+                        alt={b.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 p-4 bg-[#f9f9f7]">
+                      <h3 className="font-heading text-xl font-bold mb-2">
+                        {b.title}
+                      </h3>
+                      <p className="font-body text-sm text-gray-600">
+                        {b.excerpt}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {visible < filtered.length && (
+                <div className="text-center mt-6">
+                  <button
+                    onClick={() => setVis((v) => v + PER_PAGE)}
+                    className="font-heading bg-brand-primary text-white px-6 py-2 rounded hover:bg-brand-hover"
+                  >
+                    Show&nbsp;more
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <p className="text-center text-gray-500">
+              No posts in this category.
+            </p>
+          ))}
       </div>
     </>
   );
-};
-
-export default Blog;
+}

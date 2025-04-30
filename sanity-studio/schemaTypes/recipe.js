@@ -111,20 +111,15 @@ export default {
         },
       ],
     },
+    // inside recipe.js  (same in blog.js)
     {
-      name: 'category',
-      type: 'string',
-      title: 'Category',
-      options: {
-        list: [
-          {title: 'Pastry', value: 'Pastry'},
-          {title: 'Cake', value: 'Cake'},
-          {title: 'Bread', value: 'Bread'},
-          {title: 'Cookie', value: 'Cookie'},
-          {title: 'Pie', value: 'Pie'},
-        ],
-      },
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'category'}]}],
+      validation: (r) => r.min(1).error('Choose at least one category'),
     },
+
     {
       name: 'description',
       title: 'Description',

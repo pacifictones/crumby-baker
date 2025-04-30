@@ -1,70 +1,73 @@
 import React, { useEffect, useState } from "react";
-import client from "../sanityClient";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import client from "../sanityClient";
 
-const Recipes = () => {
-  const [recipes, setRecipes] = useState([]); // All recipes fetched from Sanity
-  const [filteredRecipes, setFilteredRecipes] = useState([]);
-  const [filterCategory, setFilteredCategory] = useState("All");
-  const [sortOption, setSortOption] = useState("Newest");
-  const [loading, setLoading] = useState(true); // Track loading state
-  const PER_PAGE = 1;
-  const [visibleCount, setVisibleCount] = useState(PER_PAGE);
-  const visibleRecipes = filteredRecipes.slice(0, visibleCount);
+/* ──────────────────────────────────────────
+   1. LOCAL STATE
+   ──────────────────────────────────────────*/
+const PER_PAGE = 8; // how many cards shown each “page”
 
-  const categories = ["All", "Pastry", "Cake", "Bread", "Cookie", "Pie"];
+export default function Recipes() {
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch recipes from Sanity
+  /* category list for the dropdown  */
+  const [cats, setCats] = useState([]); // [{_id,title,slug}]
+  const [selectedCatId, setCat] = useState(""); // '' = All categories
+
+  /* paging */
+  const [visible, setVisible] = useState(PER_PAGE);
+
+  /* ───────────────────────────────────────
+       2.  FETCH ALL CATEGORIES   (once)
+     ───────────────────────────────────────*/
   useEffect(() => {
     client
-      .fetch(
-        '*[_type == "recipe"]{title, "image": mainImage.asset->url, slug, category, description, _createdAt}'
-      )
-      .then((data) => {
-        setRecipes(data);
-        setFilteredRecipes(data);
-        setLoading(false); // Stop loading once data is fetched
-      })
-      .catch((error) => {
-        console.error("Error fetching recipes:", error);
-        setLoading(false); // Stop loading even if there's an error
-      });
+      .fetch('*[_type=="category"]{_id,title,slug} | order(title asc)')
+      .then(setCats)
+      .catch(console.error);
   }, []);
 
-  //Update filteredRecipes when filterCategory or sortOption changes
+  /* ───────────────────────────────────────
+       3.  FETCH RECIPES  (runs whenever
+           selectedCatId OR sort option changes)
+     ───────────────────────────────────────*/
+  const [sortOpt, setSort] = useState("Newest");
+
   useEffect(() => {
-    let updatedRecipes = [...recipes];
+    setLoading(true);
+    setVisible(PER_PAGE); // reset paging on every new fetch
 
-    //Filter by category
+    /* =========== QUERY =========== */
+    const baseFields = `{title, "image": mainImage.asset->url, slug,
+        "categories": categories[]->{_id,title},
+        description, _createdAt}`;
+    const query = selectedCatId
+      ? `*[_type=="recipe" && $cid in categories[]._ref]|order(_createdAt desc)${baseFields}`
+      : `*[_type=="recipe"]|order(_createdAt desc)${baseFields}`;
 
-    if (filterCategory != "All") {
-      updatedRecipes = updatedRecipes.filter(
-        (recipe) => recipe.category === filterCategory
-      );
-    }
+    client
+      .fetch(query, { cid: selectedCatId })
+      .then((recData) => {
+        /* optional secondary sort in JS */
+        const sorted = [...recData].sort((a, b) => {
+          if (sortOpt === "Newest")
+            return new Date(b._createdAt) - new Date(a._createdAt);
+          if (sortOpt === "Oldest")
+            return new Date(a._createdAt) - new Date(b._createdAt);
+          return a.title.localeCompare(b.title); // Alphabetical
+        });
+        setRecipes(sorted);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [selectedCatId, sortOpt]);
 
-    //Sort recipes
-    if (sortOption === "Newest") {
-      updatedRecipes.sort(
-        (a, b) => new Date(b._createdAt) - new Date(a._createdAt)
-      );
-    } else if (sortOption === "Oldest") {
-      updatedRecipes.sort(
-        (a, b) => new Date(a.created_At) - new Date(b._createdAt)
-      );
-    } else if (sortOption === "Alphabetical") {
-      updatedRecipes.sort((a, b) => a.title.localeCompare(b.title));
-    }
-
-    setFilteredRecipes(updatedRecipes);
-    setVisibleCount(PER_PAGE);
-  }, [filterCategory, sortOption, recipes]);
-
-  // Handlers for filter and sort changes
-
-  const handleCategoryChange = (e) => setFilteredCategory(e.target.value);
-  const handleSortChange = (e) => setSortOption(e.target.value);
+  /* ──────────────────────────────────────────
+   4.  RENDER
+   ──────────────────────────────────────────*/
+  const visibleRecipes = recipes.slice(0, visible);
 
   return (
     <>
@@ -72,113 +75,85 @@ const Recipes = () => {
         <title>Recipes</title>
       </Helmet>
       <div className="max-w-screen-xl mx-auto px-4">
+        {/* HEADER, DROPDOWNS ─────────────────── */}
         <header className="text-center py-10">
-          <h1 className="font-heading text-4xl font-bold mb-4 text-gray-800">
+          <h1 className="font-heading text-4xl font-bold mb-4">
             Crumby Baker Recipes
           </h1>
 
-          {/* <p className="text-lg text-gray-700">
-          I hope you find something you like!
-        </p> */}
-        </header>
-
-        {/* filter and sort controls */}
-        <div className="font-heading filter-controls flex flex-wrap justify-center gap-4 my-6">
-          {/* category filter */}
-          <div className="flex items-center gap-2">
-            <label
-              htmlFor="categoryFilter"
-              className="font-semibold whitespace-nowrap"
-            >
-              Filter by Category:{" "}
-            </label>
+          <div className="font-heading flex flex-wrap justify-center gap-4 mt-8">
+            {/* ◾ Category dropdown */}
             <select
-              id="categoryFilter"
-              value={filterCategory}
-              onChange={handleCategoryChange}
-              className="ml-2 border rounded px-2 py-1"
+              value={selectedCatId}
+              onChange={(e) => setCat(e.target.value)}
+              className="border rounded px-3 py-1"
             >
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
+              <option value="">All categories</option>
+              {cats.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.title}
                 </option>
               ))}
             </select>
-          </div>
 
-          {/* Sort Option */}
-          <div className="flex items-center gap-2">
-            <label
-              htmlFor="sortOption"
-              className="font-semibold whitespace-nowrap"
-            >
-              Sort by:{" "}
-            </label>
+            {/* ◾ Sort dropdown */}
             <select
-              id="sortOption"
-              value={sortOption}
-              onChange={handleSortChange}
-              className="ml-2 border rounded px-2 py-1"
+              value={sortOpt}
+              onChange={(e) => setSort(e.target.value)}
+              className="border rounded px-3 py-1"
             >
               <option value="Newest">Newest</option>
               <option value="Oldest">Oldest</option>
-              <option value="Alphabetical">A-Z</option>
+              <option value="Alphabetical">A → Z</option>
             </select>
           </div>
-        </div>
+        </header>
 
-        {/* Loading Indicator */}
-
+        {/* GRID / LOADING ─────────────────────── */}
         {loading ? (
-          <div className="flex justify-center items-center py-10">
-            <div
-              className="animate-spin rounded-full h-8 w-8
-          border-t-2 border-b-2 border-gray-500"
-            ></div>
-          </div>
-        ) : filteredRecipes.length > 0 ? (
+          <p className="text-center py-12">Loading…</p>
+        ) : recipes.length === 0 ? (
+          <p className="text-center text-gray-500">No recipes found.</p>
+        ) : (
           <>
             <div
-              className=" // Mobile:
-            flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide 
-        // sm and md:
-            sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible   
-        // lg and up: 
-            lg:grid-cols-4  lg:gap-8 lg:justify-center
-            
-        // all
-            py-4 px-2 mx-auto   "
+              className="
+                flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide
+                sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible
+                lg:grid-cols-4 lg:gap-8 lg:justify-center
+                py-4 px-2
+              "
             >
-              {/* Recipe Grid */}
-              {visibleRecipes.map((recipe) => (
+              {visibleRecipes.map((r) => (
                 <Link
-                  to={`/recipes/${recipe.slug.current}`}
-                  className="flex flex-col block rounded shadow hover:text-brand-primary"
-                  key={recipe.slug.current}
+                  key={r.slug.current}
+                  to={`/recipes/${r.slug.current}`}
+                  className="flex flex-col rounded shadow hover:text-brand-primary"
                 >
                   <div className="w-full aspect-square overflow-hidden">
                     <img
-                      src={recipe.image}
-                      alt={recipe.title}
+                      src={r.image}
+                      alt={r.title}
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="flex-1 p-4 bg-[#f9f9f7]">
                     <h3 className="font-heading text-xl font-bold mb-2">
-                      {recipe.title}
+                      {r.title}
                     </h3>
-                    <p className="font-body  text-gray-600 text-sm">
-                      {recipe.description}
+                    <p className="font-body text-gray-600 text-sm">
+                      {r.description}
                     </p>
                   </div>
                 </Link>
               ))}
             </div>
-            {/* ---- SHOW-MORE BUTTON ---- */}
-            {visibleCount < filteredRecipes.length && (
+
+            {/* SHOW-MORE BUTTON */}
+            {visible < recipes.length && (
               <div className="text-center mt-6">
                 <button
-                  onClick={() => setVisibleCount((c) => c + PER_PAGE)}
+                  onClick={() => setVisible((v) => v + PER_PAGE)}
                   className="font-heading bg-brand-primary text-white px-6 py-2 rounded hover:bg-brand-hover"
                 >
                   Show more
@@ -186,12 +161,8 @@ const Recipes = () => {
               </div>
             )}
           </>
-        ) : (
-          <p className="text-center text-gray-500">No recipes found.</p>
         )}
       </div>
     </>
   );
-};
-
-export default Recipes;
+}
