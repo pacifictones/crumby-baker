@@ -8,6 +8,10 @@ const Blog = () => {
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [sortOption, setSortOption] = useState("Newest");
   const [loading, setLoading] = useState(true);
+  const PER_PAGE = 1;
+  const [visibleCount, setVisibleCount] = useState(PER_PAGE);
+
+  const visibleBlogs = filteredBlogs.slice(0, visibleCount);
 
   // Fetch blogs form Sanity
   useEffect(() => {
@@ -52,6 +56,7 @@ const Blog = () => {
     // }
 
     setFilteredBlogs(updatedBlogs);
+    setVisibleCount(PER_PAGE);
   }, [sortOption, blogs]);
 
   // Handlers for filter and sort changes
@@ -124,8 +129,9 @@ const Blog = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
           </div>
         ) : filteredBlogs.length > 0 ? (
-          <div
-            className=" // Mobile:
+          <>
+            <div
+              className=" // Mobile:
             flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide 
         // sm and md:
             sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible   
@@ -134,37 +140,47 @@ const Blog = () => {
             
         // all
             py-4 px-2 mx-auto   "
-          >
-            {/* Blog Grid */}
-            {filteredBlogs.map((blog) => (
-              <Link
-                to={`/blog/${blog.slug.current}`}
-                className="blog-thumbnail block rounded shadow hover:text-brand-primary"
-                key={blog.slug.current}
-              >
-                <div className="w-full aspect-square overflow-hidden">
-                  <img
-                    src={blog.image}
-                    alt={blog.title}
-                    className=" w-full  h-full object-cover"
-                  />
-                </div>
-                <div className="p-4 bg-[#f9f9f7]">
-                  <h3 className="font-heading text-xl font-bold mb-2">
-                    {blog.title}
-                  </h3>
-                  <p className="font-body text-gray-600 text-sm">
-                    {blog.excerpt}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+            >
+              {/* Blog Grid */}
+              {visibleBlogs.map((blog) => (
+                <Link
+                  to={`/blog/${blog.slug.current}`}
+                  className="flex flex-col blog-thumbnail rounded shadow hover:text-brand-primary"
+                  key={blog.slug.current}
+                >
+                  <div className="w-full aspect-square overflow-hidden">
+                    <img
+                      src={blog.image}
+                      alt={blog.title}
+                      className=" w-full  h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 p-4 bg-[#f9f9f7]">
+                    <h3 className="font-heading text-xl font-bold mb-2">
+                      {blog.title}
+                    </h3>
+                    <p className="font-body text-gray-600 text-sm">
+                      {blog.excerpt}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            {/*   SHOW-MORE BUTTON   */}
+            {visibleCount < filteredBlogs.length && (
+              <div className="text-center mt-6">
+                <button
+                  onClick={() => setVisibleCount((c) => c + PER_PAGE)}
+                  className="font-heading bg-brand-primary text-white px-6 py-2 rounded hover:bg-brand-hover"
+                >
+                  Show more
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <p className="text-center text-gray-500">No blogs found.</p>
         )}
-
-        {/* Blog Grid */}
 
         {/* <List
         data={filteredBlogs}

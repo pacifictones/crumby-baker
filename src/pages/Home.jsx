@@ -61,7 +61,7 @@ const Home = () => {
         <div className="mx-auto max-w-screen-xl text-center">
           <div className="mb-6">
             <Link
-              className="font-heading rounded-xl hover:translate-y-1 hover:shadow-lg transition-transform duration-200 text-2xl font-semibold hover:text-brand-primary"
+              className="font-heading text-2xl font-semibold hover:text-brand-primary"
               to="/recipes"
             >
               Latest Recipes
@@ -159,38 +159,28 @@ const Home = () => {
       </section>
 
       {/* About Me */}
-      <section className="py-10 bg-white">
-        <div className="max-w-screen-lg mx-auto px-4 text-center ">
-          <div className="mb-6">
+      {/* About Teaser – place between Hero and Latest Recipes */}
+      <section className="bg-[#f9f9f7] py-12">
+        <div className="max-w-screen-lg mx-auto px-6 md:flex md:items-center md:gap-8">
+          <img
+            src="/photos/Heather-Waterfall.jpg"
+            alt="Heather smiling"
+            className="w-40 h-40 rounded-full object-cover mx-auto md:mx-0 mb-6 md:mb-0 shadow"
+          />
+          <div className="text-center md:text-left">
+            <h2 className="font-heading text-2xl font-bold mb-2">
+              Oh, hi. I’m Heather.
+            </h2>
+            <p className="font-body text-gray-700 max-w-xl mx-auto md:mx-0 mb-4">
+              I drop batter on the oven door, forget the baking powder, and
+              still try again. Welcome to mediocrity — grab a whisk.
+            </p>
             <Link
-              className="font-heading text-2xl font-semibold hover:text-brand-primary mb-4 inline-block"
               to="/about"
+              className="inline-block font-heading text-brand-primary hover:text-brand-hover"
             >
-              About me
+              Read the whole messy story →
             </Link>
-          </div>
-
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10">
-            <img
-              src="/photos/Heather-Waterfall.jpg"
-              alt="waterFall"
-              className=" h-60 
-             w-auto md:h-64 rounded-md shadow-lg"
-            />
-            <div className="font-body text-md  leading-relaxed text-gray-700 text-left">
-              <p className="mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde,
-                aperiam eaque veritatis cumque molestias recusandae temporibus
-                quos facilis, aspernatur vero asperiores blanditiis, accusamus
-                rem voluptates doloribus dolore quis eligendi quae.
-              </p>
-              <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam
-                laudantium doloremque nesciunt expedita blanditiis aperiam
-                aliquam hic odit rem deleniti, repellendus pariatur officia
-                corrupti suscipit dignissimos iusto a eveniet temporibus!
-              </p>
-            </div>
           </div>
         </div>
       </section>

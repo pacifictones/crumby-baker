@@ -9,6 +9,9 @@ const Recipes = () => {
   const [filterCategory, setFilteredCategory] = useState("All");
   const [sortOption, setSortOption] = useState("Newest");
   const [loading, setLoading] = useState(true); // Track loading state
+  const PER_PAGE = 1;
+  const [visibleCount, setVisibleCount] = useState(PER_PAGE);
+  const visibleRecipes = filteredRecipes.slice(0, visibleCount);
 
   const categories = ["All", "Pastry", "Cake", "Bread", "Cookie", "Pie"];
 
@@ -55,6 +58,7 @@ const Recipes = () => {
     }
 
     setFilteredRecipes(updatedRecipes);
+    setVisibleCount(PER_PAGE);
   }, [filterCategory, sortOption, recipes]);
 
   // Handlers for filter and sort changes
@@ -133,8 +137,9 @@ const Recipes = () => {
             ></div>
           </div>
         ) : filteredRecipes.length > 0 ? (
-          <div
-            className=" // Mobile:
+          <>
+            <div
+              className=" // Mobile:
             flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide 
         // sm and md:
             sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible   
@@ -143,32 +148,44 @@ const Recipes = () => {
             
         // all
             py-4 px-2 mx-auto   "
-          >
-            {/* Recipe Grid */}
-            {filteredRecipes.map((recipe) => (
-              <Link
-                to={`/recipes/${recipe.slug.current}`}
-                className="block rounded shadow hover:text-brand-primary"
-                key={recipe.slug.current}
-              >
-                <div className="w-full aspect-square overflow-hidden">
-                  <img
-                    src={recipe.image}
-                    alt={recipe.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-heading text-xl font-bold mb-2">
-                    {recipe.title}
-                  </h3>
-                  <p className="font-body  text-gray-600 text-sm">
-                    {recipe.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+            >
+              {/* Recipe Grid */}
+              {visibleRecipes.map((recipe) => (
+                <Link
+                  to={`/recipes/${recipe.slug.current}`}
+                  className="flex flex-col block rounded shadow hover:text-brand-primary"
+                  key={recipe.slug.current}
+                >
+                  <div className="w-full aspect-square overflow-hidden">
+                    <img
+                      src={recipe.image}
+                      alt={recipe.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 p-4 bg-[#f9f9f7]">
+                    <h3 className="font-heading text-xl font-bold mb-2">
+                      {recipe.title}
+                    </h3>
+                    <p className="font-body  text-gray-600 text-sm">
+                      {recipe.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            {/* ---- SHOW-MORE BUTTON ---- */}
+            {visibleCount < filteredRecipes.length && (
+              <div className="text-center mt-6">
+                <button
+                  onClick={() => setVisibleCount((c) => c + PER_PAGE)}
+                  className="font-heading bg-brand-primary text-white px-6 py-2 rounded hover:bg-brand-hover"
+                >
+                  Show more
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <p className="text-center text-gray-500">No recipes found.</p>
         )}
