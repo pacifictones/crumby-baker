@@ -28,7 +28,7 @@ export default function AllCategoriesPage() {
         All Categories
       </h1>
 
-      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-6 grid-cols-2 md:grid-cols-4  xl:grid-cols-6 ">
         {cats.map((c) => {
           /* ---------- choose a safe image source ---------- */
           const hasImg = c.image && c.image.asset;

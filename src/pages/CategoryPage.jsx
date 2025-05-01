@@ -1,9 +1,7 @@
 // src/pages/CategoryPage.jsx
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import client, { urlFor } from "../sanityClient";
-import ResponsiveCarouselGrid from "../components/ResponsiveCarouselGrid";
-import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 export default function CategoryPage() {
@@ -18,10 +16,10 @@ export default function CategoryPage() {
         `{
           "cat": *[_type=="category" && slug.current==$slug][0]{title},
           "rec": *[_type=="recipe" && $slug in categories[]->slug.current]{
-            _id,title,slug,"image":mainImage
+            _id, title, slug, "image": mainImage
           } | order(_createdAt desc),
           "blg": *[_type=="blog" && $slug in categories[]->slug.current]{
-            _id,title,slug,"image":mainImage
+            _id, title, slug, "image": mainImage
           } | order(_createdAt desc)
         }`,
         { slug }
@@ -41,68 +39,77 @@ export default function CategoryPage() {
         <title>{category.title} | The Crumby Baker</title>
       </Helmet>
 
-      {/* ◀── Wrap everything in this dark container ──▶ */}
-      <div className="bg-[#DEE7E7]">
-        {/* Recipes always shows on that background */}
+      {/* ——— WRAPPER THAT COVERS FULL WIDTH ——— */}
+      <div className="w-full bg-[#DEE7E7]">
+        {/* ——— RECIPES BAND ——— */}
         {recipes.length > 0 && (
-          <section className="max-w-screen-xl mx-auto px-4 py-14 text-center">
-            <h2 className="font-heading text-2xl mb-8">Recipes</h2>
-            <ResponsiveCarouselGrid
-              items={recipes}
-              renderItem={(r) => (
+          <div className="max-w-screen-xl mx-auto px-4 py-12">
+            <h2 className="font-heading text-2xl inline-block mb-6 pb-1 ">
+              Recipes
+            </h2>
+
+            <div className="grid grid-cols-2 md:grid-cols-4  xl:grid-cols-6 gap-6">
+              {recipes.map((r) => (
                 <Link
+                  key={r._id}
                   to={`/recipes/${r.slug.current}`}
-                  className="rounded shadow flex flex-col hover:text-brand-primary"
+                  className="group block rounded shadow overflow-hidden hover:text-brand-primary"
                 >
                   <div className="w-full aspect-square overflow-hidden">
                     <img
                       src={urlFor(r.image).width(400).quality(80).url()}
                       alt={r.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <div className="p-4 bg-[#f9f9f7]">
-                    <h3 className="font-heading text-center font-bold">
+                  <div className="p-2 bg-[#f9f9f7] text-center">
+                    <h3 className="font-heading text-base font-semibold">
                       {r.title}
                     </h3>
                   </div>
                 </Link>
-              )}
-            />
-          </section>
+              ))}
+            </div>
+          </div>
         )}
 
-        {/* Blog section, if it exists, sits *above* that same wrapper */}
+        {/* ——— BLOG BAND ——— */}
         {blogs.length > 0 && (
-          <section className="max-w-screen-xl mx-auto px-4 py-14 text-center bg-white">
-            <h2 className="font-heading text-2xl mb-8">Blog Posts</h2>
-            <ResponsiveCarouselGrid
-              items={blogs}
-              renderItem={(b) => (
-                <Link
-                  to={`/blog/${b.slug.current}`}
-                  className="rounded shadow flex flex-col hover:text-brand-primary"
-                >
-                  <div className="w-full aspect-square overflow-hidden">
-                    <img
-                      src={urlFor(b.image).width(400).quality(80).url()}
-                      alt={b.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4 bg-[#f9f9f7]">
-                    <h3 className="font-heading text-center font-bold">
-                      {b.title}
-                    </h3>
-                  </div>
-                </Link>
-              )}
-            />
-          </section>
+          <div className="w-full bg-white">
+            <div className="max-w-screen-xl mx-auto px-4 py-12">
+              <h2 className="font-heading text-2xl inline-block mb-6 pb-1 ">
+                Blog Posts
+              </h2>
+
+              <div className="grid grid-cols-2  md:grid-cols-4 xl:grid-cols-6 gap-6">
+                {blogs.map((b) => (
+                  <Link
+                    key={b._id}
+                    to={`/blog/${b.slug.current}`}
+                    className="group block rounded shadow overflow-hidden hover:text-brand-primary"
+                  >
+                    <div className="w-full aspect-square overflow-hidden">
+                      <img
+                        src={urlFor(b.image).width(400).quality(80).url()}
+                        alt={b.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="p-2 bg-[#f9f9f7] text-center">
+                      <h3 className="font-heading text-base font-semibold">
+                        {b.title}
+                      </h3>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* Your footer can remain exactly as-is */}
+      {/* ——— FOOTER ——— */}
+      {/* (your existing Footer component here) */}
     </>
   );
 }
