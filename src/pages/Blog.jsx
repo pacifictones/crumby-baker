@@ -78,7 +78,7 @@ export default function Blog() {
         <title>Blog</title>
       </Helmet>
 
-      <div className="max-w-screen-xl mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto px-4 mb-16">
         <header className="text-center py-10">
           <h1 className="font-heading text-4xl font-bold">
             Crumby Baker Blogs

@@ -27,6 +27,17 @@ const readClient = createClient({
   useCdn: true, // read
 });
 
+export function formatQuantity(qty) {
+  if (qty == null || isNaN(qty)) return qty; // fail-safe
+
+  // Round to max two decimals, then let Intl strip trailing zeros
+  const rounded = Math.round(qty * 100) / 100;
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(rounded);
+}
+
 function RecipeDetail() {
   const { slug } = useParams(); // Get the slug from the URL
   const [recipe, setRecipe] = useState(null); // State to store recipe data
@@ -64,7 +75,7 @@ function RecipeDetail() {
         cookTime,
         totalTime,
         servings,
-        ingredients,
+        
         ingredientSections[]{
         sectionTitle,
         items[]{
@@ -73,10 +84,7 @@ function RecipeDetail() {
         item,notes
         }
         },
-        instructions []{
-        text,
-        image,
-        },
+        
         instructionSections[]{
         sectionTitle,
         steps[]{
@@ -84,6 +92,7 @@ function RecipeDetail() {
         image
         }
         },
+        notes,
         "reviews": *[
         _type == "review" && recipe._ref == ^._id &&
         confirmed == true
@@ -149,15 +158,9 @@ function RecipeDetail() {
   }
 
   function scaleQuantity(baseQty, baseServings, newServings) {
-    if (
-      typeof baseQty !== "number" ||
-      typeof baseServings !== "number" ||
-      baseServings === 0 ||
-      typeof newServings !== "number"
-    ) {
-      return baseQty;
-    }
-    return baseQty * (newServings / baseServings);
+    const qty = Number(baseQty);
+    if (!qty || !baseServings || !newServings) return baseQty;
+    return qty * (newServings / baseServings);
   }
 
   return (
@@ -369,11 +372,18 @@ function RecipeDetail() {
                             {/* Displayed scaled quantity if numeric */}
                             {typeof scaledQty === "number" &&
                               !isNaN(scaledQty) && (
-                                <span>{scaledQty.toFixed(2)}</span>
+                                <span>{formatQuantity(scaledQty)}</span>
                               )}
                             {/* Then unit, item */}
                             {line.unit && ` ${line.unit} `}
                             {line.item}
+                            {/* NEW – show per-ingredient note, if any */}
+                            {line.notes && (
+                              <span className="italic text-gray-600">
+                                {" "}
+                                — {line.notes}
+                              </span>
+                            )}
                           </li>
                         );
                       })}
@@ -432,6 +442,17 @@ function RecipeDetail() {
                     </ol>
                   </div>
                 ))}
+                {/* Cook’s Notes */}
+                {recipe.notes?.length > 0 && (
+                  <section className="max-w-screen-lg mx-auto px-4 py-8">
+                    <h2 className="font-heading text-2xl font-bold mb-4">
+                      Notes
+                    </h2>
+                    <div className="prose max-w-none">
+                      <PortableText value={recipe.notes} />
+                    </div>
+                  </section>
+                )}
               </div>
             </section>
           </div>

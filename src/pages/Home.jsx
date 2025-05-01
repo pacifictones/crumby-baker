@@ -5,10 +5,14 @@ import { Link } from "react-router-dom";
 import ResponsiveCarouselGrid from "../components/ResponsiveCarouselGrid";
 import SeeMoreCard from "../components/SeeMoreCard";
 import { Helmet } from "react-helmet";
+import Hero from "../components/Hero";
+
+import { useTransition } from "react";
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [blogs, setBlogs] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -36,8 +40,18 @@ const Home = () => {
           }`
         );
         setBlogs(blogData);
+
+        // Categories with cover images
+        const catData = await client.fetch(`
+          *[_type == "category" && featured == true && defined(image)]
+          | order(title asc)[0...4]{
+            _id, title, slug, image
+          }
+        `);
+
+        setCategories(catData);
       } catch (error) {
-        console.log("error fetching data", error);
+        console.log("Fetching home content failed:", error);
       }
     };
     fetchContent();
@@ -48,6 +62,44 @@ const Home = () => {
       <Helmet>
         <title>The Crumby Baker</title>
       </Helmet>
+      {/* ─────────────── HERO ─────────────── */}
+      <Hero />
+
+      {/* ─────────────── FEATURED CATEGORIES ─────────────── */}
+      <section className="py-16 bg-white">
+        <div className="max-w-screen-xl mx-auto px-4">
+          <h2 className="font-heading text-2xl mb-6 text-center">
+            <Link to="/categories" className="hover:text-brand-primary">
+              Explore by Category
+            </Link>
+          </h2>
+
+          <ResponsiveCarouselGrid
+            items={categories}
+            renderItem={(cat) => (
+              <Link
+                to={`/category/${cat.slug.current}`}
+                className="group block rounded shadow overflow-hidden hover:text-brand-primary"
+              >
+                <img
+                  src={urlFor(cat.image)
+                    .width(400)
+                    .height(400)
+                    .fit("crop")
+                    .url()}
+                  alt={cat.image?.alt || cat.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="bg-[#f9f9f7] px-2 py-2">
+                  <h3 className="font-heading text-center text-base font-semibold">
+                    {cat.title}
+                  </h3>
+                </div>
+              </Link>
+            )}
+          />
+        </div>
+      </section>
       {/* <header className="w-full py-10 text-center">
         <h1 className="text-4xl font-semibold mb-4">
           Welcome to the Crumby Baker
@@ -56,8 +108,9 @@ const Home = () => {
           Your one-stop shop for delicious recipes and baking tips.
         </p>
       </header> */}
+
       {/* Latest Recipe Section */}
-      <section className=" py-10 bg-white px-4 ">
+      <section className=" py-16 bg-[#DEE7E7] px-4 ">
         <div className="mx-auto max-w-screen-xl text-center">
           <div className="mb-6">
             <Link
@@ -108,7 +161,7 @@ const Home = () => {
       </section>
 
       {/* Blog Section */}
-      <section className="py-10 bg-[#DEE7E7] px-4">
+      <section className="py-16 bg-white px-4">
         <div className="  border-gray-500 max-w-screen-xl mx-auto text-center">
           <div className="mb-6">
             <Link
@@ -160,8 +213,8 @@ const Home = () => {
 
       {/* About Me */}
       {/* About Teaser – place between Hero and Latest Recipes */}
-      <section className="bg-[#f9f9f7] py-12">
-        <div className="max-w-screen-lg mx-auto px-6 md:flex md:items-center md:gap-8">
+      <section className="bg-[#DEE7E7] py-12">
+        <div className="max-w-screen-lg mx-auto px-6  py-6 md:flex md:items-center md:gap-8">
           <img
             src="/photos/Heather-Waterfall.jpg"
             alt="Heather smiling"

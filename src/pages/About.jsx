@@ -30,7 +30,7 @@ export default function About() {
         <title>About | The Crumby Baker</title>
       </Helmet>
 
-      <div className="max-w-screen-lg mx-auto p-4">
+      <div className="max-w-screen-lg mx-auto p-4  mb-10">
         {/* Page title */}
         <h1 className="font-heading text-3xl text-center mb-14 mt-10">
           {aboutContent.title}

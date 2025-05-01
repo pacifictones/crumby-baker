@@ -14,6 +14,8 @@ import PrintRecipe from "./pages/PrintRecipe.jsx";
 import NoLayout from "./components/NoLayout.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import DataDeletion from "./pages/DataDeletion.jsx";
+import CategoryPage from "./pages/CategoryPage.jsx";
+import AllCategoriesPage from "./pages/AllCategoriesPage.jsx";
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/data-deletion" element={<DataDeletion />} />
+                  <Route path="/category/:slug" element={<CategoryPage />} />
+                  <Route path="/categories" element={<AllCategoriesPage />} />
                 </Routes>
               </Layout>
             }

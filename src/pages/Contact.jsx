@@ -8,7 +8,7 @@ const Contact = () => {
       <Helmet>
         <title>Contact</title>
       </Helmet>
-      <div>
+      <div className="my-10 pb-12 pt-8">
         <h1 className="font-heading text-3xl font-bold text-center mb-4">
           Contact the Crumby Baker
         </h1>

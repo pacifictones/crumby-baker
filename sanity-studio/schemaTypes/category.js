@@ -1,4 +1,4 @@
-// /schemas/category.js
+// /schemaTypes/category.js
 export default {
   name: 'category',
   title: 'Category',
@@ -6,7 +6,6 @@ export default {
   fields: [
     {name: 'title', title: 'Title', type: 'string', validation: (r) => r.required()},
 
-    // optional slug so you can route /category/cookies
     {
       name: 'slug',
       title: 'Slug',
@@ -14,12 +13,32 @@ export default {
       options: {source: 'title', maxLength: 96},
     },
 
-    // optional parent reference → lets you build sub-categories later
+    {
+      name: 'image',
+      title: 'Cover Image',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+          description: 'Describe the image for accessibility',
+        },
+      ],
+    },
+
     {
       name: 'parent',
       title: 'Parent Category',
       type: 'reference',
       to: [{type: 'category'}],
+    },
+    {
+      name: 'featured',
+      title: 'Show on Home Hero',
+      type: 'boolean',
+      initialValue: false,
     },
   ],
 }

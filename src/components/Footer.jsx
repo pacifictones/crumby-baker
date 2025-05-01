@@ -3,7 +3,7 @@ import SocialIcons from "./SocialIcons";
 
 const Footer = () => {
   return (
-    <footer className="font-heading w-full  bg-[#E7D8C9] py-6 text-center mt-14">
+    <footer className="font-heading w-full  bg-[#E7D8C9] py-6 text-center ">
       <p className="max-w-screen-lg mx-auto  p-2">
         © {new Date().getFullYear()} The Crumby Baker
       </p>

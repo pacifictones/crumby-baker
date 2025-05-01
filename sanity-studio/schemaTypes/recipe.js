@@ -11,18 +11,6 @@ export default {
       title: 'Title',
       type: 'string',
     },
-    {
-      name: 'ingredients',
-      title: 'Ingredients',
-      type: 'array',
-      of: [{type: 'string'}],
-    },
-    {
-      name: 'instructions',
-      title: 'Instructions',
-      type: 'array',
-      of: [{type: 'step'}], // Reference custom step object
-    },
 
     {
       name: 'ingredientSections',
@@ -144,6 +132,13 @@ export default {
       name: 'servings',
       title: 'Servings/Yield',
       type: 'number',
+    },
+    {
+      name: 'notes',
+      title: 'Cook’s Notes',
+      type: 'array',
+      of: [{type: 'block'}], // rich-text via PortableText
+      description: 'Extra tips, substitutions, mistakes to avoid…',
     },
     {
       name: 'slug',

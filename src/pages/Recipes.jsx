@@ -74,7 +74,7 @@ export default function Recipes() {
       <Helmet>
         <title>Recipes</title>
       </Helmet>
-      <div className="max-w-screen-xl mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto px-4 mb-16">
         {/* HEADER, DROPDOWNS ─────────────────── */}
         <header className="text-center py-10">
           <h1 className="font-heading text-4xl font-bold mb-4">
