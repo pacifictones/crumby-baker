@@ -40,7 +40,7 @@ export default function CategoryPage() {
       </Helmet>
 
       {/* ——— WRAPPER THAT COVERS FULL WIDTH ——— */}
-      <div className="w-full bg-[#DEE7E7]">
+      <div className="w-full ">
         {/* ——— RECIPES BAND ——— */}
         {recipes.length > 0 && (
           <div className="max-w-screen-xl mx-auto px-4 py-12">
