@@ -89,9 +89,9 @@ export default function Blog() {
         <div className="font-heading flex flex-wrap justify-center gap-6 my-6">
           {/* ▼▼ NEW Category dropdown ▼▼ */}
           <div className="flex items-center gap-2">
-            <label htmlFor="catSel" className="font-semibold">
+            {/* <label htmlFor="catSel" className="font-semibold">
               Category:
-            </label>
+            </label> */}
             <select
               id="catSel"
               value={catId}
@@ -101,7 +101,7 @@ export default function Blog() {
               }}
               className="border rounded px-2 py-1"
             >
-              <option value="all">All</option>
+              <option value="all">All Categories</option>
               {cats.map((c) => (
                 <option key={c._id} value={c._id}>
                   {c.title}
@@ -113,9 +113,9 @@ export default function Blog() {
 
           {/* sort dropdown */}
           <div className="flex items-center gap-2">
-            <label htmlFor="sortSel" className="font-semibold">
+            {/* <label htmlFor="sortSel" className="font-semibold">
               Sort&nbsp;by:
-            </label>
+            </label> */}
             <select
               id="sortSel"
               value={sortOpt}
@@ -141,10 +141,7 @@ export default function Blog() {
             <>
               <div
                 className="
-                flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide
-                sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible
-                lg:grid-cols-4 lg:gap-8 lg:justify-center
-                py-4 px-2
+                grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8 xl:grid-cols-6 py-4 px-2
               "
               >
                 {shown.map((b) => (

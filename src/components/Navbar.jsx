@@ -41,12 +41,19 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
       <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo/Title */}
-        <Link
-          to="/"
-          className="font-chelseaMarket text-lg sm:text-2xl font-bold hover:text-black whitespace-nowrap"
-        >
-          The Crumby Baker
-        </Link>
+        <div className="flex items-center gap-3">
+          <img
+            src="/photos/blackToaster.png"
+            alt="Heather smiling"
+            className="w-10 h-10 hidden sm:block"
+          />
+          <Link
+            to="/"
+            className="font-chelseaMarket text-lg sm:text-2xl font-bold hover:text-black whitespace-nowrap"
+          >
+            The Crumby Baker
+          </Link>
+        </div>
 
         {/* ========== DESKTOP NAV ========== */}
         <nav className="ml-2 mr-4">

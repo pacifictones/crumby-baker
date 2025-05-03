@@ -118,10 +118,7 @@ export default function Recipes() {
           <>
             <div
               className="
-                flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide
-                sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible
-                lg:grid-cols-4 lg:gap-8 lg:justify-center
-                py-4 px-2
+                grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8 xl:grid-cols-6 py-4 px-2
               "
             >
               {visibleRecipes.map((r) => (
