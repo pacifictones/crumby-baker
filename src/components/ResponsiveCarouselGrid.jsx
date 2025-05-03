@@ -5,7 +5,7 @@ function ResponsiveCarouselGrid({ items, renderItem, className = "" }) {
     <div
       className={`
         // Mobile:
-            flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide 
+            flex flex-nowrap gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pl-4 
         // sm and md:
             sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible   
         // lg and up: 
