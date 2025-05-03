@@ -59,8 +59,8 @@ const Navbar = () => {
         <nav className="ml-2 mr-4">
           <ul
             className="
-      font-heading text-lg hidden sm:flex
-      gap-6 md:gap-4           /* smaller gap under 768 px */
+      font-heading text-lg hidden lg:flex
+      gap-6 lg:gap-4           /* smaller gap under 768 px */
       whitespace-nowrap
 "
           >
@@ -148,7 +148,7 @@ const Navbar = () => {
           {/* ========== HAMBURGER BUTTON ========== */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="block sm:hidden text-black focus:outline-none bg-transparent border-0"
+            className="block lg:hidden text-black focus:outline-none bg-transparent border-0"
           >
             <svg
               className="w-6 h-6"

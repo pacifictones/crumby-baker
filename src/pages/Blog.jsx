@@ -148,7 +148,7 @@ export default function Blog() {
                   <Link
                     key={b.slug.current}
                     to={`/blog/${b.slug.current}`}
-                    className="flex flex-col rounded shadow hover:text-brand-primary w-72 sm:w-auto"
+                    className="flex flex-col rounded shadow hover:text-brand-primary w-full sm:w-auto"
                   >
                     <div className="w-full aspect-square overflow-hidden">
                       <img

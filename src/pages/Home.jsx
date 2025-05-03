@@ -129,7 +129,7 @@ const Home = () => {
                   to="/recipes"
                   title="See All Recipes"
                   description="Explore our full collection of recipes!"
-                  className=" font-heading w-full aspect-square lg:hidden" // Hide on larger screens
+                  className=" font-heading w-full aspect-square sm:hidden" // Hide on larger screens
                   backgroundImage={null} // Or pass an image path
                 />
               ) : (
@@ -180,7 +180,7 @@ const Home = () => {
                   to="/blog"
                   title="See All Blogs"
                   description="Explore our full collection of blogs!"
-                  className="font-heading w-full aspect-square lg:hidden" // Hide on larger screens
+                  className="font-heading w-full aspect-square sm:hidden" // Hide on larger screens
                   backgroundImage={null} // Optional image
                 />
               ) : (
