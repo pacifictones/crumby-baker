@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import client from "../sanityClient";
+import Loading from "../components/Loading";
 
 export default function Blog() {
   const PER_PAGE = 8;
@@ -129,11 +130,7 @@ export default function Blog() {
         </div>
 
         {/* ── loading ── */}
-        {loading && (
-          <div className="flex justify-center py-10">
-            <div className="animate-spin h-8 w-8 rounded-full border-t-2 border-b-2 border-gray-500" />
-          </div>
-        )}
+        {loading && <Loading />}
 
         {/* ── cards ── */}
         {!loading &&

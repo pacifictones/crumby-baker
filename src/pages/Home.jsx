@@ -6,6 +6,7 @@ import ResponsiveCarouselGrid from "../components/ResponsiveCarouselGrid";
 import SeeMoreCard from "../components/SeeMoreCard";
 import { Helmet } from "react-helmet";
 import Hero from "../components/Hero";
+import Loading from "../components/Loading";
 
 import { useTransition } from "react";
 
@@ -13,49 +14,39 @@ const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        // Fetch latest recipes
-        const recipeData = await client.fetch(
-          `*[_type == "recipe"] | order(_createdAt desc)[0...4] {
-          _id,
-          title,
-          slug,
-          "image": mainImage.asset->url,
-          description
-          }`
-        );
+        setLoading(true); /* turn spinner on */
+
+        /* run the three queries in parallel for speed */
+        const [recipeData, blogData, catData] = await Promise.all([
+          client.fetch(
+            `*[_type=="recipe"]|order(_createdAt desc)[0...4]{ _id,title,slug,"image":mainImage.asset->url,description }`
+          ),
+          client.fetch(
+            `*[_type=="blog"]|order(_createdAt desc)[0...4]{ _id,title,slug,"image":mainImage.asset->url,excerpt }`
+          ),
+          client.fetch(
+            `*[_type=="category" && featured==true && defined(image)]|order(title asc)[0...4]{ _id,title,slug,image }`
+          ),
+        ]);
+
         setRecipes(recipeData);
-
-        // Fetch latest blogs
-        const blogData = await client.fetch(
-          `*[_type == "blog"] | order(_createdAt desc)[0...4] {
-          _id,
-          title, 
-          slug,
-          "image": mainImage.asset->url,
-          excerpt
-          }`
-        );
         setBlogs(blogData);
-
-        // Categories with cover images
-        const catData = await client.fetch(`
-          *[_type == "category" && featured == true && defined(image)]
-          | order(title asc)[0...4]{
-            _id, title, slug, image
-          }
-        `);
-
         setCategories(catData);
-      } catch (error) {
-        console.log("Fetching home content failed:", error);
+      } catch (err) {
+        console.error("Home fetch failed:", err);
+      } finally {
+        setLoading(false); /* spinner off whether success or error */
       }
     };
     fetchContent();
   }, []);
+
+  if (loading) return <Loading />;
 
   return (
     <div>

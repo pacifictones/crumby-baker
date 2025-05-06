@@ -3,11 +3,14 @@ import React, { useEffect, useState } from "react";
 import client, { urlFor } from "../sanityClient";
 import { PortableText } from "@portabletext/react";
 import { Helmet } from "react-helmet";
+import Loading from "../components/Loading";
 
 export default function About() {
   const [aboutContent, setAboutContent] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     client
       .fetch(
         `*[_type == "about"][0]{
@@ -17,12 +20,11 @@ export default function About() {
         }`
       )
       .then((data) => setAboutContent(data))
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
-  if (!aboutContent) {
-    return <p className="p-8 text-center font-body">Loading…</p>;
-  }
+  if (loading) return <Loading />;
 
   return (
     <>

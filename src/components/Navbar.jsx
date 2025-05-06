@@ -169,7 +169,7 @@ const Navbar = () => {
 
       {/* ========== MOBILE DRAWER ========== */}
       {isOpen && (
-        <ul className="absolute top-full left-0 w-full bg-gray-800 text-white text-center z-50 shadow-lg sm:hidden">
+        <ul className="absolute top-full left-0 w-full bg-gray-800 text-white text-center z-50 shadow-lg lg:hidden">
           <li className="p-2 border-b border-gray-600">
             <Search />
           </li>

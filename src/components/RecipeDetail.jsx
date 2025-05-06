@@ -10,9 +10,10 @@ import { createClient } from "@sanity/client";
 import StarBreakdown from "./StarBreakdown";
 import CookModeToggle from "./CookModeToggle";
 import ShareModal from "./ShareModal";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import RecipeSchema from "./RecipeSchema";
 import Breadcrumbs from "./Breadcrumbs";
+import Loading from "./Loading";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -42,6 +43,8 @@ function RecipeDetail() {
   const { slug } = useParams(); // Get the slug from the URL
   const [recipe, setRecipe] = useState(null); // State to store recipe data
 
+  const [loading, setLoading] = useState(true);
+
   // State for how many servigns user wants now
   const [currentServings, setCurrentServings] = useState(null);
 
@@ -64,6 +67,7 @@ function RecipeDetail() {
 
   const fetchRecipe = async () => {
     try {
+      setLoading(true);
       const data = await client.fetch(
         `*[_type == "recipe" && slug.current == $slug][0]{
         _id,
@@ -106,6 +110,8 @@ function RecipeDetail() {
       setCurrentServings(data.servings);
     } catch (error) {
       console.error("Error fetching recipe:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,7 +119,9 @@ function RecipeDetail() {
     fetchRecipe();
   }, [slug]);
 
-  if (!recipe) return <div>Loading...</div>;
+  if (loading) return <Loading />;
+  if (!recipe)
+    return <p className="text-center py-12 font-heading">Recipe not found.</p>;
 
   const galleryImages =
     recipe.gallery?.map((img) => ({

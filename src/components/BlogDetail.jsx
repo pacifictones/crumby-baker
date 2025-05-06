@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet";
 import ShareModal from "./ShareModal";
 import Breadcrumbs from "./Breadcrumbs";
 import CommentForm from "./CommentForm";
+import Loading from "./Loading";
 
 function interleaveReplies(comments) {
   // group replies by parent ID
@@ -40,6 +41,7 @@ function BlogDetail() {
   const { slug } = useParams(); // Get the slug from the URL
   const [blog, setBlog] = useState(null); // State to store blog data
   const [replyTo, setReplyTo] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const COMMENTS_PER_PAGE = 6;
   const [page, setPage] = useState(1); // current page
@@ -48,7 +50,9 @@ function BlogDetail() {
   );
 
   const refreshComments = () => {
+    setLoading(true);
     client
+
       .fetch(
         `*[_type=="blog" && slug.current==$slug][0]{
           _id,
@@ -78,7 +82,8 @@ function BlogDetail() {
         setBlog({ ...data, comments: ordered });
       })
 
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false));
   };
 
   // 2) On mount or slug change, just call the helper
@@ -92,7 +97,9 @@ function BlogDetail() {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [page]);
 
-  if (!blog) return <div>Loading...</div>;
+  if (loading) return <Loading />;
+  if (!blog)
+    return <p className="text-center py-12 font-heading">Blog not found.</p>;
 
   const testUrl = urlFor(blog.mainImage).width(600).url();
   console.log("Test image URL:", testUrl);

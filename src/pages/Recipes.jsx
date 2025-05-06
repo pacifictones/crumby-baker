@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import client from "../sanityClient";
+import Loading from "../components/Loading";
 
 /* ──────────────────────────────────────────
    1. LOCAL STATE
@@ -111,7 +112,7 @@ export default function Recipes() {
 
         {/* GRID / LOADING ─────────────────────── */}
         {loading ? (
-          <p className="text-center py-12">Loading…</p>
+          <Loading />
         ) : recipes.length === 0 ? (
           <p className="text-center text-gray-500">No recipes found.</p>
         ) : (
