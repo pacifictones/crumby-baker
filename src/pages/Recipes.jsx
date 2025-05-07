@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import client from "../sanityClient";
 import Loading from "../components/Loading";
+import StarRating from "../components/StarRating";
 
 /* ──────────────────────────────────────────
    1. LOCAL STATE
@@ -41,9 +42,24 @@ export default function Recipes() {
     setVisible(PER_PAGE); // reset paging on every new fetch
 
     /* =========== QUERY =========== */
-    const baseFields = `{title, "image": mainImage.asset->url, slug,
-        "categories": categories[]->{_id,title},
-        description, _createdAt}`;
+    const baseFields = `{
+      _id,
+      title,
+      "image": mainImage.asset->url,
+      slug,
+      _createdAt,
+      "categories": categories[]->{_id,title},
+      "reviewsCount": count(*[
+        _type == "review" && recipe._ref == ^._id && confirmed
+      ]),
+      "averageRating": coalesce(
+        math::avg(*[
+          _type == "review" && recipe._ref == ^._id && confirmed
+        ].rating),
+        0
+      )
+    }`;
+
     const query = selectedCatId
       ? `*[_type=="recipe" && $cid in categories[]._ref]|order(_createdAt desc)${baseFields}`
       : `*[_type=="recipe"]|order(_createdAt desc)${baseFields}`;
@@ -119,32 +135,51 @@ export default function Recipes() {
           <>
             <div
               className="
-                grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8 xl:grid-cols-6 py-4 px-2
+                grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8  py-4 px-2
               "
             >
-              {visibleRecipes.map((r) => (
-                <Link
-                  key={r.slug.current}
-                  to={`/recipes/${r.slug.current}`}
-                  className="flex flex-col rounded shadow hover:text-brand-primary"
-                >
-                  <div className="w-full aspect-square overflow-hidden">
-                    <img
-                      src={r.image}
-                      alt={r.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1 p-4 bg-[#f9f9f7]">
-                    <h3 className="font-heading text-xl font-bold mb-2">
-                      {r.title}
-                    </h3>
-                    <p className="font-body text-gray-600 text-sm">
-                      {r.description}
-                    </p>
-                  </div>
-                </Link>
-              ))}
+              {visibleRecipes.map((r) => {
+                /* 🟡 compute once per card */
+                const avgRounded = Math.round((r.averageRating ?? 0) * 2) / 2;
+
+                return (
+                  <Link
+                    key={r.slug.current}
+                    to={`/recipes/${r.slug.current}`}
+                    className="flex flex-col rounded shadow hover:text-brand-primary"
+                  >
+                    {/* image */}
+                    <div className="w-full aspect-square overflow-hidden">
+                      <img
+                        src={r.image}
+                        alt={r.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {/* text box */}
+                    <div className="flex-1 p-4 bg-[#f9f9f7]">
+                      <h3 className="font-heading text-xl font-bold mb-1">
+                        {r.title}
+                      </h3>
+
+                      {/* ★ rating row */}
+                      <div className="flex items-center gap-1 mb-2">
+                        <StarRating rating={avgRounded} maxStars={5} />
+                        <span className="font-body text-sm text-gray-600 pl-3">
+                          {r.reviewsCount}{" "}
+                          {r.reviewsCount === 1 ? "review" : "reviews"}
+                        </span>
+                      </div>
+
+                      {/* (optional) description clamped to two lines */}
+                      <p className="font-body text-sm text-gray-600 line-clamp-2">
+                        {r.description}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
             {/* SHOW-MORE BUTTON */}

@@ -7,6 +7,7 @@ import SeeMoreCard from "../components/SeeMoreCard";
 import { Helmet } from "react-helmet";
 import Hero from "../components/Hero";
 import Loading from "../components/Loading";
+import StarRating from "../components/StarRating";
 
 import { useTransition } from "react";
 
@@ -23,9 +24,24 @@ const Home = () => {
 
         /* run the three queries in parallel for speed */
         const [recipeData, blogData, catData] = await Promise.all([
-          client.fetch(
-            `*[_type=="recipe"]|order(_createdAt desc)[0...4]{ _id,title,slug,"image":mainImage.asset->url,description }`
-          ),
+          client.fetch(`
+            *[_type=="recipe"]
+            | order(_createdAt desc)[0...4]{
+              _id,
+              title,
+              slug,
+              "image": mainImage.asset->url,
+              "reviewsCount": count(*[
+                _type=="review" && recipe._ref == ^._id && confirmed
+              ]),
+              "averageRating": coalesce(
+                math::avg(*[
+                  _type=="review" && recipe._ref == ^._id && confirmed
+                ].rating),
+                0
+              )
+            }
+          `),
           client.fetch(
             `*[_type=="blog"]|order(_createdAt desc)[0...4]{ _id,title,slug,"image":mainImage.asset->url,excerpt }`
           ),
@@ -60,7 +76,10 @@ const Home = () => {
       <section className="py-16 bg-white">
         <div className="max-w-screen-xl mx-auto px-4">
           <h2 className="font-heading text-2xl mb-6 text-center">
-            <Link to="/categories" className="hover:text-brand-primary">
+            <Link
+              to="/categories"
+              className=" font-semiboldhover:text-brand-primary"
+            >
               Explore by Category
             </Link>
           </h2>
@@ -102,7 +121,7 @@ const Home = () => {
 
       {/* Latest Recipe Section */}
       <section className=" py-16 bg-[#DEE7E7] px-4 ">
-        <div className="mx-auto max-w-screen-xl text-center">
+        <div className="mx-auto max-w-screen-xl ">
           <div className="mb-6">
             <Link
               className="font-heading text-2xl font-semibold hover:text-brand-primary"
@@ -113,40 +132,59 @@ const Home = () => {
           </div>
 
           <ResponsiveCarouselGrid
-            items={[...recipes, { isSeeMore: true }]} // Append "See More Card"
-            renderItem={(recipe) =>
-              recipe.isSeeMore ? (
-                <SeeMoreCard
-                  to="/recipes"
-                  title="See All Recipes"
-                  description="Explore our full collection of recipes!"
-                  className=" font-heading w-full aspect-square sm:hidden" // Hide on larger screens
-                  backgroundImage={null} // Or pass an image path
-                />
-              ) : (
+            items={[...recipes, { isSeeMore: true }]}
+            /* ⬇︎ block‑form arrow so we can run JS before we return JSX */
+            renderItem={(recipe) => {
+              /* — see‑more card — */
+              if (recipe.isSeeMore) {
+                return (
+                  <SeeMoreCard
+                    to="/recipes"
+                    title="See All Recipes"
+                    description="Explore our full collection of recipes!"
+                    className="font-heading w-full aspect-square sm:hidden"
+                  />
+                );
+              }
+
+              /* half‑star rounding */
+              const avgRounded =
+                Math.round((recipe.averageRating || 0) * 2) / 2;
+
+              /* — normal recipe card — */
+              return (
                 <Link
+                  key={recipe._id}
                   to={`/recipes/${recipe.slug.current}`}
                   className="rounded shadow w-full flex flex-col hover:text-brand-primary"
                 >
+                  {/* image */}
                   <div className="w-full aspect-square overflow-hidden">
                     <img
                       src={urlFor(recipe.image).width(400).quality(80).url()}
-                      alt={recipe.image.alt || recipe.title}
+                      alt={recipe.title}
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  {/* Text Section */}
-                  <div className=" p-4 flex-1 flex flex-col justify-between bg-[#f9f9f7] min-h-[160px] ">
-                    <h3 className="font-heading mt-2 text-lg font-bold mb-2 text-center">
+
+                  {/* text box */}
+                  <div className="p-4 flex-1 flex flex-col justify-between bg-[#f9f9f7]">
+                    <h3 className="font-heading text-lg font-bold mb-1">
                       {recipe.title}
                     </h3>
-                    <p className="font-body text-gray-600 text-md line-clamp-3 min-h-[72px]">
-                      {recipe.description}
-                    </p>
+
+                    {/* ⭐ row — exactly like your detail page */}
+                    <div className="flex items-center gap-1 mb-2">
+                      <StarRating rating={avgRounded} maxStars={5} />
+                      <span className="font-body text-sm text-gray-600 pl-3">
+                        {recipe.reviewsCount}{" "}
+                        {recipe.reviewsCount === 1 ? "review" : "reviews"}
+                      </span>
+                    </div>
                   </div>
                 </Link>
-              )
-            }
+              );
+            }}
           />
         </div>
       </section>

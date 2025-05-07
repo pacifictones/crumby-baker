@@ -138,7 +138,7 @@ export default function Blog() {
             <>
               <div
                 className="
-                grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8 xl:grid-cols-6 py-4 px-2
+                grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8  py-4 px-2
               "
               >
                 {shown.map((b) => (
@@ -158,7 +158,7 @@ export default function Blog() {
                       <h3 className="font-heading text-xl font-bold mb-2">
                         {b.title}
                       </h3>
-                      <p className="font-body text-sm text-gray-600">
+                      <p className="font-body text-sm text-gray-600 line-clamp-3">
                         {b.excerpt}
                       </p>
                     </div>
