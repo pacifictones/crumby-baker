@@ -2,22 +2,41 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import client, { urlFor } from "../sanityClient";
+import ContentError from "./ContentError";
+import Loading from "../components/Loading";
 
 export default function AllCategoriesPage() {
   const [cats, setCats] = useState([]);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    client
-      .fetch(
-        `*[_type=="category"]|order(title asc){
-        _id, title, slug, image
-      }`
-      )
-      .then(setCats)
-      .catch((err) => console.error("Category fetch failed:", err));
+    const fetchCats = async () => {
+      setLoading(true);
+      setError(false);
+      try {
+        const data = await client.fetch(
+          `*[_type == "category"] | order(title asc) {
+            _id,
+            title,
+            slug,
+            image
+          }`
+        );
+        setCats(data);
+      } catch (err) {
+        console.error("Category fetch failed:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCats();
   }, []);
 
-  if (!cats.length) return <div className="p-10 text-center">Loading…</div>;
+  if (error) return <ContentError message="We couldn't load the categories." />;
+  if (loading) return <Loading />;
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 pb-16">

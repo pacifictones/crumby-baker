@@ -7,10 +7,12 @@ import ShareModal from "./ShareModal";
 import Breadcrumbs from "./Breadcrumbs";
 import CommentForm from "./CommentForm";
 import Loading from "./Loading";
+import ContentError from "../pages/ContentError";
 
 function interleaveReplies(comments) {
   // group replies by parent ID
   const repliesByParent = {};
+
   comments.forEach((c) => {
     const pid = c.parent?._id;
     if (pid) {
@@ -42,6 +44,7 @@ function BlogDetail() {
   const [blog, setBlog] = useState(null); // State to store blog data
   const [replyTo, setReplyTo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const COMMENTS_PER_PAGE = 6;
   const [page, setPage] = useState(1); // current page
@@ -49,41 +52,42 @@ function BlogDetail() {
     (blog?.comments?.length || 0) / COMMENTS_PER_PAGE
   );
 
-  const refreshComments = () => {
+  const refreshComments = async () => {
     setLoading(true);
-    client
+    setError(false);
 
-      .fetch(
-        `*[_type=="blog" && slug.current==$slug][0]{
-          _id,
-          title,
-          mainImage,
-          content,
-          author,
-          excerpt,
-          publishedAt,
-          "comments": *[
-            _type=="comment" &&
-            blog._ref == ^._id &&
-            confirmed == true
-          ] | order(_createdAt asc){
-            _id,
-            authorName,
-            text,
-            _createdAt,
-            parent->{_id, authorName}
-          }
-        }`,
-        { slug }
-      )
-      .then((data) => {
-        console.log("Raw comments:", data.comments);
-        const ordered = interleaveReplies(data.comments);
-        setBlog({ ...data, comments: ordered });
-      })
+    const query = `*[_type=="blog" && slug.current==$slug][0]{
+      _id,
+      title,
+      mainImage,
+      content,
+      author,
+      excerpt,
+      publishedAt,
+      "comments": *[
+        _type=="comment" &&
+        blog._ref == ^._id &&
+        confirmed == true
+      ] | order(_createdAt asc){
+        _id,
+        authorName,
+        text,
+        _createdAt,
+        parent->{_id, authorName}
+      }
+    }`;
 
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    try {
+      const data = await client.fetch(query, { slug });
+      console.log("Raw comments:", data.comments);
+      const ordered = interleaveReplies(data.comments);
+      setBlog({ ...data, comments: ordered });
+    } catch (err) {
+      console.error("Failed to refresh comments:", err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 2) On mount or slug change, just call the helper
@@ -98,6 +102,7 @@ function BlogDetail() {
   }, [page]);
 
   if (loading) return <Loading />;
+  if (error) return <ContentError message="Failed to load blog." />;
   if (!blog)
     return <p className="text-center py-12 font-heading">Blog not found.</p>;
 

@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import client from "../sanityClient";
 import Loading from "../components/Loading";
 import StarRating from "../components/StarRating";
+import ContentError from "./ContentError";
 
 /* ──────────────────────────────────────────
    1. LOCAL STATE
@@ -13,6 +14,7 @@ const PER_PAGE = 8; // how many cards shown each “page”
 export default function Recipes() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   /* category list for the dropdown  */
   const [cats, setCats] = useState([]); // [{_id,title,slug}]
@@ -38,36 +40,37 @@ export default function Recipes() {
   const [sortOpt, setSort] = useState("Newest");
 
   useEffect(() => {
-    setLoading(true);
-    setVisible(PER_PAGE); // reset paging on every new fetch
+    const fetchRecipes = async () => {
+      setLoading(true);
+      setError(false); // reset error on re-fetch
+      setVisible(PER_PAGE); // reset paging
 
-    /* =========== QUERY =========== */
-    const baseFields = `{
-      _id,
-      title,
-      "image": mainImage.asset->url,
-      slug,
-      _createdAt,
-      "categories": categories[]->{_id,title},
-      "reviewsCount": count(*[
-        _type == "review" && recipe._ref == ^._id && confirmed
-      ]),
-      "averageRating": coalesce(
-        math::avg(*[
+      const baseFields = `{
+        _id,
+        title,
+        "image": mainImage.asset->url,
+        slug,
+        _createdAt,
+        "categories": categories[]->{_id,title},
+        "reviewsCount": count(*[
           _type == "review" && recipe._ref == ^._id && confirmed
-        ].rating),
-        0
-      )
-    }`;
+        ]),
+        "averageRating": coalesce(
+          math::avg(*[
+            _type == "review" && recipe._ref == ^._id && confirmed
+          ].rating),
+          0
+        )
+      }`;
 
-    const query = selectedCatId
-      ? `*[_type=="recipe" && $cid in categories[]._ref]|order(_createdAt desc)${baseFields}`
-      : `*[_type=="recipe"]|order(_createdAt desc)${baseFields}`;
+      const query = selectedCatId
+        ? `*[_type=="recipe" && $cid in categories[]._ref] | order(_createdAt desc) ${baseFields}`
+        : `*[_type=="recipe"] | order(_createdAt desc) ${baseFields}`;
 
-    client
-      .fetch(query, { cid: selectedCatId })
-      .then((recData) => {
-        /* optional secondary sort in JS */
+      try {
+        const recData = await client.fetch(query, { cid: selectedCatId });
+
+        // Optional client-side sort
         const sorted = [...recData].sort((a, b) => {
           if (sortOpt === "Newest")
             return new Date(b._createdAt) - new Date(a._createdAt);
@@ -75,15 +78,23 @@ export default function Recipes() {
             return new Date(a._createdAt) - new Date(b._createdAt);
           return a.title.localeCompare(b.title); // Alphabetical
         });
+
         setRecipes(sorted);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      } catch (err) {
+        console.error("Recipe fetch failed:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipes();
   }, [selectedCatId, sortOpt]);
 
   /* ──────────────────────────────────────────
    4.  RENDER
    ──────────────────────────────────────────*/
+  if (error) return <ContentError message="We could not load the recipes." />;
   const visibleRecipes = recipes.slice(0, visible);
 
   return (

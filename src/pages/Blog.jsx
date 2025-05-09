@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import client from "../sanityClient";
 import Loading from "../components/Loading";
+import ContentError from "./ContentError";
 
 export default function Blog() {
   const PER_PAGE = 8;
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoad] = useState(true);
+  const [error, setError] = useState(false);
 
   /* ▼▼ NEW ▼▼ */
   const [cats, setCats] = useState([]); // {id,title}
@@ -23,7 +25,7 @@ export default function Blog() {
   useEffect(() => {
     (async () => {
       setLoad(true);
-
+      setError(false);
       // 1) categories
       const catData = await client.fetch(
         `*[_type=="category"] | order(title asc){
@@ -46,6 +48,7 @@ export default function Blog() {
 
       setPosts(sortPosts(postData, "Newest"));
       setLoad(false);
+      setError(false);
     })();
   }, []);
 
@@ -72,6 +75,8 @@ export default function Blog() {
 
   const shown = filtered.slice(0, visible);
   /* ▲▲ NEW ▲▲ */
+
+  if (error) return <ContentError />;
 
   return (
     <>

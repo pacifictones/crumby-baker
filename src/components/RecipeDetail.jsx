@@ -14,6 +14,7 @@ import { Helmet } from "react-helmet-async";
 import RecipeSchema from "./RecipeSchema";
 import Breadcrumbs from "./Breadcrumbs";
 import Loading from "./Loading";
+import ContentError from "../pages/ContentError";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -42,6 +43,7 @@ export function formatQuantity(qty) {
 function RecipeDetail() {
   const { slug } = useParams(); // Get the slug from the URL
   const [recipe, setRecipe] = useState(null); // State to store recipe data
+  const [error, setError] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -68,6 +70,7 @@ function RecipeDetail() {
   const fetchRecipe = async () => {
     try {
       setLoading(true);
+      setError(false);
       const data = await client.fetch(
         `*[_type == "recipe" && slug.current == $slug][0]{
         _id,
@@ -110,6 +113,7 @@ function RecipeDetail() {
       setCurrentServings(data.servings);
     } catch (error) {
       console.error("Error fetching recipe:", error);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -154,6 +158,8 @@ function RecipeDetail() {
   //   setReviews([newReview, ...reviews]);
   //   setShowReviewModal(false);
   // };
+
+  if (error) return <ContentError message="We couldn't load the recipe." />;
 
   function StarRatingDisplay({ rating }) {
     return (

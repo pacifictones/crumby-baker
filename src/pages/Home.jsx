@@ -8,6 +8,7 @@ import { Helmet } from "react-helmet";
 import Hero from "../components/Hero";
 import Loading from "../components/Loading";
 import StarRating from "../components/StarRating";
+import ContentError from "./ContentError";
 
 import { useTransition } from "react";
 
@@ -16,12 +17,13 @@ const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
         setLoading(true); /* turn spinner on */
-
+        setError(false);
         /* run the three queries in parallel for speed */
         const [recipeData, blogData, catData] = await Promise.all([
           client.fetch(`
@@ -55,6 +57,7 @@ const Home = () => {
         setCategories(catData);
       } catch (err) {
         console.error("Home fetch failed:", err);
+        setError(true);
       } finally {
         setLoading(false); /* spinner off whether success or error */
       }
@@ -63,6 +66,11 @@ const Home = () => {
   }, []);
 
   if (loading) return <Loading />;
+  if (error) {
+    return (
+      <ContentError message="Something went wrong loading the homepage." />
+    );
+  }
 
   return (
     <div>
@@ -78,35 +86,48 @@ const Home = () => {
           <h2 className="font-heading text-2xl mb-6 text-center">
             <Link
               to="/categories"
-              className=" font-semiboldhover:text-brand-primary"
+              className="font-semibold hover:text-brand-primary"
             >
               Explore by Category
             </Link>
           </h2>
 
           <ResponsiveCarouselGrid
-            items={categories}
-            renderItem={(cat) => (
-              <Link
-                to={`/category/${cat.slug.current}`}
-                className="group block rounded shadow overflow-hidden hover:text-brand-primary"
-              >
-                <img
-                  src={urlFor(cat.image)
-                    .width(400)
-                    .height(400)
-                    .fit("crop")
-                    .url()}
-                  alt={cat.image?.alt || cat.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="bg-[#f9f9f7] px-2 py-2">
-                  <h3 className="font-heading text-center text-base font-semibold">
-                    {cat.title}
-                  </h3>
-                </div>
-              </Link>
-            )}
+            items={[...categories, { isSeeMore: true }]}
+            renderItem={(cat) => {
+              if (cat.isSeeMore) {
+                return (
+                  <SeeMoreCard
+                    to="/categories"
+                    title="See All Categories"
+                    description="Browse all baking categories"
+                    className="font-heading w-full aspect-square sm:hidden"
+                  />
+                );
+              }
+
+              return (
+                <Link
+                  to={`/category/${cat.slug.current}`}
+                  className="group block rounded shadow overflow-hidden hover:text-brand-primary"
+                >
+                  <img
+                    src={urlFor(cat.image)
+                      .width(400)
+                      .height(400)
+                      .fit("crop")
+                      .url()}
+                    alt={cat.image?.alt || cat.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="bg-[#f9f9f7] px-2 py-2">
+                    <h3 className="font-heading text-center text-base font-semibold">
+                      {cat.title}
+                    </h3>
+                  </div>
+                </Link>
+              );
+            }}
           />
         </div>
       </section>
@@ -122,7 +143,7 @@ const Home = () => {
       {/* Latest Recipe Section */}
       <section className=" py-16 bg-[#DEE7E7] px-4 ">
         <div className="mx-auto max-w-screen-xl ">
-          <div className="mb-6">
+          <div className="mb-6 text-center ">
             <Link
               className="font-heading text-2xl font-semibold hover:text-brand-primary"
               to="/recipes"

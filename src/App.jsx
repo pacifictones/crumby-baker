@@ -16,6 +16,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import DataDeletion from "./pages/DataDeletion.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
 import AllCategoriesPage from "./pages/AllCategoriesPage.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
                   <Route path="/data-deletion" element={<DataDeletion />} />
                   <Route path="/category/:slug" element={<CategoryPage />} />
                   <Route path="/categories" element={<AllCategoriesPage />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
             }
