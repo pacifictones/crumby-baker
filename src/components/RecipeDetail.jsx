@@ -64,6 +64,7 @@ function RecipeDetail() {
     try {
       setLoading(true);
       setError(false);
+  
       const data = await client.fetch(
         `*[_type == "recipe" && slug.current == $slug][0]{
           _id,
@@ -72,56 +73,54 @@ function RecipeDetail() {
           description,
           seoTitle,
           metaDescription,
-      
-          mainImage{
-            asset->{url, metadata{dimensions{width,height}}},
-            alt,
-            "assetUrl": asset->url,
-            "dimensions": asset->metadata.dimensions
-          },
-          gallery[]{
-            asset->{url},
-            alt,
-            assetUrl: asset->url
-          },
-      
+  
+          // ✅ KEEP image refs so urlFor() works
+          mainImage{ ..., alt },
+          gallery[]{ ..., alt },
+  
           prepTime,
           cookTime,
           totalTime,
           servings,
-      
+  
           ingredientSections[]{
             sectionTitle,
-            items[]{
-              quantity,
-              unit,
-              item,
-              notes
-            }
+            items[]{ quantity, unit, item, notes }
           },
-      
+  
           instructionSections[]{
             sectionTitle,
-            steps[]{
-              text,
-              image
-            }
+            steps[]{ text, image }
           },
           notes,
-      
-          internalLinks[]->{
-            _id,
-            title,
-            "slug": slug.current
-          },
-          externalLinks[]{label, url},
-      
+  
+          internalLinks[]->{ _id, title, "slug": slug.current },
+          externalLinks[]{ label, url },
+  
           "reviews": *[
             _type == "review" && recipe._ref == ^._id && confirmed == true
           ] | order(_createdAt desc)
         }`,
         { slug }
       );
+  
+      console.log("Fetched recipe:", data); // keep this for now
+      setRecipe(data);
+      setReviews(data?.reviews || []);
+      setCurrentServings(data?.servings);
+    } catch (error) {
+      console.error("Error fetching recipe:", error);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Lint-safe: effect depends only on slug; the function is stable across renders
+  useEffect(() => {
+    fetchRecipe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
 
       console.log("Fetched recipe:", data);
       setRecipe(data);
