@@ -95,15 +95,15 @@ function RecipeDetail() {
       _type == "review" && recipe._ref == ^._id && confirmed == true
     ] | order(_createdAt desc)
   }`;
-  
+
   const fetchRecipe = async () => {
     try {
       setLoading(true);
       setError(false);
-  
+
       const data = await client.fetch(RECIPE_QUERY, { slug });
       console.log("Fetched recipe:", data);
-  
+
       setRecipe(data);
       setReviews(data?.reviews || []);
       setCurrentServings(data?.servings);
@@ -114,26 +114,10 @@ function RecipeDetail() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchRecipe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
-
-      console.log("Fetched recipe:", data);
-      setRecipe(data);
-      setReviews(data?.reviews || []);
-      setCurrentServings(data.servings);
-    } catch (error) {
-      console.error("Error fetching recipe:", error);
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchRecipe();
   }, [slug]);
 
   if (loading) return <Loading />;
