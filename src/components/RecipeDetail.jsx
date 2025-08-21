@@ -6,7 +6,6 @@ import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import StarRating from "./StarRating";
 import ReviewForm from "./ReviewForm";
-import { createClient } from "@sanity/client";
 import StarBreakdown from "./StarBreakdown";
 import CookModeToggle from "./CookModeToggle";
 import ShareModal from "./ShareModal";
@@ -22,12 +21,6 @@ import { Navigation, Thumbs } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-
-const readClient = createClient({
-  projectId: "ulggaxa8",
-  dataset: "production",
-  useCdn: true, // read
-});
 
 export function formatQuantity(qty) {
   if (qty == null || isNaN(qty)) return qty; // fail-safe
@@ -82,11 +75,14 @@ function RecipeDetail() {
       
           mainImage{
             asset->{url, metadata{dimensions{width,height}}},
-            alt
+            alt,
+            "assetUrl": asset->url,
+            "dimensions": asset->metadata.dimensions
           },
           gallery[]{
             asset->{url},
-            alt
+            alt,
+            assetUrl: asset->url
           },
       
           prepTime,
@@ -198,6 +194,13 @@ function RecipeDetail() {
   }
 
   const canonical = `https://thecrumbybaker.com/recipes/${slug}`;
+  const pageTitle = recipe.seoTitle?.trim()
+    ? recipe.seoTitle
+    : `${recipe.title} | The Crumby Baker`;
+  const metaDesc = (recipe.metaDescription || recipe.description || "").slice(
+    0,
+    155
+  );
 
   return (
     <>
