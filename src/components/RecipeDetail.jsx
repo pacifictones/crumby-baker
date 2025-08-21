@@ -73,40 +73,60 @@ function RecipeDetail() {
       setError(false);
       const data = await client.fetch(
         `*[_type == "recipe" && slug.current == $slug][0]{
-        _id,
-        title,
-        mainImage,
-        gallery,
-        description,
-        prepTime,
-        cookTime,
-        totalTime,
-        servings,
-        
-        ingredientSections[]{
-        sectionTitle,
-        items[]{
-        quantity,
-        unit,
-        item,notes
-        }
-        },
-        
-        instructionSections[]{
-        sectionTitle,
-        steps[]{
-        text,
-        image
-        }
-        },
-        notes,
-        "reviews": *[
-        _type == "review" && recipe._ref == ^._id &&
-        confirmed == true
-        ] | order(_createdAt desc)
+          _id,
+          _createdAt,
+          title,
+          description,
+          seoTitle,
+          metaDescription,
+      
+          mainImage{
+            asset->{url, metadata{dimensions{width,height}}},
+            alt
+          },
+          gallery[]{
+            asset->{url},
+            alt
+          },
+      
+          prepTime,
+          cookTime,
+          totalTime,
+          servings,
+      
+          ingredientSections[]{
+            sectionTitle,
+            items[]{
+              quantity,
+              unit,
+              item,
+              notes
+            }
+          },
+      
+          instructionSections[]{
+            sectionTitle,
+            steps[]{
+              text,
+              image
+            }
+          },
+          notes,
+      
+          internalLinks[]->{
+            _id,
+            title,
+            "slug": slug.current
+          },
+          externalLinks[]{label, url},
+      
+          "reviews": *[
+            _type == "review" && recipe._ref == ^._id && confirmed == true
+          ] | order(_createdAt desc)
         }`,
         { slug }
       );
+
       console.log("Fetched recipe:", data);
       setRecipe(data);
       setReviews(data?.reviews || []);
@@ -177,22 +197,34 @@ function RecipeDetail() {
     return qty * (newServings / baseServings);
   }
 
+  const canonical = `https://thecrumbybaker.com/recipes/${slug}`;
+
   return (
     <>
       {/* Helmet for dynamic og: tags based on the loaded recipe */}
       <Helmet>
-        <title>{recipe.title} | The Crumby Baker</title>
-        <meta name="description" content={recipe.description} />
-        <meta property="og:title" content={recipe.title} />
-        <meta property="og:description" content={recipe.description} />
-        <meta property="og:image" content={ogImageUrl} />
-        <meta
-          property="og:url"
-          content={`https://thecrumbybaker.com/recipes/${slug}`}
-        />
+        <title>{pageTitle}</title>
+        <meta name="description" content={metaDesc} />
+        <link rel="canonical" href={canonical} />
+
         <meta property="og:type" content="article" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={metaDesc} />
+        {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+        <meta property="og:url" content={canonical} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={metaDesc} />
+        {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
       </Helmet>
-      <RecipeSchema recipe={recipe} reviews={reviews} />
+
+      <RecipeSchema
+        recipe={recipe}
+        reviews={reviews}
+        canonicalUrl={canonical}
+      />
+
       <div className="px-4">
         <Breadcrumbs />
       </div>
@@ -558,6 +590,33 @@ function RecipeDetail() {
                 {console.log("Passing recipeID to ReviewForm:", recipe?._id)}
               </div>
             </div>
+          )}
+          {recipe.internalLinks?.length > 0 && (
+            <section className="mt-10">
+              <h3 className="font-heading text-xl mb-3">Related recipes</h3>
+              <ul className="grid gap-3 sm:grid-cols-2">
+                {recipe.internalLinks.map((doc) => (
+                  <li key={doc._id}>
+                    <a href={`/recipes/${doc.slug}`}>{doc.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {recipe.externalLinks?.length > 0 && (
+            <section className="mt-8">
+              <h3 className="font-heading text-xl mb-3">Further reading</h3>
+              <ul className="list-disc list-inside space-y-1">
+                {recipe.externalLinks.map((l, i) => (
+                  <li key={i}>
+                    <a href={l.url} target="_blank" rel="noopener nofollow">
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
         </section>
       </div>

@@ -1,5 +1,6 @@
 import step from './step'
 import ingredientLine from './ingredientLine'
+import {validation} from 'sanity'
 
 export default {
   name: 'recipe',
@@ -111,8 +112,23 @@ export default {
     {
       name: 'description',
       title: 'Description',
-      type: 'string',
+      type: 'text',
+      rows: 3,
     },
+    {
+      name: 'seoTitle',
+      title: 'SEO Title (<=60 chars)',
+      type: 'string',
+      validation: (r) => r.max(60),
+    },
+    {
+      name: 'metaDescription',
+      title: 'Meta Description (<=155 chars)',
+      type: 'text',
+      rows: 2,
+      validation: (r) => r.max(155),
+    },
+
     {
       name: 'prepTime',
       title: 'Prep Time (mins)',
@@ -148,6 +164,28 @@ export default {
         source: 'title',
         maxLength: 96,
       },
+    },
+    {
+      name: 'internalLinks',
+      title: 'Related Recipes',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'recipe'}]}],
+      description: 'Select other recipes to recommend at the bottom of the page',
+    },
+    {
+      name: 'externalLinks',
+      title: 'External Links',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {name: 'label', type: 'string', title: 'Label'},
+            {name: 'url', type: 'url', title: 'URL'},
+          ],
+        },
+      ],
+      description: 'Optional further reading or inspiration links',
     },
   ],
 }
