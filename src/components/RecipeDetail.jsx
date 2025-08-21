@@ -60,51 +60,50 @@ function RecipeDetail() {
   const [reviews, setReviews] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
 
+  const RECIPE_QUERY = `*[_type == "recipe" && slug.current == $slug][0]{
+    _id,
+    _createdAt,
+    title,
+    description,
+    seoTitle,
+    metaDescription,
+  
+    // keep the asset ref so urlFor() works
+    mainImage{ ..., alt },
+    gallery[]{ ..., alt },
+  
+    prepTime,
+    cookTime,
+    totalTime,
+    servings,
+  
+    ingredientSections[]{
+      sectionTitle,
+      items[]{ quantity, unit, item, notes }
+    },
+  
+    instructionSections[]{
+      sectionTitle,
+      steps[]{ text, image }
+    },
+    notes,
+  
+    internalLinks[]->{ _id, title, "slug": slug.current },
+    externalLinks[]{ label, url },
+  
+    "reviews": *[
+      _type == "review" && recipe._ref == ^._id && confirmed == true
+    ] | order(_createdAt desc)
+  }`;
+  
   const fetchRecipe = async () => {
     try {
       setLoading(true);
       setError(false);
   
-      const data = await client.fetch(
-        `*[_type == "recipe" && slug.current == $slug][0]{
-          _id,
-          _createdAt,
-          title,
-          description,
-          seoTitle,
-          metaDescription,
+      const data = await client.fetch(RECIPE_QUERY, { slug });
+      console.log("Fetched recipe:", data);
   
-          // ✅ KEEP image refs so urlFor() works
-          mainImage{ ..., alt },
-          gallery[]{ ..., alt },
-  
-          prepTime,
-          cookTime,
-          totalTime,
-          servings,
-  
-          ingredientSections[]{
-            sectionTitle,
-            items[]{ quantity, unit, item, notes }
-          },
-  
-          instructionSections[]{
-            sectionTitle,
-            steps[]{ text, image }
-          },
-          notes,
-  
-          internalLinks[]->{ _id, title, "slug": slug.current },
-          externalLinks[]{ label, url },
-  
-          "reviews": *[
-            _type == "review" && recipe._ref == ^._id && confirmed == true
-          ] | order(_createdAt desc)
-        }`,
-        { slug }
-      );
-  
-      console.log("Fetched recipe:", data); // keep this for now
       setRecipe(data);
       setReviews(data?.reviews || []);
       setCurrentServings(data?.servings);
@@ -116,7 +115,6 @@ function RecipeDetail() {
     }
   };
   
-  // Lint-safe: effect depends only on slug; the function is stable across renders
   useEffect(() => {
     fetchRecipe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
