@@ -105,38 +105,31 @@ function RecipeDetail() {
     externalLinks[]{ label, url },
   
     "relatedAutoRecipes": *[
-      _type == "recipe" &&
-      slug.current != ^.slug.current &&
-      (
-        references(^.categories[]._ref) ||
-        count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])]) > 0
-      )
-    ]{
-      _id,
-      title,
-      "slug": slug.current,
-      mainImage{ ..., alt },
-      "overlap": count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])])
-    } | order(overlap desc, _createdAt desc)[0...6],
+    _type == "recipe" &&
+    slug.current != ^.slug.current &&
+    (
+      references(^.categories[]._ref) ||
+      (defined(^.keywords) && defined(keywords) && count((^.keywords)[@ in keywords]) > 0)
+    )
+  ] | order(_createdAt desc)[0...6]{
+    _id, title, "slug": slug.current, mainImage{ ..., alt }
+  },
   
-    "relatedPosts": *[
-      _type == "blog" &&
-      (
-        references(^.categories[]._ref) ||
-        count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])]) > 0
-      )
-    ]{
-      _id,
-      title,
-      "slug": slug.current,
-      mainImage{ ..., alt },
-      "overlap": count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])])
-    } | order(overlap desc, _createdAt desc)[0...4],
-  
-    "reviews": *[
-      _type == "review" && recipe._ref == ^._id && confirmed == true
-    ] | order(_createdAt desc)
-  }`;
+      "relatedPosts": *[
+    _type == "blog" &&
+    (
+      references(^.categories[]._ref) ||
+      (defined(^.keywords) && defined(keywords) && count((^.keywords)[@ in keywords]) > 0)
+    )
+  ] | order(_createdAt desc)[0...4]{
+    _id, title, "slug": slug.current, mainImage{ ..., alt }
+  },
+
+  // reviews
+  "reviews": *[
+    _type == "review" && recipe._ref == ^._id && confirmed == true
+  ] | order(_createdAt desc)
+}`;
 
   const fetchRecipe = async () => {
     try {
