@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
 import client, { urlFor } from "../sanityClient";
-import { set } from "react-hook-form";
 import { Link } from "react-router-dom";
 import ResponsiveCarouselGrid from "../components/ResponsiveCarouselGrid";
 import SeeMoreCard from "../components/SeeMoreCard";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import Hero from "../components/Hero";
 import Loading from "../components/Loading";
 import StarRating from "../components/StarRating";
 import ContentError from "./ContentError";
-
-import { useTransition } from "react";
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
@@ -48,7 +45,10 @@ const Home = () => {
             `*[_type=="blog"]|order(_createdAt desc)[0...4]{ _id,title,slug,"image":mainImage.asset->url,excerpt }`
           ),
           client.fetch(
-            `*[_type=="category" && featured==true && defined(image)]|order(title asc)[0...4]{ _id,title,slug,image }`
+            `*[_type=="category" && featured==true && defined(image.asset)]
+| order(title asc)[0...4]{
+  _id, title, slug, image
+}`
           ),
         ]);
 
@@ -111,15 +111,18 @@ const Home = () => {
                   to={`/category/${cat.slug.current}`}
                   className="group block rounded shadow overflow-hidden hover:text-brand-primary"
                 >
-                  <img
-                    src={urlFor(cat.image)
-                      .width(400)
-                      .height(400)
-                      .fit("crop")
-                      .url()}
-                    alt={cat.image?.alt || cat.title}
-                    className="w-full h-full object-cover"
-                  />
+                  {cat.image?.asset && (
+                    <img
+                      src={urlFor(cat.image)
+                        .width(400)
+                        .height(400)
+                        .fit("crop")
+                        .url()}
+                      alt={cat.image?.alt || cat.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  )}
                   <div className="bg-[#f9f9f7] px-2 py-2">
                     <h3 className="font-heading text-center text-base font-semibold">
                       {cat.title}
@@ -181,11 +184,14 @@ const Home = () => {
                 >
                   {/* image */}
                   <div className="w-full aspect-square overflow-hidden">
-                    <img
-                      src={urlFor(recipe.image).width(400).quality(80).url()}
-                      alt={recipe.title}
-                      className="w-full h-full object-cover"
-                    />
+                    {recipe.image ? (
+                      <img
+                        src={`${recipe.image}?w=400&h=400&fit=crop&auto=format&dpr=2`}
+                        alt={recipe.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : null}
                   </div>
 
                   {/* text box */}
@@ -239,11 +245,14 @@ const Home = () => {
                   className="rounded shadow hover:text-brand-primary w-full flex flex-col"
                 >
                   <div className="w-full aspect-square overflow-hidden ">
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-full h-full object-cover"
-                    />
+                    {blog.image ? (
+                      <img
+                        src={`${blog.image}?w=400&h=400&fit=crop&auto=format&dpr=2`}
+                        alt={blog.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : null}
                   </div>
                   {/* Text Section */}
                   <div className="p-4 flex-1 flex flex-col justify-between bg-[#f9f9f7] min-h-[150px]">
