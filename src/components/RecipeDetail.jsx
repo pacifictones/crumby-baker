@@ -88,15 +88,19 @@ function RecipeDetail() {
     cookTime,
     totalTime,
     servings,
+  
     ingredientSections[]{
       sectionTitle,
       items[]{ quantity, unit, item, notes }
     },
+  
     instructionSections[]{
       sectionTitle,
       steps[]{ text, image }
     },
+  
     notes,
+  
     internalLinks[]->{ _id, title, "slug": slug.current, mainImage{ ..., alt } },
     externalLinks[]{ label, url },
   
@@ -105,21 +109,29 @@ function RecipeDetail() {
       slug.current != ^.slug.current &&
       (
         references(^.categories[]._ref) ||
-        (defined(^.keywords) && defined(keywords) && count((^.keywords)[@ in keywords]) > 0)
+        count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])]) > 0
       )
-    ] | order(_createdAt desc)[0...6]{
-      _id, title, "slug": slug.current, mainImage{ ..., alt }
-    },
+    ]{
+      _id,
+      title,
+      "slug": slug.current,
+      mainImage{ ..., alt },
+      "overlap": count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])])
+    } | order(overlap desc, _createdAt desc)[0...6],
   
     "relatedPosts": *[
       _type == "blog" &&
       (
         references(^.categories[]._ref) ||
-        (defined(^.keywords) && defined(keywords) && count((^.keywords)[@ in keywords]) > 0)
+        count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])]) > 0
       )
-    ] | order(_createdAt desc)[0...4]{
-      _id, title, "slug": slug.current, mainImage{ ..., alt }
-    },
+    ]{
+      _id,
+      title,
+      "slug": slug.current,
+      mainImage{ ..., alt },
+      "overlap": count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])])
+    } | order(overlap desc, _createdAt desc)[0...4],
   
     "reviews": *[
       _type == "review" && recipe._ref == ^._id && confirmed == true

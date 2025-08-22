@@ -60,25 +60,28 @@ const BLOG_QUERY = `*[_type=="blog" && slug.current==$slug][0]{
   externalLinks[]{ label, url },
 
   "relatedRecipes": *[
-    _type=="recipe" &&
-    (
-      references(^.categories[]._ref) ||
-      (defined(^.keywords) && defined(keywords) && count((^.keywords)[@ in keywords]) > 0)
-    )
-  ] | order(_createdAt desc)[0...6]{
-    _id, _type, title, "slug": slug.current, mainImage{ ..., alt }
-  },
+  _type == "recipe" &&
+  (
+    references(^.categories[]._ref) ||
+    count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])]) > 0
+  )
+]{
+  _id, _type, title, "slug": slug.current, mainImage{ ..., alt },
+  "overlap": count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])])
+} | order(overlap desc, _createdAt desc)[0...6],
 
-  "relatedPosts": *[
-    _type=="blog" &&
-    slug.current != ^.slug.current &&
-    (
-      references(^.categories[]._ref) ||
-      (defined(^.keywords) && defined(keywords) && count((^.keywords)[@ in keywords]) > 0)
-    )
-  ] | order(_createdAt desc)[0...6]{
-    _id, _type, title, "slug": slug.current, mainImage{ ..., alt }
-  },
+"relatedPosts": *[
+  _type=="blog" &&
+  slug.current != ^.slug.current &&
+  (
+    references(^.categories[]._ref) ||
+    count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])]) > 0
+  )
+]{
+  _id, _type, title, "slug": slug.current, mainImage{ ..., alt },
+  "overlap": count(coalesce(^.keywords, [])[@ in coalesce(keywords, [])])
+} | order(overlap desc, _createdAt desc)[0...6],
+
 
   "comments": *[
     _type=="comment" &&
