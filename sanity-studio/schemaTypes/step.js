@@ -5,9 +5,8 @@ export default {
   fields: [
     {
       name: 'text',
-      title: 'Step Text',
-      type: 'array',
-      of: [{type: 'block'}], // Rich text for each step
+      title: 'Text',
+      type: 'blockContent',
     },
     {
       name: 'image',
@@ -20,6 +19,12 @@ export default {
           title: 'Alt Text',
           type: 'string',
           description: 'A short description for screen readers',
+          options: {isHighlighted: true}, // shows in the image “edit” popover
+          validation: (Rule) =>
+            Rule.custom((val, context) => {
+              // Require alt if an image asset is set
+              return context.parent?.asset ? (val ? true : 'Please add alt text') : true
+            }).max(120),
         },
       ],
     },

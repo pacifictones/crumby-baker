@@ -6,5 +6,16 @@ import review from './review'
 import ingredientLine from './ingredientLine'
 import comment from './comment'
 import category from './category'
+import blockContent from './blockContent'
 
-export const schemaTypes = [recipe, about, blog, step, review, ingredientLine, comment, category]
+export const schemaTypes = [
+  recipe,
+  about,
+  blog,
+  step,
+  review,
+  ingredientLine,
+  comment,
+  category,
+  blockContent,
+]

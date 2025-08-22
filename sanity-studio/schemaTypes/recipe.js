@@ -1,6 +1,5 @@
 import step from './step'
 import ingredientLine from './ingredientLine'
-import {validation} from 'sanity'
 
 export default {
   name: 'recipe',
@@ -130,6 +129,14 @@ export default {
     },
 
     {
+      name: 'keywords',
+      title: 'Keywords',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {layout: 'tags'},
+    },
+
+    {
       name: 'prepTime',
       title: 'Prep Time (mins)',
       type: 'number',
@@ -152,8 +159,8 @@ export default {
     {
       name: 'notes',
       title: 'Cook’s Notes',
-      type: 'array',
-      of: [{type: 'block'}], // rich-text via PortableText
+      type: 'blockContent',
+
       description: 'Extra tips, substitutions, mistakes to avoid…',
     },
     {

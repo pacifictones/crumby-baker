@@ -22,6 +22,19 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
+const ptComponents = {
+  marks: {
+    link: ({ children, value }) => {
+      const rel = value?.nofollow ? "nofollow noopener" : "noopener";
+      const target = value?.blank ? "_blank" : undefined;
+      return (
+        <a href={value?.href} target={target} rel={rel}>
+          {children}
+        </a>
+      );
+    },
+  },
+};
 export function formatQuantity(qty) {
   if (qty == null || isNaN(qty)) return qty; // fail-safe
 
@@ -67,8 +80,8 @@ function RecipeDetail() {
     description,
     seoTitle,
     metaDescription,
+    keywords,
   
-    // keep the asset ref so urlFor() works
     mainImage{ ..., alt },
     gallery[]{ ..., alt },
   
@@ -88,8 +101,25 @@ function RecipeDetail() {
     },
     notes,
   
-    internalLinks[]->{ _id, title, "slug": slug.current },
-    externalLinks[]{ label, url },
+    internalLinks[]->{ _id, title, "slug": slug.current, mainImage{ ..., alt } },
+  
+    "relatedAutoRecipes": *[
+      _type == "recipe" &&
+      slug.current != ^.slug.current &&
+      (
+        references(^.categories[]._ref) ||
+        (defined(^.keywords) && defined(keywords) && count(array::intersect(keywords, ^.keywords)) > 0)
+      )
+    ] | order(_createdAt desc)[0...6]{
+      _id, title, "slug": slug.current, mainImage{ ..., alt }
+    },
+  
+    "relatedPosts": *[
+      _type == "blog" &&
+      references(^.categories[]._ref)
+    ] | order(_createdAt desc)[0...4]{
+      _id, title, "slug": slug.current, mainImage{ ..., alt }
+    },
   
     "reviews": *[
       _type == "review" && recipe._ref == ^._id && confirmed == true
@@ -168,6 +198,24 @@ function RecipeDetail() {
     );
   }
 
+  const cardImg = (img) =>
+    img
+      ? urlFor(img).width(600).height(400).fit("crop").quality(80).url()
+      : null;
+
+  // Merge manual + auto related recipes, de-dupe by slug, cap at 6
+  const manualRelated = recipe.internalLinks || [];
+  const autoRelated = recipe.relatedAutoRecipes || [];
+  const seen = new Set();
+  const combinedRecipes = [...manualRelated, ...autoRelated]
+    .filter((r) => {
+      const k = r?.slug;
+      if (!k || seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    })
+    .slice(0, 6);
+
   function scaleQuantity(baseQty, baseServings, newServings) {
     const qty = Number(baseQty);
     if (!qty || !baseServings || !newServings) return baseQty;
@@ -233,7 +281,7 @@ function RecipeDetail() {
           {/* Left: Description and Info */}
 
           <div>
-            <div className="felx items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2">
               <StarRating rating={Math.round(averageRating)} />
               <p className="mt-2">
                 <a
@@ -301,7 +349,11 @@ function RecipeDetail() {
               <div>
                 <ShareModal
                   url={`https://thecrumbybaker.com/recipes/${slug}`}
-                  image={urlFor(recipe.mainImage).url()}
+                  image={
+                    recipe.mainImage
+                      ? urlFor(recipe.mainImage).url()
+                      : undefined
+                  }
                   title={recipe.title}
                 />
               </div>
@@ -456,7 +508,11 @@ function RecipeDetail() {
                     <ol className="font-body list-decimal list-outside space-y-6">
                       {instSec.steps?.map((step, idx) => (
                         <li key={idx}>
-                          <PortableText value={step.text} />
+                          <PortableText
+                            value={step.text}
+                            components={ptComponents}
+                          />
+
                           {showImages && step.image && (
                             <img
                               src={urlFor(step.image)
@@ -479,7 +535,10 @@ function RecipeDetail() {
                       Notes
                     </h2>
                     <div className="prose max-w-none">
-                      <PortableText value={recipe.notes} />
+                      <PortableText
+                        value={recipe.notes}
+                        components={ptComponents}
+                      />
                     </div>
                   </section>
                 )}
@@ -575,15 +634,68 @@ function RecipeDetail() {
               </div>
             </div>
           )}
-          {recipe.internalLinks?.length > 0 && (
-            <section className="mt-10">
-              <h3 className="font-heading text-xl mb-3">Related recipes</h3>
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {recipe.internalLinks.map((doc) => (
-                  <li key={doc._id}>
-                    <a href={`/recipes/${doc.slug}`}>{doc.title}</a>
-                  </li>
-                ))}
+
+          {combinedRecipes.length > 0 && (
+            <section className="mt-14">
+              <h3 className="font-heading text-2xl mb-5">Related recipes</h3>
+              <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {combinedRecipes.map((doc) => {
+                  const img = cardImg(doc.mainImage);
+                  return (
+                    <li
+                      key={doc._id}
+                      className="group rounded-2xl overflow-hidden shadow hover:shadow-lg transition"
+                    >
+                      <a href={`/recipes/${doc.slug}`} className="block">
+                        <div className="aspect-[3/2] bg-gray-100">
+                          {img ? (
+                            <img
+                              src={img}
+                              alt={doc.mainImage?.alt || doc.title}
+                              className="w-full h-full object-cover group-hover:scale-[1.02] transition"
+                              loading="lazy"
+                            />
+                          ) : null}
+                        </div>
+                        <div className="p-4">
+                          <h4 className="font-heading text-lg">{doc.title}</h4>
+                        </div>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          )}
+          {recipe.relatedPosts?.length > 0 && (
+            <section className="mt-12">
+              <h3 className="font-heading text-2xl mb-5">From the blog</h3>
+              <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {recipe.relatedPosts.map((post) => {
+                  const img = cardImg(post.mainImage);
+                  return (
+                    <li
+                      key={post._id}
+                      className="group rounded-2xl overflow-hidden shadow hover:shadow-lg transition"
+                    >
+                      <a href={`/blog/${post.slug}`} className="block">
+                        <div className="aspect-[3/2] bg-gray-100">
+                          {img ? (
+                            <img
+                              src={img}
+                              alt={post.mainImage?.alt || post.title}
+                              className="w-full h-full object-cover group-hover:scale-[1.02] transition"
+                              loading="lazy"
+                            />
+                          ) : null}
+                        </div>
+                        <div className="p-4">
+                          <h4 className="font-heading text-lg">{post.title}</h4>
+                        </div>
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </section>
           )}
