@@ -171,7 +171,7 @@ function RecipeDetail() {
   }));
 
   const ogImageUrl = recipe.mainImage
-    ? urlFor(recipe.mainImage).width(1600).quality(80).url()
+    ? urlFor(recipe.mainImage).width(3000).quality(80).url()
     : "";
 
   // const reviews = recipe.reviews || [];
