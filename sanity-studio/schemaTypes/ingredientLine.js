@@ -4,6 +4,12 @@ export default {
   type: 'object',
   fields: [
     {
+      name: 'item',
+      title: 'Item',
+      type: 'string',
+      description: 'The ingredients itself, e.g. Flour',
+    },
+    {
       name: 'quantity',
       title: 'Quantity',
       type: 'number',
@@ -15,12 +21,7 @@ export default {
       type: 'string',
       description: 'e.g., cups, grams, tablespoons, etc.',
     },
-    {
-      name: 'item',
-      title: 'Item',
-      type: 'string',
-      description: 'The ingredients itself, e.g. Flour',
-    },
+
     {
       name: 'notes',
       title: 'Notes',
