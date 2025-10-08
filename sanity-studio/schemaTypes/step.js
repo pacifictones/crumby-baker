@@ -29,4 +29,28 @@ export default {
       ],
     },
   ],
+  preview: {
+    select: {
+      blocks: 'text', // Portable Text array
+      media: 'image', // show the image thumbnail if set
+      alt: 'image.alt',
+    },
+    prepare({blocks, media, alt}) {
+      const pt = Array.isArray(blocks) ? blocks : []
+
+      // Extract plain text from Portable Text blocks
+      const plain = pt
+        .filter((b) => b?._type === 'block')
+        .map((b) => (Array.isArray(b.children) ? b.children.map((c) => c.text || '').join('') : ''))
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+
+      const title = plain ? (plain.length > 90 ? plain.slice(0, 90) + '…' : plain) : '(empty step)'
+
+      const subtitle = media ? (alt ? `🖼 ${alt}` : '🖼 Step image') : undefined
+
+      return {title, subtitle, media}
+    },
+  },
 }

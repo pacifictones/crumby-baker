@@ -61,6 +61,16 @@ export default {
               of: [{type: 'step'}],
             },
           ],
+          preview: {
+            select: {title: 'sectionTitle', steps: 'steps'},
+            prepare({title, steps}) {
+              const count = Array.isArray(steps) ? steps.length : 0
+              return {
+                title: title || 'Method',
+                subtitle: `${count} step${count === 1 ? '' : 's'}`,
+              }
+            },
+          },
         },
       ],
     },
