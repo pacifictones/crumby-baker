@@ -36,6 +36,33 @@ export default {
               of: [{type: 'ingredientLine'}],
             },
           ],
+          preview: {
+            select: {
+              title: 'sectionTitle',
+              items: 'items',
+            },
+            prepare({title, items}) {
+              const list = Array.isArray(items) ? items : []
+              const count = list.length
+
+              // Try to show the first 1–2 ingredient item names for context
+              const firstTwo = list
+                .slice(0, 2)
+                .map((it) => it?.item || '') // relies on your ingredientLine.item
+                .filter(Boolean)
+                .join(', ')
+
+              return {
+                title: title?.trim() || 'Ingredients',
+                subtitle:
+                  count === 0
+                    ? '0 items'
+                    : firstTwo
+                      ? `${count} item${count === 1 ? '' : 's'} · ${firstTwo}${count > 2 ? ', …' : ''}`
+                      : `${count} item${count === 1 ? '' : 's'}`,
+              }
+            },
+          },
         },
       ],
     },
