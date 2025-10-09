@@ -152,12 +152,6 @@ export default {
     },
 
     {
-      name: 'description',
-      title: 'Meta Description',
-      type: 'text',
-      rows: 3,
-    },
-    {
       name: 'seoTitle',
       title: 'SEO Title (<=60 chars)',
       type: 'string',
