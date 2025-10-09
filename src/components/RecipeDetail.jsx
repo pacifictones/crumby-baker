@@ -78,7 +78,6 @@ function RecipeDetail() {
     _createdAt,
     title,
     intro,
-    description,
     seoTitle,
     metaDescription,
     keywords,
@@ -232,7 +231,18 @@ function RecipeDetail() {
   const pageTitle = recipe.seoTitle?.trim()
     ? recipe.seoTitle
     : `${recipe.title} | The Crumby Baker`;
-  const metaDesc = (recipe.metaDescription || recipe.description || "").slice(
+
+  const plainFromPT = (pt) =>
+    Array.isArray(pt)
+      ? pt
+          .filter((b) => b?._type === "block")
+          .map((b) => (b.children || []).map((c) => c.text || "").join(""))
+          .join(" ")
+          .replace(/\s+/g, " ")
+          .trim()
+      : "";
+
+  const metaDesc = (recipe.metaDescription || plainFromPT(recipe.intro)).slice(
     0,
     155
   );
@@ -302,9 +312,7 @@ function RecipeDetail() {
               <div className="space-y-4 mb-8 leading-relaxed">
                 <PortableText value={recipe.intro} components={ptComponents} />
               </div>
-            ) : (
-              <p className="mb-8 leading-relaxed">{recipe.description}</p>
-            )}
+            ) : null}
             {/* Row 1: Prep, Cook, Total */}
             <div className="font-heading grid grid-cols-3 gap-y-4 text-center mb-4">
               <div>
