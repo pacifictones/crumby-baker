@@ -77,6 +77,7 @@ function RecipeDetail() {
     _id,
     _createdAt,
     title,
+    intro,
     description,
     seoTitle,
     metaDescription,
@@ -297,7 +298,13 @@ function RecipeDetail() {
                 </a>
               </p>
             </div>
-            <p className="mb-8">{recipe.description}</p>
+            {recipe.intro?.length ? (
+              <div className="space-y-4 mb-8 leading-relaxed">
+                <PortableText value={recipe.intro} components={ptComponents} />
+              </div>
+            ) : (
+              <p className="mb-8 leading-relaxed">{recipe.description}</p>
+            )}
             {/* Row 1: Prep, Cook, Total */}
             <div className="font-heading grid grid-cols-3 gap-y-4 text-center mb-4">
               <div>

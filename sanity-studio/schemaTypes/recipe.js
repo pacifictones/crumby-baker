@@ -144,10 +144,16 @@ export default {
       of: [{type: 'reference', to: [{type: 'category'}]}],
       validation: (r) => r.min(1).error('Choose at least one category'),
     },
+    {
+      name: 'intro',
+      title: 'Intro (rich text, for on-page paragraphs)',
+      type: 'blockContent', // your existing Portable Text type
+      description: 'Use for multi-paragraph intro. Meta description still uses "description".',
+    },
 
     {
       name: 'description',
-      title: 'Description',
+      title: 'Meta Description',
       type: 'text',
       rows: 3,
     },
