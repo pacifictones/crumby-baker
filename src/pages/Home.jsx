@@ -195,13 +195,13 @@ const Home = () => {
                   </div>
 
                   {/* text box */}
-                  <div className="p-4 flex-1 flex flex-col justify-between bg-[#f9f9f7]">
-                    <h3 className="font-heading text-lg font-bold mb-1">
+                  <div className="p-4 flex flex-col gap-2 bg-[#f9f9f7]">
+                    <h3 className="font-heading text-lg font-bold line-clamp-2 leading-snug min-h-[3.0rem]">
                       {recipe.title}
                     </h3>
 
                     {/* ⭐ row — exactly like your detail page */}
-                    <div className="flex items-center gap-1 mb-2">
+                    <div className="flex items-center gap-1 min-h-[24px]">
                       <StarRating rating={avgRounded} maxStars={5} />
                       <span className="font-body text-sm text-gray-600 pl-3">
                         {recipe.reviewsCount}{" "}
