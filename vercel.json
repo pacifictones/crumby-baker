@@ -1,5 +1,17 @@
 {
   "version": 2,
+  "redirects": [
+    {
+      "source": "http://thecrumbybaker.com/:path*",
+      "destination": "https://www.thecrumbybaker.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "https://thecrumbybaker.com/:path*",
+      "destination": "https://www.thecrumbybaker.com/:path*",
+      "permanent": true
+    }
+  ],
   "builds": [
     {
       "src": "package.json",

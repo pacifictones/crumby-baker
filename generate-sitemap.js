@@ -18,7 +18,7 @@ async function generateSitemap() {
   }));
 
   const smStream = new SitemapStream({
-    hostname: "https://thecrumbybaker.com",
+    hostname: "https://www.thecrumbybaker.com",
   });
 
   // Write homepage and static pages

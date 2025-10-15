@@ -21,12 +21,13 @@ const Layout = ({ children }) => {
         />
         <meta
           property="og:image"
-          content="https://thecrumbybaker.com/og-default.png"
+          content="https://www.thecrumbybaker.com/og-default.png"
         />
-        <meta property="og:url" content="https://thecrumbybaker.com" />
+        <meta property="og:url" content="https://www.thecrumbybaker.com" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
+        <meta property="og:site_name" content="The Crumby Baker" />
       </Helmet>
 
       <div className="min-h-screen flex flex-col ">

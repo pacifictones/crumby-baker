@@ -169,7 +169,7 @@ function BlogDetail() {
     return <p className="text-center py-12 font-heading">Blog not found.</p>;
 
   // ---------------- SEO head values ----------------
-  const canonical = `https://thecrumbybaker.com/blog/${slug}`;
+  const canonical = `https://www.thecrumbybaker.com/blog/${slug}`;
   const pageTitle = blog.seoTitle?.trim()
     ? blog.seoTitle
     : `${blog.title} | The Crumby Baker`;

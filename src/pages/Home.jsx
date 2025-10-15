@@ -109,7 +109,7 @@ const Home = () => {
               return (
                 <Link
                   to={`/category/${cat.slug.current}`}
-                  className="group block rounded shadow overflow-hidden hover:text-brand-primary"
+                  className="group block rounded-b shadow overflow-hidden hover:text-brand-primary"
                 >
                   {cat.image?.asset && (
                     <img
@@ -180,7 +180,7 @@ const Home = () => {
                 <Link
                   key={recipe._id}
                   to={`/recipes/${recipe.slug.current}`}
-                  className="rounded shadow w-full flex flex-col hover:text-brand-primary"
+                  className="rounded-b overflow-hidden shadow w-full flex flex-col hover:text-brand-primary"
                 >
                   {/* image */}
                   <div className="w-full aspect-square overflow-hidden">
@@ -242,7 +242,7 @@ const Home = () => {
               ) : (
                 <Link
                   to={`/blog/${blog.slug.current}`}
-                  className="rounded shadow hover:text-brand-primary w-full flex flex-col"
+                  className="rounded-b shadow hover:text-brand-primary w-full flex flex-col"
                 >
                   <div className="w-full aspect-square overflow-hidden ">
                     {blog.image ? (

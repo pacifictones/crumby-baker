@@ -227,7 +227,7 @@ function RecipeDetail() {
     return qty * (newServings / baseServings);
   }
 
-  const canonical = `https://thecrumbybaker.com/recipes/${slug}`;
+  const canonical = `https://www.thecrumbybaker.com/recipes/${slug}`;
   const pageTitle = recipe.seoTitle?.trim()
     ? recipe.seoTitle
     : `${recipe.title} | The Crumby Baker`;
@@ -260,6 +260,10 @@ function RecipeDetail() {
         <meta property="og:description" content={metaDesc} />
         {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
         <meta property="og:url" content={canonical} />
+        <meta property="og:site_name" content="The Crumby Baker" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="theme-color" content="#ED6A5A" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
