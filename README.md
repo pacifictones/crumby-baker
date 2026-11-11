@@ -1,8 +1,28 @@
-# React + Vite
+# The Crumby Baker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Recipe and baking website, live at [thecrumbybaker.com](https://thecrumbybaker.com).
 
-Currently, two official plugins are available:
+I designed, built and maintain the site. The baker (my wife) writes the recipes and takes the photos; I handle everything else.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Built with
+
+- **React** (Vite) front end
+- **Sanity** headless CMS for recipes and posts
+- **Vercel** for hosting and deployment
+- Responsive layouts for mobile and desktop
+
+## What it does
+
+- Reusable page templates for recipes and blog posts, so new content can be published through the CMS without code changes
+- Content planned around search demand, using a Node.js script that pulls Google rankings and autocomplete suggestions via SerpApi and exports them to CSV
+
+## Run it locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Next up
+
+- Migrating to Astro to improve SEO and social sharing previews
